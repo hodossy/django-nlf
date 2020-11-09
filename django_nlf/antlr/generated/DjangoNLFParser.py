@@ -1,13 +1,21 @@
 # Generated from DjangoNLF.g4 by ANTLR 4.8
 # encoding: utf-8
-from antlr4 import *
-from io import StringIO
 import sys
+from io import StringIO
+from typing import TextIO
 
-if sys.version_info[1] > 5:
-    from typing import TextIO
-else:
-    from typing.io import TextIO
+from antlr4 import (
+    ATNDeserializer,
+    DFA,
+    Parser,
+    ParserATNSimulator,
+    ParserRuleContext,
+    ParseTreeListener,
+    PredictionContextCache,
+    RecognitionException,
+    Token,
+    TokenStream,
+)
 
 
 def serializedATN():
@@ -116,6 +124,7 @@ class DjangoNLFParser(Parser):
             self, self.atn, self.decisionsToDFA, self.sharedContextCache
         )
         self._predicates = None
+        self._la = None
 
     class OperatorContext(ParserRuleContext):
         def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
@@ -134,8 +143,8 @@ class DjangoNLFParser(Parser):
         def WHITESPACE(self, i: int = None):
             if i is None:
                 return self.getTokens(DjangoNLFParser.WHITESPACE)
-            else:
-                return self.getToken(DjangoNLFParser.WHITESPACE, i)
+
+            return self.getToken(DjangoNLFParser.WHITESPACE, i)
 
         def getRuleIndex(self):
             return DjangoNLFParser.RULE_operator
@@ -247,8 +256,8 @@ class DjangoNLFParser(Parser):
         def WHITESPACE(self, i: int = None):
             if i is None:
                 return self.getTokens(DjangoNLFParser.WHITESPACE)
-            else:
-                return self.getToken(DjangoNLFParser.WHITESPACE, i)
+
+            return self.getToken(DjangoNLFParser.WHITESPACE, i)
 
         def getRuleIndex(self):
             return DjangoNLFParser.RULE_lookup
@@ -329,8 +338,8 @@ class DjangoNLFParser(Parser):
         def TEXT(self, i: int = None):
             if i is None:
                 return self.getTokens(DjangoNLFParser.TEXT)
-            else:
-                return self.getToken(DjangoNLFParser.TEXT, i)
+
+            return self.getToken(DjangoNLFParser.TEXT, i)
 
         def lookup(self):
             return self.getTypedRuleContext(DjangoNLFParser.LookupContext, 0)
@@ -383,14 +392,14 @@ class DjangoNLFParser(Parser):
         def expression(self, i: int = None):
             if i is None:
                 return self.getTypedRuleContexts(DjangoNLFParser.ExpressionContext)
-            else:
-                return self.getTypedRuleContext(DjangoNLFParser.ExpressionContext, i)
+
+            return self.getTypedRuleContext(DjangoNLFParser.ExpressionContext, i)
 
         def operator(self, i: int = None):
             if i is None:
                 return self.getTypedRuleContexts(DjangoNLFParser.OperatorContext)
-            else:
-                return self.getTypedRuleContext(DjangoNLFParser.OperatorContext, i)
+
+            return self.getTypedRuleContext(DjangoNLFParser.OperatorContext, i)
 
         def getRuleIndex(self):
             return DjangoNLFParser.RULE_filter_exp
