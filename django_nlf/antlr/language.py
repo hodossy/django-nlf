@@ -24,7 +24,7 @@ class DjangoNLFLanguage:
         parser.removeErrorListeners()
         parser.addErrorListener(error_listener)
 
-        tree = parser.filter_exp()
+        tree = parser.filter_expr()
 
         listener = self.get_listener()
         walker = ParseTreeWalker()

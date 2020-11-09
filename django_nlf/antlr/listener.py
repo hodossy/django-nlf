@@ -94,6 +94,22 @@ class DjangoNLFListener(ParseTreeListener):
                 self.output.append([self.operator, previous_expression, current_expression])
             self.operator = None
 
+    # # Enter a parse tree produced by DjangoNLFParser#composite_expr.
+    # def enterComposite_expr(self, ctx: DjangoNLFParser.Composite_exprContext):
+    #     pass
+    #
+    # # Exit a parse tree produced by DjangoNLFParser#composite_expr.
+    # def exitComposite_expr(self, ctx: DjangoNLFParser.Composite_exprContext):
+    #     pass
+    #
+    # # Enter a parse tree produced by DjangoNLFParser#nested_comp_expr.
+    # def enterNested_comp_expr(self, ctx: DjangoNLFParser.Nested_comp_exprContext):
+    #     pass
+    #
+    # # Exit a parse tree produced by DjangoNLFParser#nested_comp_expr.
+    # def exitNested_comp_expr(self, ctx: DjangoNLFParser.Nested_comp_exprContext):
+    #     pass
+
     # # Enter a parse tree produced by DjangoNLFParser#filter_exp.
     # def enterFilter_exp(self, ctx: DjangoNLFParser.Filter_expContext):
     #     print("enterFilter_exp")
