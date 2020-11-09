@@ -1,11 +1,11 @@
 import unittest
 
-from django_nlf.antlr import DjangoNLFilter, Lookup
+from django_nlf.antlr import DjangoNLFLanguage, Lookup
 
 
 class DjangoNLFListenerSingleExpressionTestCase(unittest.TestCase):
     def setUp(self):
-        self.nl_filter = DjangoNLFilter()
+        self.nl_filter = DjangoNLFLanguage()
 
     def test_equals(self):
         expressions = ["field is value", "field equals value", "field=value"]

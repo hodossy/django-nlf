@@ -1,2 +1,2 @@
-from .django_nlf import DjangoNLFilter
+from .language import DjangoNLFLanguage
 from .lookups import Lookup, Operation

@@ -1,11 +1,11 @@
 import unittest
 
-from django_nlf.antlr import DjangoNLFilter, Lookup, Operation
+from django_nlf.antlr import DjangoNLFLanguage, Lookup, Operation
 
 
 class DjangoNLFListenerMultipleExpressionsTestCase(unittest.TestCase):
     def setUp(self):
-        self.nl_filter = DjangoNLFilter()
+        self.nl_filter = DjangoNLFLanguage()
 
     def test_two_exprs_and(self):
         expr = "field is value and another_field equals another_value"
