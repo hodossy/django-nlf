@@ -12,6 +12,9 @@ class DjangoNLFLanguage:
     error_listener_class = DjangoNLFErrorListener
 
     def parse(self, filter_expr: str):
+        if not filter_expr:
+            return []
+
         _input = InputStream(filter_expr)
         lexer = self.get_lexer(_input)
         stream = CommonTokenStream(lexer)

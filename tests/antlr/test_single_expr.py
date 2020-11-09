@@ -7,8 +7,14 @@ class DjangoNLFListenerSingleExpressionTestCase(unittest.TestCase):
     def setUp(self):
         self.nl_filter = DjangoNLFLanguage()
 
+    def test_empty_expr(self):
+        expr = ""
+        expected = []
+        res = self.nl_filter.parse(expr)
+        self.assertListEqual(res, expected)
+
     def test_equals(self):
-        expressions = ["field is value", "field equals value", "field=value"]
+        expressions = ["field is value", "field equals value", "field=value", "field = value"]
         expected = [
             {
                 "field_name": "field",
@@ -22,7 +28,12 @@ class DjangoNLFListenerSingleExpressionTestCase(unittest.TestCase):
             self.assertListEqual(res, expected)
 
     def test_not_equals(self):
-        expressions = ["field is not value", "field not equals value", "field!=value"]
+        expressions = [
+            "field is not value",
+            "field not equals value",
+            "field!=value",
+            "field != value",
+        ]
         expected = [
             {
                 "field_name": "field",
@@ -36,7 +47,7 @@ class DjangoNLFListenerSingleExpressionTestCase(unittest.TestCase):
             self.assertListEqual(res, expected)
 
     def test_like(self):
-        expressions = ["field is like value", "field ~ value"]
+        expressions = ["field is like value", "field~value", "field ~ value"]
         expected = [
             {
                 "field_name": "field",
@@ -50,7 +61,7 @@ class DjangoNLFListenerSingleExpressionTestCase(unittest.TestCase):
             self.assertListEqual(res, expected)
 
     def test_nlike(self):
-        expressions = ["field is not like value", "field!~value"]
+        expressions = ["field is not like value", "field!~value", "field !~ value"]
         expected = [
             {
                 "field_name": "field",
