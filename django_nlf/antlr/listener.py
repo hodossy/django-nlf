@@ -7,7 +7,6 @@ from .lookups import Lookup, Operation
 
 # This class defines a complete listener for a parse tree produced by DjangoNLFParser.
 class DjangoNLFListener(ParseTreeListener):
-
     def __init__(self):
         super().__init__()
         self.output = []
@@ -16,26 +15,26 @@ class DjangoNLFListener(ParseTreeListener):
         self.exclude = False
 
     # Enter a parse tree produced by DjangoNLFParser#operator.
-    def enterOperator(self, ctx:DjangoNLFParser.OperatorContext):
-        print('enterOperator')
+    def enterOperator(self, ctx: DjangoNLFParser.OperatorContext):
+        print("enterOperator")
         pass
 
     # Exit a parse tree produced by DjangoNLFParser#operator.
-    def exitOperator(self, ctx:DjangoNLFParser.OperatorContext):
-        print('exitOperator')
+    def exitOperator(self, ctx: DjangoNLFParser.OperatorContext):
+        print("exitOperator")
         if ctx.AND() is not None:
             self.operator = Operation.AND
         elif ctx.OR() is not None:
             self.operator = Operation.OR
 
     # Enter a parse tree produced by DjangoNLFParser#lookup.
-    def enterLookup(self, ctx:DjangoNLFParser.LookupContext):
-        print('enterLookup')
+    def enterLookup(self, ctx: DjangoNLFParser.LookupContext):
+        print("enterLookup")
         pass
 
     # Exit a parse tree produced by DjangoNLFParser#lookup.
-    def exitLookup(self, ctx:DjangoNLFParser.LookupContext):
-        print('exitLookup')
+    def exitLookup(self, ctx: DjangoNLFParser.LookupContext):
+        print("exitLookup")
         if ctx.EQUALS() is not None:
             self.lookup = Lookup.EQUALS
         elif ctx.NEQUALS() is not None:
@@ -60,20 +59,19 @@ class DjangoNLFListener(ParseTreeListener):
         elif ctx.LTE() is not None:
             self.lookup = Lookup.LTE
 
-
     # Enter a parse tree produced by DjangoNLFParser#expression.
-    def enterExpression(self, ctx:DjangoNLFParser.ExpressionContext):
-        print('enterExpression')
+    def enterExpression(self, ctx: DjangoNLFParser.ExpressionContext):
+        print("enterExpression")
         pass
 
     # Exit a parse tree produced by DjangoNLFParser#expression.
-    def exitExpression(self, ctx:DjangoNLFParser.ExpressionContext):
-        print('exitExpression')
+    def exitExpression(self, ctx: DjangoNLFParser.ExpressionContext):
+        print("exitExpression")
         current_expression = {
-            'field_name': ctx.TEXT(0).getText(),
-            'lookup': self.lookup,
-            'value': (ctx.QUOTED_TEXT() or ctx.TEXT(1)).getText(),
-            'exclude': self.exclude,
+            "field_name": ctx.TEXT(0).getText(),
+            "lookup": self.lookup,
+            "value": (ctx.QUOTED_TEXT() or ctx.TEXT(1)).getText(),
+            "exclude": self.exclude,
         }
         self.lookup = None
         self.exclude = False
@@ -82,9 +80,10 @@ class DjangoNLFListener(ParseTreeListener):
             self.output.append(current_expression)
         else:
             previous_expression = self.output.pop()
-            if (isinstance(previous_expression, list) and
-                self.operator == Operation.AND and
-                previous_expression[0] == Operation.OR
+            if (
+                isinstance(previous_expression, list)
+                and self.operator == Operation.AND
+                and previous_expression[0] == Operation.OR
             ):
                 pre_previous_expression = previous_expression.pop()
                 previous_expression.append(
@@ -92,22 +91,19 @@ class DjangoNLFListener(ParseTreeListener):
                 )
                 self.output.append(previous_expression)
             else:
-                self.output.append(
-                    [self.operator, previous_expression, current_expression]
-                )
+                self.output.append([self.operator, previous_expression, current_expression])
             self.operator = None
 
     # Enter a parse tree produced by DjangoNLFParser#filter_exp.
-    def enterFilter_exp(self, ctx:DjangoNLFParser.Filter_expContext):
-        print('enterFilter_exp')
+    def enterFilter_exp(self, ctx: DjangoNLFParser.Filter_expContext):
+        print("enterFilter_exp")
         pass
 
     # Exit a parse tree produced by DjangoNLFParser#filter_exp.
-    def exitFilter_exp(self, ctx:DjangoNLFParser.Filter_expContext):
-        print('exitFilter_exp')
+    def exitFilter_exp(self, ctx: DjangoNLFParser.Filter_expContext):
+        print("exitFilter_exp")
 
         pass
-
 
 
 del DjangoNLFParser

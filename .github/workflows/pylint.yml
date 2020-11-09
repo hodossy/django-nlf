@@ -17,8 +17,11 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install pylint pylint-exit
+        pip install black pylint pylint-exit
         pip install -r requirements.txt
+    - name: Check formatting with Black
+      run: |
+        black --check django_nlf tests
     - name: Analysing the code with pylint
       run: |
         pylint django_nlf || pylint-exit --error-fail $?
