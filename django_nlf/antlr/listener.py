@@ -2,7 +2,7 @@
 from antlr4 import ParseTreeListener
 
 from .generated import DjangoNLFParser
-from ..utils import Lookup, Operation
+from ..utils import Lookup, Operation, Expression, CompositeExpression
 
 
 class Operator:
@@ -37,9 +37,14 @@ def handle_operator(el):
 
 
 def normalize_operators(output):
-    return [
+    normalized = [
         normalize_operators(el) if isinstance(el, list) else handle_operator(el) for el in output
     ]
+
+    if len(normalized) == 3:
+        return CompositeExpression(*normalized)
+
+    return normalized
 
 
 # This class defines a complete listener for a parse tree produced by DjangoNLFParser.
@@ -102,12 +107,12 @@ class DjangoNLFListener(ParseTreeListener):
 
     # Exit a parse tree produced by DjangoNLFParser#expression.
     def exitExpression(self, ctx: DjangoNLFParser.ExpressionContext):
-        current_expression = {
-            "field_name": ctx.field.text,
-            "lookup": self.lookup,
-            "value": ctx.value.text,
-            "exclude": self.exclude,
-        }
+        current_expression = Expression(
+            lookup=self.lookup,
+            field=ctx.field.text,
+            value=ctx.value.text,
+            exclude=self.exclude,
+        )
         self.lookup = None
         self.exclude = False
 

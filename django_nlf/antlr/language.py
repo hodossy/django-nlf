@@ -1,8 +1,11 @@
+import typing
+
 from antlr4 import CommonTokenStream, InputStream, ParseTreeWalker
 
 from .error_listener import DjangoNLFErrorListener
 from .generated import DjangoNLFLexer, DjangoNLFParser
 from .listener import DjangoNLFListener
+from ..utils import Expression, CompositeExpression
 
 
 class DjangoNLFLanguage:
@@ -11,7 +14,7 @@ class DjangoNLFLanguage:
     listener_class = DjangoNLFListener
     error_listener_class = DjangoNLFErrorListener
 
-    def parse(self, filter_expr: str):
+    def parse(self, filter_expr: str) -> typing.Union[Expression, CompositeExpression]:
         if not filter_expr:
             return []
 
@@ -30,7 +33,7 @@ class DjangoNLFLanguage:
         walker = ParseTreeWalker()
         walker.walk(listener, tree)
 
-        return listener.output
+        return listener.output[0]
 
     def get_error_listener(self) -> DjangoNLFErrorListener:
         return self.error_listener_class()
@@ -38,8 +41,8 @@ class DjangoNLFLanguage:
     def get_listener(self) -> DjangoNLFListener:
         return self.listener_class()
 
-    def get_lexer(self, _input) -> DjangoNLFLexer:
-        return self.lexer_class(_input)
+    def get_lexer(self, input_stream: InputStream) -> DjangoNLFLexer:
+        return self.lexer_class(input_stream)
 
-    def get_parser(self, token_stream) -> DjangoNLFParser:
+    def get_parser(self, token_stream: CommonTokenStream) -> DjangoNLFParser:
         return self.parser_class(token_stream)
