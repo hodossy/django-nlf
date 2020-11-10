@@ -1,6 +1,6 @@
 import unittest
 
-from django_nlf.antlr import DjangoNLFLanguage, Lookup, Operation
+from django_nlf import DjangoNLFLanguage, Lookup, Operation
 
 
 class DjangoNLFListenerMultipleExpressionsTestCase(unittest.TestCase):

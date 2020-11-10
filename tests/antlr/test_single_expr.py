@@ -1,6 +1,6 @@
 import unittest
 
-from django_nlf.antlr import DjangoNLFLanguage, Lookup
+from django_nlf import DjangoNLFLanguage, Lookup
 
 
 class DjangoNLFListenerSingleExpressionTestCase(unittest.TestCase):

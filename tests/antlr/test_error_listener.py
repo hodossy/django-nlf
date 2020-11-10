@@ -1,6 +1,6 @@
 import unittest
 
-from django_nlf.antlr import DjangoNLFLanguage, LanguageSyntaxError
+from django_nlf import DjangoNLFLanguage, LanguageSyntaxError
 
 
 class DjangoNLFListenerSingleExpressionTestCase(unittest.TestCase):
