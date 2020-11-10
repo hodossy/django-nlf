@@ -8,6 +8,7 @@ from antlr4 import (
     ATN,
     ATNDeserializer,
     DFA,
+    NoViableAltException,
     Parser,
     ParserATNSimulator,
     ParserRuleContext,
@@ -18,30 +19,32 @@ from antlr4 import (
     TokenStream,
 )
 
+
 def serializedATN():
     with StringIO() as buf:
         buf.write("\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\26")
-        buf.write("<\4\2\t\2\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\3\2")
-        buf.write("\5\2\20\n\2\3\2\3\2\5\2\24\n\2\3\3\5\3\27\n\3\3\3\3\3")
-        buf.write("\5\3\33\n\3\3\4\3\4\3\4\3\4\3\5\3\5\3\5\3\5\7\5%\n\5\f")
-        buf.write("\5\16\5(\13\5\3\6\3\6\3\6\3\6\3\7\3\7\5\7\60\n\7\3\7\3")
-        buf.write("\7\3\7\5\7\65\n\7\7\7\67\n\7\f\7\16\7:\13\7\3\7\2\2\b")
-        buf.write("\2\4\6\b\n\f\2\5\3\2\r\17\3\2\3\f\3\2\24\26\2=\2\17\3")
-        buf.write("\2\2\2\4\26\3\2\2\2\6\34\3\2\2\2\b \3\2\2\2\n)\3\2\2\2")
-        buf.write("\f/\3\2\2\2\16\20\7\22\2\2\17\16\3\2\2\2\17\20\3\2\2\2")
-        buf.write("\20\21\3\2\2\2\21\23\t\2\2\2\22\24\7\22\2\2\23\22\3\2")
-        buf.write("\2\2\23\24\3\2\2\2\24\3\3\2\2\2\25\27\7\22\2\2\26\25\3")
-        buf.write("\2\2\2\26\27\3\2\2\2\27\30\3\2\2\2\30\32\t\3\2\2\31\33")
-        buf.write("\7\22\2\2\32\31\3\2\2\2\32\33\3\2\2\2\33\5\3\2\2\2\34")
-        buf.write("\35\7\24\2\2\35\36\5\4\3\2\36\37\t\4\2\2\37\7\3\2\2\2")
-        buf.write(' &\5\6\4\2!"\5\2\2\2"#\5\6\4\2#%\3\2\2\2$!\3\2\2\2%')
-        buf.write("(\3\2\2\2&$\3\2\2\2&'\3\2\2\2'\t\3\2\2\2(&\3\2\2\2)")
-        buf.write("*\7\20\2\2*+\5\b\5\2+,\7\21\2\2,\13\3\2\2\2-\60\5\6\4")
-        buf.write("\2.\60\5\b\5\2/-\3\2\2\2/.\3\2\2\2\608\3\2\2\2\61\64\5")
-        buf.write("\2\2\2\62\65\5\6\4\2\63\65\5\b\5\2\64\62\3\2\2\2\64\63")
-        buf.write("\3\2\2\2\65\67\3\2\2\2\66\61\3\2\2\2\67:\3\2\2\28\66\3")
-        buf.write("\2\2\289\3\2\2\29\r\3\2\2\2:8\3\2\2\2\n\17\23\26\32&/")
-        buf.write("\648")
+        buf.write("A\4\2\t\2\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b")
+        buf.write("\t\b\3\2\5\2\22\n\2\3\2\3\2\5\2\26\n\2\3\3\5\3\31\n\3")
+        buf.write("\3\3\3\3\5\3\35\n\3\3\4\3\4\3\4\3\4\3\5\3\5\3\5\3\5\7")
+        buf.write("\5'\n\5\f\5\16\5*\13\5\3\6\3\6\3\6\3\6\3\7\3\7\5\7\62")
+        buf.write("\n\7\3\7\3\7\3\7\5\7\67\n\7\7\79\n\7\f\7\16\7<\13\7\3")
+        buf.write("\b\3\b\3\b\3\b\2\2\t\2\4\6\b\n\f\16\2\5\3\2\r\17\3\2\3")
+        buf.write("\f\3\2\24\26\2A\2\21\3\2\2\2\4\30\3\2\2\2\6\36\3\2\2\2")
+        buf.write('\b"\3\2\2\2\n+\3\2\2\2\f\61\3\2\2\2\16=\3\2\2\2\20\22')
+        buf.write("\7\22\2\2\21\20\3\2\2\2\21\22\3\2\2\2\22\23\3\2\2\2\23")
+        buf.write("\25\t\2\2\2\24\26\7\22\2\2\25\24\3\2\2\2\25\26\3\2\2\2")
+        buf.write("\26\3\3\2\2\2\27\31\7\22\2\2\30\27\3\2\2\2\30\31\3\2\2")
+        buf.write("\2\31\32\3\2\2\2\32\34\t\3\2\2\33\35\7\22\2\2\34\33\3")
+        buf.write("\2\2\2\34\35\3\2\2\2\35\5\3\2\2\2\36\37\7\24\2\2\37 \5")
+        buf.write('\4\3\2 !\t\4\2\2!\7\3\2\2\2"(\5\6\4\2#$\5\2\2\2$%\5\6')
+        buf.write("\4\2%'\3\2\2\2&#\3\2\2\2'*\3\2\2\2(&\3\2\2\2()\3\2\2")
+        buf.write("\2)\t\3\2\2\2*(\3\2\2\2+,\7\20\2\2,-\5\b\5\2-.\7\21\2")
+        buf.write("\2.\13\3\2\2\2/\62\5\b\5\2\60\62\5\n\6\2\61/\3\2\2\2\61")
+        buf.write("\60\3\2\2\2\62:\3\2\2\2\63\66\5\2\2\2\64\67\5\b\5\2\65")
+        buf.write("\67\5\n\6\2\66\64\3\2\2\2\66\65\3\2\2\2\679\3\2\2\28\63")
+        buf.write("\3\2\2\29<\3\2\2\2:8\3\2\2\2:;\3\2\2\2;\r\3\2\2\2<:\3")
+        buf.write("\2\2\2=>\5\f\7\2>?\7\2\2\3?\17\3\2\2\2\n\21\25\30\34(")
+        buf.write("\61\66:")
         return buf.getvalue()
 
 
@@ -104,6 +107,7 @@ class DjangoNLFParser(Parser):
     RULE_composite_expr = 3
     RULE_nested_comp_expr = 4
     RULE_filter_expr = 5
+    RULE_parse = 6
 
     ruleNames = [
         "operator",
@@ -112,6 +116,7 @@ class DjangoNLFParser(Parser):
         "composite_expr",
         "nested_comp_expr",
         "filter_expr",
+        "parse",
     ]
 
     EOF = Token.EOF
@@ -143,7 +148,6 @@ class DjangoNLFParser(Parser):
             self, self.atn, self.decisionsToDFA, self.sharedContextCache
         )
         self._predicates = None
-        self._la = None
 
     class OperatorContext(ParserRuleContext):
         def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
@@ -162,8 +166,8 @@ class DjangoNLFParser(Parser):
         def WHITESPACE(self, i: int = None):
             if i is None:
                 return self.getTokens(DjangoNLFParser.WHITESPACE)
-
-            return self.getToken(DjangoNLFParser.WHITESPACE, i)
+            else:
+                return self.getToken(DjangoNLFParser.WHITESPACE, i)
 
         def getRuleIndex(self):
             return DjangoNLFParser.RULE_operator
@@ -183,14 +187,14 @@ class DjangoNLFParser(Parser):
         self._la = 0  # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 13
+            self.state = 15
             self._errHandler.sync(self)
             _la = self._input.LA(1)
             if _la == DjangoNLFParser.WHITESPACE:
-                self.state = 12
+                self.state = 14
                 self.match(DjangoNLFParser.WHITESPACE)
 
-            self.state = 15
+            self.state = 17
             _la = self._input.LA(1)
             if not (
                 (
@@ -210,11 +214,11 @@ class DjangoNLFParser(Parser):
             else:
                 self._errHandler.reportMatch(self)
                 self.consume()
-            self.state = 17
+            self.state = 19
             self._errHandler.sync(self)
             _la = self._input.LA(1)
             if _la == DjangoNLFParser.WHITESPACE:
-                self.state = 16
+                self.state = 18
                 self.match(DjangoNLFParser.WHITESPACE)
 
         except RecognitionException as re:
@@ -263,8 +267,8 @@ class DjangoNLFParser(Parser):
         def WHITESPACE(self, i: int = None):
             if i is None:
                 return self.getTokens(DjangoNLFParser.WHITESPACE)
-
-            return self.getToken(DjangoNLFParser.WHITESPACE, i)
+            else:
+                return self.getToken(DjangoNLFParser.WHITESPACE, i)
 
         def getRuleIndex(self):
             return DjangoNLFParser.RULE_lookup
@@ -284,14 +288,14 @@ class DjangoNLFParser(Parser):
         self._la = 0  # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 20
+            self.state = 22
             self._errHandler.sync(self)
             _la = self._input.LA(1)
             if _la == DjangoNLFParser.WHITESPACE:
-                self.state = 19
+                self.state = 21
                 self.match(DjangoNLFParser.WHITESPACE)
 
-            self.state = 22
+            self.state = 24
             _la = self._input.LA(1)
             if not (
                 (
@@ -318,11 +322,11 @@ class DjangoNLFParser(Parser):
             else:
                 self._errHandler.reportMatch(self)
                 self.consume()
-            self.state = 24
+            self.state = 26
             self._errHandler.sync(self)
             _la = self._input.LA(1)
             if _la == DjangoNLFParser.WHITESPACE:
-                self.state = 23
+                self.state = 25
                 self.match(DjangoNLFParser.WHITESPACE)
 
         except RecognitionException as re:
@@ -337,15 +341,17 @@ class DjangoNLFParser(Parser):
         def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
             super().__init__(parent, invokingState)
             self.parser = parser
+            self.field = None  # Token
+            self.value = None  # Token
+
+        def lookup(self):
+            return self.getTypedRuleContext(DjangoNLFParser.LookupContext, 0)
 
         def TEXT(self, i: int = None):
             if i is None:
                 return self.getTokens(DjangoNLFParser.TEXT)
-
-            return self.getToken(DjangoNLFParser.TEXT, i)
-
-        def lookup(self):
-            return self.getTypedRuleContext(DjangoNLFParser.LookupContext, 0)
+            else:
+                return self.getToken(DjangoNLFParser.TEXT, i)
 
         def QUOTED_TEXT(self):
             return self.getToken(DjangoNLFParser.QUOTED_TEXT, 0)
@@ -371,11 +377,12 @@ class DjangoNLFParser(Parser):
         self._la = 0  # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 26
-            self.match(DjangoNLFParser.TEXT)
-            self.state = 27
-            self.lookup()
             self.state = 28
+            localctx.field = self.match(DjangoNLFParser.TEXT)
+            self.state = 29
+            self.lookup()
+            self.state = 30
+            localctx.value = self._input.LT(1)
             _la = self._input.LA(1)
             if not (
                 (
@@ -391,7 +398,7 @@ class DjangoNLFParser(Parser):
                     != 0
                 )
             ):
-                self._errHandler.recoverInline(self)
+                localctx.value = self._errHandler.recoverInline(self)
             else:
                 self._errHandler.reportMatch(self)
                 self.consume()
@@ -411,14 +418,14 @@ class DjangoNLFParser(Parser):
         def expression(self, i: int = None):
             if i is None:
                 return self.getTypedRuleContexts(DjangoNLFParser.ExpressionContext)
-
-            return self.getTypedRuleContext(DjangoNLFParser.ExpressionContext, i)
+            else:
+                return self.getTypedRuleContext(DjangoNLFParser.ExpressionContext, i)
 
         def operator(self, i: int = None):
             if i is None:
                 return self.getTypedRuleContexts(DjangoNLFParser.OperatorContext)
-
-            return self.getTypedRuleContext(DjangoNLFParser.OperatorContext, i)
+            else:
+                return self.getTypedRuleContext(DjangoNLFParser.OperatorContext, i)
 
         def getRuleIndex(self):
             return DjangoNLFParser.RULE_composite_expr
@@ -437,18 +444,18 @@ class DjangoNLFParser(Parser):
         self.enterRule(localctx, 6, self.RULE_composite_expr)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 30
+            self.state = 32
             self.expression()
-            self.state = 36
+            self.state = 38
             self._errHandler.sync(self)
             _alt = self._interp.adaptivePredict(self._input, 4, self._ctx)
             while _alt != 2 and _alt != ATN.INVALID_ALT_NUMBER:
                 if _alt == 1:
-                    self.state = 31
+                    self.state = 33
                     self.operator()
-                    self.state = 32
+                    self.state = 34
                     self.expression()
-                self.state = 38
+                self.state = 40
                 self._errHandler.sync(self)
                 _alt = self._interp.adaptivePredict(self._input, 4, self._ctx)
 
@@ -491,11 +498,11 @@ class DjangoNLFParser(Parser):
         self.enterRule(localctx, 8, self.RULE_nested_comp_expr)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 39
-            self.match(DjangoNLFParser.OPEN_PAREN)
-            self.state = 40
-            self.composite_expr()
             self.state = 41
+            self.match(DjangoNLFParser.OPEN_PAREN)
+            self.state = 42
+            self.composite_expr()
+            self.state = 43
             self.match(DjangoNLFParser.CLOSE_PAREN)
         except RecognitionException as re:
             localctx.exception = re
@@ -510,23 +517,23 @@ class DjangoNLFParser(Parser):
             super().__init__(parent, invokingState)
             self.parser = parser
 
-        def expression(self, i: int = None):
-            if i is None:
-                return self.getTypedRuleContexts(DjangoNLFParser.ExpressionContext)
-
-            return self.getTypedRuleContext(DjangoNLFParser.ExpressionContext, i)
-
         def composite_expr(self, i: int = None):
             if i is None:
                 return self.getTypedRuleContexts(DjangoNLFParser.Composite_exprContext)
+            else:
+                return self.getTypedRuleContext(DjangoNLFParser.Composite_exprContext, i)
 
-            return self.getTypedRuleContext(DjangoNLFParser.Composite_exprContext, i)
+        def nested_comp_expr(self, i: int = None):
+            if i is None:
+                return self.getTypedRuleContexts(DjangoNLFParser.Nested_comp_exprContext)
+            else:
+                return self.getTypedRuleContext(DjangoNLFParser.Nested_comp_exprContext, i)
 
         def operator(self, i: int = None):
             if i is None:
                 return self.getTypedRuleContexts(DjangoNLFParser.OperatorContext)
-
-            return self.getTypedRuleContext(DjangoNLFParser.OperatorContext, i)
+            else:
+                return self.getTypedRuleContext(DjangoNLFParser.OperatorContext, i)
 
         def getRuleIndex(self):
             return DjangoNLFParser.RULE_filter_expr
@@ -546,18 +553,21 @@ class DjangoNLFParser(Parser):
         self._la = 0  # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 45
+            self.state = 47
             self._errHandler.sync(self)
-            la_ = self._interp.adaptivePredict(self._input, 5, self._ctx)
-            if la_ == 1:
-                self.state = 43
-                self.expression()
-
-            elif la_ == 2:
-                self.state = 44
+            token = self._input.LA(1)
+            if token in [DjangoNLFParser.TEXT]:
+                self.state = 45
                 self.composite_expr()
+                pass
+            elif token in [DjangoNLFParser.OPEN_PAREN]:
+                self.state = 46
+                self.nested_comp_expr()
+                pass
+            else:
+                raise NoViableAltException(self)
 
-            self.state = 54
+            self.state = 56
             self._errHandler.sync(self)
             _la = self._input.LA(1)
             while ((_la) & ~0x3F) == 0 and (
@@ -569,23 +579,66 @@ class DjangoNLFParser(Parser):
                     | (1 << DjangoNLFParser.WHITESPACE)
                 )
             ) != 0:
-                self.state = 47
+                self.state = 49
                 self.operator()
-                self.state = 50
+                self.state = 52
                 self._errHandler.sync(self)
-                la_ = self._interp.adaptivePredict(self._input, 6, self._ctx)
-                if la_ == 1:
-                    self.state = 48
-                    self.expression()
-
-                elif la_ == 2:
-                    self.state = 49
+                token = self._input.LA(1)
+                if token in [DjangoNLFParser.TEXT]:
+                    self.state = 50
                     self.composite_expr()
+                    pass
+                elif token in [DjangoNLFParser.OPEN_PAREN]:
+                    self.state = 51
+                    self.nested_comp_expr()
+                    pass
+                else:
+                    raise NoViableAltException(self)
 
-                self.state = 56
+                self.state = 58
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
 
+        except RecognitionException as re:
+            localctx.exception = re
+            self._errHandler.reportError(self, re)
+            self._errHandler.recover(self, re)
+        finally:
+            self.exitRule()
+        return localctx
+
+    class ParseContext(ParserRuleContext):
+        def __init__(self, parser, parent: ParserRuleContext = None, invokingState: int = -1):
+            super().__init__(parent, invokingState)
+            self.parser = parser
+
+        def filter_expr(self):
+            return self.getTypedRuleContext(DjangoNLFParser.Filter_exprContext, 0)
+
+        def EOF(self):
+            return self.getToken(DjangoNLFParser.EOF, 0)
+
+        def getRuleIndex(self):
+            return DjangoNLFParser.RULE_parse
+
+        def enterRule(self, listener: ParseTreeListener):
+            if hasattr(listener, "enterParse"):
+                listener.enterParse(self)
+
+        def exitRule(self, listener: ParseTreeListener):
+            if hasattr(listener, "exitParse"):
+                listener.exitParse(self)
+
+    def parse(self):
+
+        localctx = DjangoNLFParser.ParseContext(self, self._ctx, self.state)
+        self.enterRule(localctx, 12, self.RULE_parse)
+        try:
+            self.enterOuterAlt(localctx, 1)
+            self.state = 59
+            self.filter_expr()
+            self.state = 60
+            self.match(DjangoNLFParser.EOF)
         except RecognitionException as re:
             localctx.exception = re
             self._errHandler.reportError(self, re)

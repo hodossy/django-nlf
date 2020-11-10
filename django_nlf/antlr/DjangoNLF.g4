@@ -5,11 +5,11 @@ grammar DjangoNLF;
  */
 operator            : WHITESPACE? (AND | OR | NOT) WHITESPACE? ;
 lookup              : WHITESPACE? (EQUALS | NEQUALS | LIKE | NLIKE | IN | NIN | GT | GTE | LT | LTE) WHITESPACE? ;
-expression          : TEXT lookup (TEXT | QUOTED_TEXT | LISTING) ;
+expression          : field=TEXT lookup value=(TEXT | QUOTED_TEXT | LISTING) ;
 composite_expr      : expression (operator expression)* ;
 nested_comp_expr    : OPEN_PAREN composite_expr CLOSE_PAREN ;
-filter_expr         : (expression | composite_expr) (operator (expression | composite_expr))* ;
-
+filter_expr         : (composite_expr | nested_comp_expr) (operator (composite_expr | nested_comp_expr))* ;
+parse               : filter_expr EOF ;
 /*
  * Lexer rules
  */
