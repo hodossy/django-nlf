@@ -7,3 +7,4 @@ setuptools
 twine
 wheel
 black
+rest_framework
