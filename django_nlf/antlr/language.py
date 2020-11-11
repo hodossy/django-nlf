@@ -5,7 +5,7 @@ from antlr4 import CommonTokenStream, InputStream, ParseTreeWalker
 from .error_listener import DjangoNLFErrorListener
 from .generated import DjangoNLFLexer, DjangoNLFParser
 from .listener import DjangoNLFListener
-from ..utils import Expression, CompositeExpression
+from ..types import Expression, CompositeExpression
 
 
 class DjangoNLFLanguage:

@@ -2,7 +2,7 @@
 from antlr4 import ParseTreeListener
 
 from .generated import DjangoNLFParser
-from ..utils import Lookup, Operation, Expression, CompositeExpression
+from ..types import Lookup, Operation, Expression, CompositeExpression
 
 
 class Operator:
