@@ -11,8 +11,7 @@ DEFAULTS = {
 }
 
 
-DEPRECATED_SETTINGS = [
-]
+DEPRECATED_SETTINGS = []
 
 
 def is_callable(value):
@@ -21,7 +20,6 @@ def is_callable(value):
 
 
 class Settings:
-
     def __getattr__(self, name):
         if name not in DEFAULTS:
             msg = "'%s' object has no attribute '%s'"
@@ -37,7 +35,7 @@ class Settings:
         return value
 
     def get_setting(self, setting):
-        django_setting = 'NLF_%s' % setting
+        django_setting = "NLF_%s" % setting
 
         if setting in DEPRECATED_SETTINGS and hasattr(dj_settings, django_setting):
             deprecate("The '%s' setting has been deprecated." % django_setting)
@@ -45,7 +43,7 @@ class Settings:
         return getattr(dj_settings, django_setting, DEFAULTS[setting])
 
     def change_setting(self, setting, value, enter, **kwargs):
-        if not setting.startswith('NLF_'):
+        if not setting.startswith("NLF_"):
             return
         setting = setting[4:]  # strip 'NLF_'
 

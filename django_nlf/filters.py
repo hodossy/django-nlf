@@ -66,7 +66,7 @@ class DjangoNLFilter(NLFilterBase):
     def follow_field_path(self, opts, path):
         field = opts.get_field(path[0])
 
-        if hasattr(field, 'get_path_info'):
+        if hasattr(field, "get_path_info"):
             # This field is a relation, update opts to follow the relation
             path_info = field.get_path_info()
             opts = path_info[-1].to_opts

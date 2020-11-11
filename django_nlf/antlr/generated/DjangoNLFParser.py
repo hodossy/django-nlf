@@ -1,23 +1,13 @@
 # Generated from DjangoNLF.g4 by ANTLR 4.8
 # encoding: utf-8
-import sys
+from antlr4 import *
 from io import StringIO
-from typing import TextIO
+import sys
 
-from antlr4 import (
-    ATN,
-    ATNDeserializer,
-    DFA,
-    NoViableAltException,
-    Parser,
-    ParserATNSimulator,
-    ParserRuleContext,
-    ParseTreeListener,
-    PredictionContextCache,
-    RecognitionException,
-    Token,
-    TokenStream,
-)
+if sys.version_info[1] > 5:
+    from typing import TextIO
+else:
+    from typing.io import TextIO
 
 
 def serializedATN():

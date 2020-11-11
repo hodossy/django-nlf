@@ -36,15 +36,15 @@ CLOSE_PAREN         : ')';
 WHITESPACE          : (' ' | '\t') ;
 NEWLINE             : ('\r'? '\n' | '\r')+ ;
 TEXT                : (LOWERCASE | UPPERCASE | NUMBER | SYMBOL)+ ;
-QUOTED_TEXT         : QUOTE (LOWERCASE | UPPERCASE | NUMBER | SYMBOL | WHITESPACE)+ QUOTE ;
-LISTING             : OPEN_PAREN WHITESPACE? TEXT (COMA WHITESPACE? TEXT)+ WHITESPACE? CLOSE_PAREN ;
+QUOTED_TEXT         : QUOTE (LOWERCASE | UPPERCASE | NUMBER | SYMBOL | WHITESPACE)* QUOTE ;
+LISTING             : OPEN_PAREN WHITESPACE? (TEXT | QUOTED_TEXT) (COMA WHITESPACE? (TEXT | QUOTED_TEXT))+ WHITESPACE? CLOSE_PAREN ;
 
 fragment COMA       : ',' ;
 fragment QUOTE      : '"' ;
 fragment LOWERCASE  : [a-z] ;
 fragment UPPERCASE  : [A-Z] ;
 fragment NUMBER     : [0-9] ;
-fragment SYMBOL     : '.' | '_' ;
+fragment SYMBOL     : '.' | '_' | '-' | '/' | ':';
 fragment A          : [aA];
 fragment B          : [bB];
 fragment C          : [cC];

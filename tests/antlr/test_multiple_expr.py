@@ -71,7 +71,7 @@ class DjangoNLFListenerMultipleExpressionsTestCase(unittest.TestCase):
                 lookup=Lookup.EQUALS,
                 value="yet_another_value",
                 exclude=False,
-            )
+            ),
         )
         res = self.nl_filter.parse(expr)
         self.assertEqual(res, expected)
@@ -93,14 +93,14 @@ class DjangoNLFListenerMultipleExpressionsTestCase(unittest.TestCase):
                     lookup=Lookup.EQUALS,
                     value="value",
                     exclude=False,
-                )
+                ),
             ),
             Expression(
                 field="yet_another_field",
                 lookup=Lookup.EQUALS,
                 value="value",
                 exclude=False,
-            )
+            ),
         )
         res = self.nl_filter.parse(expr)
         self.assertEqual(res, expected)
@@ -122,14 +122,14 @@ class DjangoNLFListenerMultipleExpressionsTestCase(unittest.TestCase):
                     lookup=Lookup.EQUALS,
                     value="another_value",
                     exclude=False,
-                )
+                ),
             ),
             Expression(
                 field="another_field",
                 lookup=Lookup.EQUALS,
                 value="value",
                 exclude=False,
-            )
+            ),
         )
         res = self.nl_filter.parse(expr)
         self.assertEqual(res, expected)
@@ -157,7 +157,7 @@ class DjangoNLFListenerMultipleExpressionsTestCase(unittest.TestCase):
                     lookup=Lookup.EQUALS,
                     value="value",
                     exclude=False,
-                )
+                ),
             ),
         )
         res = self.nl_filter.parse(expr)
@@ -183,7 +183,7 @@ class DjangoNLFListenerMultipleExpressionsTestCase(unittest.TestCase):
                     lookup=Lookup.EQUALS,
                     value="another_value",
                     exclude=False,
-                )
+                ),
             ),
             CompositeExpression(
                 Operation.AND,
@@ -198,7 +198,7 @@ class DjangoNLFListenerMultipleExpressionsTestCase(unittest.TestCase):
                     lookup=Lookup.EQUALS,
                     value="another_value",
                     exclude=False,
-                )
+                ),
             ),
         )
         res = self.nl_filter.parse(expr)
@@ -232,7 +232,7 @@ class DjangoNLFListenerMultipleExpressionsTestCase(unittest.TestCase):
                         lookup=Lookup.EQUALS,
                         value="value",
                         exclude=False,
-                    )
+                    ),
                 ),
             ),
             Expression(
@@ -240,7 +240,7 @@ class DjangoNLFListenerMultipleExpressionsTestCase(unittest.TestCase):
                 lookup=Lookup.EQUALS,
                 value="another_value",
                 exclude=False,
-            )
+            ),
         )
         res = self.nl_filter.parse(expr)
         self.assertEqual(res, expected)

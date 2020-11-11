@@ -77,6 +77,17 @@ class DjangoNLFListenerSingleExpressionTestCase(unittest.TestCase):
         res = self.nl_filter.parse(expr)
         self.assertEqual(res, expected)
 
+    def test_in_multiple_values(self):
+        expr = 'field in (value, another_value, "quoted value")'
+        expected = Expression(
+            field="field",
+            lookup=Lookup.IN,
+            value='(value, another_value, "quoted value")',
+            exclude=False,
+        )
+        res = self.nl_filter.parse(expr)
+        self.assertEqual(res, expected)
+
     def test_nin(self):
         expr = "field not in value"
         expected = Expression(
