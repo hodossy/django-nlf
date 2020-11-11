@@ -25,10 +25,7 @@ class DjangoNLFilterBackend(BaseFilterBackend):
 
     def to_html(self, request, queryset, view):  # pylint: disable=unused-argument
         template = loader.get_template(self.template)
-        context = {
-            "param": self.filter_param,
-            "expr": self.get_filter_expr(request)
-        }
+        context = {"param": self.filter_param, "expr": self.get_filter_expr(request)}
         return template.render(context, request)
 
     def get_schema_fields(self, view):
