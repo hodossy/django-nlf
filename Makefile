@@ -5,7 +5,7 @@ lint:
 
 .PHONY: test
 test:
-	@python -m unittest discover tests
+	@python runtests.py
 
 
 .PHONY: coverage
