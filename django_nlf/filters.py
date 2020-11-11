@@ -12,12 +12,8 @@ from .utils import coerce_bool, coerce_datetime
 class NLFilterBase:
     language_class = DjangoNLFLanguage
 
-    def __init__(self, expression: str, model: models.Model):
-        self.expression = expression
-        self._model = model
-
-    def get_conditions(self):
-        filter_tree = self.get_language().parse(self.expression)
+    def get_conditions(self, expression):
+        filter_tree = self.get_language().parse(expression)
         return self.build_conditions(filter_tree)
 
     def build_condition(self, expression: Expression):
@@ -40,7 +36,10 @@ class NLFilterBase:
     def get_language(self):
         return self.language_class()
 
-    def normalize_value(self, field, value):
+    def filter(self, queryset, value):
+        raise NotImplementedError(".filter() must be overriden")
+
+    def normalize_value(self, field_name, value):
         raise NotImplementedError(".normalize_value() must be overriden")
 
     def normalize_field_name(self, field_name):
@@ -63,6 +62,10 @@ class DjangoNLFilter(NLFilterBase):
     path_sep = nlf_settings.PATH_SEPARATOR
     empty_val = nlf_settings.EMPTY_VALUE
 
+    def __init__(self):
+        super().__init__()
+        self.opts = None
+
     def follow_field_path(self, opts, path):
         field = opts.get_field(path[0])
 
@@ -82,7 +85,7 @@ class DjangoNLFilter(NLFilterBase):
             return value
 
         parts = field_name.split(LOOKUP_SEP)
-        field = self.follow_field_path(self._model._meta, parts)
+        field = self.follow_field_path(self.opts, parts)
 
         if field.choices:
             for val, display in field.choices:
@@ -112,8 +115,9 @@ class DjangoNLFilter(NLFilterBase):
         orm_lookup = LOOKUP_SEP.join([field, lookup_str]) if lookup_str else field
         return models.Q(**{orm_lookup: value})
 
-    def filter(self, queryset):
-        conditions = self.get_conditions()
+    def filter(self, queryset, value):
+        self.opts = queryset.model._meta  # pylint: disable=protected-access
+        conditions = self.get_conditions(value)
         return queryset.filter(conditions)
 
     def coerce_bool(self, value):

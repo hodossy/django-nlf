@@ -8,6 +8,8 @@ from .models import Article, Publication
 class BaseTestCase(TestCase):
     @classmethod
     def setUpClass(cls):
+        cls.nl_filter = DjangoNLFilter()
+
         cls.p1 = Publication(title="The Python Journal", subscription_fee=1.99, market_share=0.254)
         cls.p1.save()
         cls.p2 = Publication(title="Science News", subscription_fee=0.99, market_share=0.04)
@@ -76,135 +78,115 @@ class BaseTestCase(TestCase):
 class DjangoNLFilterTestCase(BaseTestCase):
     def test_simple_quoted_text_filter(self):
         filter_expr = 'title is "Science News"'
-        publication_filter = DjangoNLFilter(filter_expr, Publication)
-        qs = publication_filter.filter(Publication.objects.all())
+        qs = self.nl_filter.filter(Publication.objects.all(), filter_expr)
         self.assertEqual(qs.first(), self.p2)
 
     def test_simple_text_filter(self):
         filter_expr = "title is like science"
-        publication_filter = DjangoNLFilter(filter_expr, Publication)
-        qs = publication_filter.filter(Publication.objects.all())
+        qs = self.nl_filter.filter(Publication.objects.all(), filter_expr)
         self.assertEqual(qs.count(), 2)
         self.assertListEqual(list(qs.all()), [self.p2, self.p3])
 
     def test_composite_text_filter_or(self):
         filter_expr = "title is like news or title is like journal"
-        publication_filter = DjangoNLFilter(filter_expr, Publication)
-        qs = publication_filter.filter(Publication.objects.all())
+        qs = self.nl_filter.filter(Publication.objects.all(), filter_expr)
         self.assertEqual(qs.count(), 2)
         self.assertListEqual(list(qs.all()), [self.p2, self.p1])
 
     def test_negated_composite_text_filter_and(self):
         filter_expr = "title is like science and title is not like news"
-        publication_filter = DjangoNLFilter(filter_expr, Publication)
-        qs = publication_filter.filter(Publication.objects.all())
+        qs = self.nl_filter.filter(Publication.objects.all(), filter_expr)
         self.assertEqual(qs.count(), 1)
         self.assertEqual(qs.first(), self.p3)
 
     def test_valid_choices_filter(self):
         filter_expr = "category is printed"
-        publication_filter = DjangoNLFilter(filter_expr, Publication)
-        qs = publication_filter.filter(Publication.objects.all())
+        qs = self.nl_filter.filter(Publication.objects.all(), filter_expr)
         self.assertEqual(qs.count(), 1)
         self.assertEqual(qs.first(), self.p3)
 
     def test_invalid_choices_filter(self):
         filter_expr = "category is online"
-        publication_filter = DjangoNLFilter(filter_expr, Publication)
         with self.assertRaises(ValueError):
-            publication_filter.filter(Publication.objects.all())
+            self.nl_filter.filter(Publication.objects.all(), filter_expr)
 
     def test_simple_decimal_filter(self):
         filter_expr = "subscription_fee >= 2.12"
-        publication_filter = DjangoNLFilter(filter_expr, Publication)
-        qs = publication_filter.filter(Publication.objects.all())
+        qs = self.nl_filter.filter(Publication.objects.all(), filter_expr)
         self.assertEqual(qs.count(), 1)
         self.assertEqual(qs.first(), self.p3)
 
     def test_composite_decimal_filter(self):
         filter_expr = "subscription_fee >= 1.12 and subscription_fee < 10"
-        publication_filter = DjangoNLFilter(filter_expr, Publication)
-        qs = publication_filter.filter(Publication.objects.all())
+        qs = self.nl_filter.filter(Publication.objects.all(), filter_expr)
         self.assertEqual(qs.count(), 1)
         self.assertEqual(qs.first(), self.p1)
 
     def test_float_filter(self):
         filter_expr = "market_share >= 0.2"
-        publication_filter = DjangoNLFilter(filter_expr, Publication)
-        qs = publication_filter.filter(Publication.objects.all())
+        qs = self.nl_filter.filter(Publication.objects.all(), filter_expr)
         self.assertEqual(qs.count(), 1)
         self.assertEqual(qs.first(), self.p1)
 
     def test_text_field_filter(self):
         filter_expr = "body is like NASA"
-        publication_filter = DjangoNLFilter(filter_expr, Article)
-        qs = publication_filter.filter(Article.objects.all())
+        qs = self.nl_filter.filter(Article.objects.all(), filter_expr)
         self.assertEqual(qs.count(), 1)
         self.assertEqual(qs.first(), self.a2)
 
     def test_empty_text_filter_01(self):
         filter_expr = 'body is ""'
-        publication_filter = DjangoNLFilter(filter_expr, Article)
-        qs = publication_filter.filter(Article.objects.all())
+        qs = self.nl_filter.filter(Article.objects.all(), filter_expr)
         self.assertEqual(qs.count(), 1)
         self.assertEqual(qs.first(), self.a4)
 
     def test_empty_text_filter_02(self):
         filter_expr = "body is EMPTY"
-        publication_filter = DjangoNLFilter(filter_expr, Article)
-        qs = publication_filter.filter(Article.objects.all())
+        qs = self.nl_filter.filter(Article.objects.all(), filter_expr)
         self.assertEqual(qs.count(), 1)
         self.assertEqual(qs.first(), self.a3)
 
     def test_date_filter(self):
         filter_expr = "created_at > 2016-05-01"
-        publication_filter = DjangoNLFilter(filter_expr, Article)
-        qs = publication_filter.filter(Article.objects.all())
+        qs = self.nl_filter.filter(Article.objects.all(), filter_expr)
         self.assertEqual(qs.count(), 1)
         self.assertEqual(qs.first(), self.a4)
 
     def test_integer_filter(self):
         filter_expr = "views > 10000"
-        publication_filter = DjangoNLFilter(filter_expr, Article)
-        qs = publication_filter.filter(Article.objects.all())
+        qs = self.nl_filter.filter(Article.objects.all(), filter_expr)
         self.assertEqual(qs.count(), 1)
         self.assertEqual(qs.first(), self.a1)
 
     def test_boolean_filter_true(self):
         filter_expr = "archived is true"
-        publication_filter = DjangoNLFilter(filter_expr, Article)
-        qs = publication_filter.filter(Article.objects.all())
+        qs = self.nl_filter.filter(Article.objects.all(), filter_expr)
         self.assertEqual(qs.count(), 1)
         self.assertEqual(qs.first(), self.a3)
 
     def test_boolean_filter_false(self):
         filter_expr = "archived is false"
-        publication_filter = DjangoNLFilter(filter_expr, Article)
-        qs = publication_filter.filter(Article.objects.all())
+        qs = self.nl_filter.filter(Article.objects.all(), filter_expr)
         self.assertEqual(qs.count(), 3)
 
     def test_foreignkey_filter_01(self):
         filter_expr = "author.is_active is false"
-        publication_filter = DjangoNLFilter(filter_expr, Article)
-        qs = publication_filter.filter(Article.objects.all())
+        qs = self.nl_filter.filter(Article.objects.all(), filter_expr)
         self.assertEqual(qs.count(), 0)
 
     def test_foreignkey_filter_02(self):
         filter_expr = "author.username is jfields"
-        publication_filter = DjangoNLFilter(filter_expr, Article)
-        qs = publication_filter.filter(Article.objects.all())
+        qs = self.nl_filter.filter(Article.objects.all(), filter_expr)
         self.assertEqual(qs.count(), 1)
 
     def test_forward_many_to_many_filter(self):
         filter_expr = "publications.title is like science"
-        publication_filter = DjangoNLFilter(filter_expr, Article)
-        qs = publication_filter.filter(Article.objects.all())
+        qs = self.nl_filter.filter(Article.objects.all(), filter_expr)
         self.assertEqual(qs.count(), 2)
         self.assertListEqual(list(qs.all()), [self.a2, self.a3])
 
     def test_backward_many_to_many_filter(self):
         filter_expr = "articles.views > 10000 or articles.views < 5000"
-        publication_filter = DjangoNLFilter(filter_expr, Publication)
-        qs = publication_filter.filter(Publication.objects.all())
+        qs = self.nl_filter.filter(Publication.objects.all(), filter_expr)
         self.assertEqual(qs.count(), 2)
         self.assertListEqual(list(qs.all()), [self.p2, self.p1])
