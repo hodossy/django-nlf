@@ -35,6 +35,6 @@ jobs:
         TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
         TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
       run: |
-        sed -i -E s/"(__version__ = ).*"/"\1'${{ steps.get-version.outputs.version }}'"/g django_nlf/__init__.py
+        sed -i -E s/"(__version__ = ).*"/"\1\"${{ steps.get-version.outputs.version }}\""/g django_nlf/__init__.py
         python setup.py sdist bdist_wheel
         twine upload dist/*

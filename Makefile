@@ -1,6 +1,12 @@
 .PHONY: lint
 lint:
+	@python -m black --check django_nlf tests
 	@python -m pylint django_nlf
+
+
+.PHONY: format
+format:
+	@python -m black django_nlf tests
 
 
 .PHONY: test
@@ -10,7 +16,7 @@ test:
 
 .PHONY: coverage
 coverage:
-	@python -m coverage run --branch --module unittest discover tests
+	@python -m coverage run --branch runtests.py
 	@python -m coverage report --show-missing --include "**/django_nlf/**"
 
 
@@ -23,3 +29,7 @@ docs:
 publish:
 	@python setup.py sdist bdist_wheel
 	@twine upload dist/*
+
+.PHONY: lang
+lang:
+	@$(MAKE) -C ./django_nlf/antlr

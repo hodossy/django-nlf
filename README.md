@@ -14,23 +14,23 @@ pip install django-nlf
 
 Then you can use the `DjangoNLFilter` with a queryset and a string, containing the filter expression. Please see the [Language Reference]() for more details.
 
-```
-  from django_nlf import DjangoNLFilter
-  from .models import Article
+```python
+from django_nlf import DjangoNLFilter
+from .models import Article
 
-  nl_filter = DjangoNLFilter()
-  qs = Article.objects.all()
-  q = 'author.username is john or title ~ news'
-  # equivalent to Article.objects.filter(Q(author__username="user") | Q(title__icontains="news"))
-  articles = nl_filter.filter(qs, q)
+nl_filter = DjangoNLFilter()
+qs = Article.objects.all()
+q = 'author.username is john or title ~ news'
+# equivalent to Article.objects.filter(Q(author__username="user") | Q(title__icontains="news"))
+articles = nl_filter.filter(qs, q)
 
-  # Nested logical operators are also supported:
-  q = 'author.username is john and (title ~ news or created_at <= 2020-06-05)'
-  # equivalent to
-  # Article.objects.filter(
-  #   Q(author__username="user") & (Q(title__icontains="news") | Q(created_at__lte="2020-06-05"))
-  # )
-  articles = nl_filter.filter(qs, q)
+# Nested logical operators are also supported:
+q = 'author.username is john and (title ~ news or created_at <= 2020-06-05)'
+# equivalent to
+# Article.objects.filter(
+#   Q(author__username="user") & (Q(title__icontains="news") | Q(created_at__lte="2020-06-05"))
+# )
+articles = nl_filter.filter(qs, q)
 ```
 
 ## Rest framework integration
