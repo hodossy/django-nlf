@@ -13,6 +13,7 @@
 # import os
 # import sys
 # sys.path.insert(0, os.path.abspath('.'))
+import sphinx_rtd_theme
 
 
 # -- Project information -----------------------------------------------------
@@ -30,7 +31,10 @@ author = 'Hodossy, Szabolcs'
 extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.intersphinx',
+    'sphinx_rtd_theme'
 ]
+
+html_theme = 'sphinx_rtd_theme'
 
 # Add any inventories here that are referenced.
 intersphinx_mapping = {

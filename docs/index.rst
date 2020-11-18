@@ -6,7 +6,7 @@
 Welcome to Django Natural Language Filter's documentation!
 ==========================================================
 
-Django NLF provides a simple and easy way to filter :class:`QuerySets <django.db.models.QuerySet>`. This natural language approach enables building nested complex queries quickly for your users, which are otherwise cumbersome with other libraries.
+Django NLF provides a simple and easy way to filter :class:`QuerySets <django:django.db.models.QuerySet>`. This natural language approach enables building nested complex queries quickly for your users, which are otherwise cumbersome with other libraries.
 
 .. warning::
 
@@ -61,11 +61,12 @@ You just need to simply add the natural language filter backend to your filter b
 
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
    :caption: Contents:
    :hidden:
+   :titlesonly:
 
-   language.rst
+   language/index.rst
    configuration.rst
 
 

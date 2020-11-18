@@ -20,6 +20,7 @@ def start_of_week(*args, **kwargs):  # pylint: disable=unused-argument
 def start_of_month(*args, **kwargs):  # pylint: disable=unused-argument
     """
         Determines the first day of the current month. Time is set to `00:00:00`.
+
         :returns: A datetime object set to 00:00 on the first day of the current month.
         :rtype: :class:`datetime <python:datetime.datetime>`
     """

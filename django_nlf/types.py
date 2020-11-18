@@ -4,6 +4,7 @@ from enum import Enum, auto
 
 
 class Lookup(Enum):
+    """Enumeration of supported lookups"""
     EQUALS = auto()
     CONTAINS = auto()
     REGEX = auto()

@@ -12,6 +12,8 @@ Default: ``"q"``
 
 This applies to the Django RESTFramework Backend. This parameter is used for extracting the filter expression from the ``GET`` query parameters.
 
+.. _path-separator:
+
 NLF_PATH_SEPARATOR
 ******************
 
