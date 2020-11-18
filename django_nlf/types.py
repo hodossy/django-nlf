@@ -1,21 +1,22 @@
 import typing
 from dataclasses import dataclass
-from enum import Enum
+from enum import Enum, auto
 
 
 class Lookup(Enum):
-    EQUALS = 0
-    LIKE = 1
-    IN = 2
-    GT = 3
-    GTE = 4
-    LT = 5
-    LTE = 6
+    EQUALS = auto()
+    CONTAINS = auto()
+    REGEX = auto()
+    IN = auto()
+    GT = auto()
+    GTE = auto()
+    LT = auto()
+    LTE = auto()
 
 
 class Operation(Enum):
-    AND = 0
-    OR = 1
+    AND = auto()
+    OR = auto()
 
 
 @dataclass(eq=True)
@@ -30,3 +31,8 @@ class CompositeExpression(typing.NamedTuple):
     op: Operation
     left: typing.Union[Expression, "CompositeExpression"]
     right: typing.Union[Expression, "CompositeExpression"]
+
+
+class CustomFunction(typing.NamedTuple):
+    name: str
+    args: typing.Iterable[str]
