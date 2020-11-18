@@ -60,7 +60,7 @@ class BaseTestCase(TestCase):
         cls.a4 = Article(
             headline="NASA finds intelligent life on Earth",
             body="",
-            created_at="2017-02-24T10:44:10.234",
+            created_at="2117-02-24T10:44:10.234",
             author=cls.author2,
         )
         cls.a4.save()
@@ -71,11 +71,12 @@ class BaseTestCase(TestCase):
 
     @classmethod
     def tearDownClass(cls):
+        User.objects.all().delete()
         Article.objects.all().delete()
         Publication.objects.all().delete()
 
 
-class DjangoNLFilterTestCase(BaseTestCase):
+class DjangoNLFilterSimpleTestCase(BaseTestCase):
     def test_simple_quoted_text_filter(self):
         filter_expr = 'title is "Science News"'
         qs = self.nl_filter.filter(Publication.objects.all(), filter_expr)
@@ -201,3 +202,11 @@ class DjangoNLFilterTestCase(BaseTestCase):
         qs = self.nl_filter.filter(Publication.objects.all(), filter_expr)
         self.assertEqual(qs.count(), 2)
         self.assertListEqual(list(qs.all()), [self.p2, self.p1])
+
+
+class DjangoNLFilterFunctionsTestCase(BaseTestCase):
+    def test_a_date_function(self):
+        filter_expr = "created_at > startOfWeek()"
+        qs = self.nl_filter.filter(Article.objects.all(), filter_expr)
+        self.assertEqual(qs.count(), 1)
+        self.assertListEqual(list(qs.all()), [self.a4])
