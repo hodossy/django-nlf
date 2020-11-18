@@ -1,6 +1,13 @@
 import unittest
 
-from django_nlf import DjangoNLFLanguage, Lookup, Operation, Expression, CompositeExpression
+from django_nlf import (
+    DjangoNLFLanguage,
+    Lookup,
+    Operation,
+    Expression,
+    CompositeExpression,
+    CustomFunction,
+)
 
 
 class DjangoNLFListenerMultipleExpressionsTestCase(unittest.TestCase):
@@ -241,6 +248,42 @@ class DjangoNLFListenerMultipleExpressionsTestCase(unittest.TestCase):
                 value="another_value",
                 exclude=False,
             ),
+        )
+        res = self.nl_filter.parse(expr)
+        self.assertEqual(res, expected)
+
+    def test_four_exprs_with_function_and_boolean_expr(self):
+        expr = (
+            "field is value or field matches function(multiple, params) and "
+            'is not archived or anotherFunction("quoted param")'
+        )
+        expected = CompositeExpression(
+            Operation.OR,
+            CompositeExpression(
+                Operation.OR,
+                Expression(
+                    field="field",
+                    lookup=Lookup.EQUALS,
+                    value="value",
+                    exclude=False,
+                ),
+                CompositeExpression(
+                    Operation.AND,
+                    Expression(
+                        field="field",
+                        lookup=Lookup.REGEX,
+                        value=CustomFunction("function", ["multiple", "params"]),
+                        exclude=False,
+                    ),
+                    Expression(
+                        field="archived",
+                        lookup=Lookup.EQUALS,
+                        value=False,
+                        exclude=False,
+                    ),
+                ),
+            ),
+            CustomFunction("anotherFunction", ["quoted param"]),
         )
         res = self.nl_filter.parse(expr)
         self.assertEqual(res, expected)

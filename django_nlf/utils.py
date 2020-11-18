@@ -1,12 +1,10 @@
-import warnings
-
-
-def deprecate(msg, level_modifier=0):
-    warnings.warn(msg, DeprecationWarning, stacklevel=3 + level_modifier)
+from .conf import nlf_settings
 
 
 def coerce_bool(value):
-    return value.lower()[0] == "t"
+    if isinstance(value, str):
+        return value[0].lower() not in nlf_settings.FALSE_VALUES
+    return value
 
 
 def coerce_datetime(value):

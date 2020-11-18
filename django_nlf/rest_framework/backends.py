@@ -2,7 +2,7 @@ from django.template import loader
 from rest_framework.filters import BaseFilterBackend
 from rest_framework import compat
 
-from ..conf import settings as nlf_settings
+from ..conf import nlf_settings
 from ..filters import DjangoNLFilter
 
 

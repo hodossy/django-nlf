@@ -1,17 +1,22 @@
+import warnings
+
 from django.conf import settings as dj_settings
 from django.core.signals import setting_changed
-from django.utils.translation import gettext_lazy as _
 
-from .utils import deprecate
 
 DEFAULTS = {
     "QUERY_PARAM": "q",
     "PATH_SEPARATOR": ".",
     "EMPTY_VALUE": "EMPTY",
+    "FALSE_VALUES": ("0", "f"),
 }
 
 
 DEPRECATED_SETTINGS = []
+
+
+def deprecate(msg, level_modifier=0):
+    warnings.warn(msg, DeprecationWarning, stacklevel=3 + level_modifier)
 
 
 def is_callable(value):
@@ -35,10 +40,10 @@ class Settings:
         return value
 
     def get_setting(self, setting):
-        django_setting = "NLF_%s" % setting
+        django_setting = f"NLF_{setting}"
 
         if setting in DEPRECATED_SETTINGS and hasattr(dj_settings, django_setting):
-            deprecate("The '%s' setting has been deprecated." % django_setting)
+            deprecate(f"The '{django_setting}' setting has been deprecated.")
 
         return getattr(dj_settings, django_setting, DEFAULTS[setting])
 
@@ -58,5 +63,5 @@ class Settings:
             delattr(self, setting)
 
 
-settings = Settings()
-setting_changed.connect(settings.change_setting)
+nlf_settings = Settings()
+setting_changed.connect(nlf_settings.change_setting)

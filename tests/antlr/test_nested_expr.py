@@ -1,6 +1,13 @@
 import unittest
 
-from django_nlf import DjangoNLFLanguage, Lookup, Operation, Expression, CompositeExpression
+from django_nlf import (
+    DjangoNLFLanguage,
+    Lookup,
+    Operation,
+    Expression,
+    CompositeExpression,
+    CustomFunction,
+)
 
 
 class DjangoNLFListenerNestedExpressionsTestCase(unittest.TestCase):
@@ -264,6 +271,61 @@ class DjangoNLFListenerNestedExpressionsTestCase(unittest.TestCase):
                         value="empty",
                         exclude=False,
                     ),
+                ),
+            ),
+        )
+        res = self.nl_filter.parse(expr)
+        self.assertEqual(res, expected)
+
+    def test_three_nested_with_function_and_boolean_expr(self):
+        expr = (
+            "(field is value and is not archived) or "
+            "(field is another_value and another_field >= startOfWeek()) and "
+            "(yet_another_field is value and hasChildren())"
+        )
+        expected = CompositeExpression(
+            Operation.OR,
+            CompositeExpression(
+                Operation.AND,
+                Expression(
+                    field="field",
+                    lookup=Lookup.EQUALS,
+                    value="value",
+                    exclude=False,
+                ),
+                Expression(
+                    field="archived",
+                    lookup=Lookup.EQUALS,
+                    value=False,
+                    exclude=False,
+                ),
+            ),
+            CompositeExpression(
+                Operation.AND,
+                CompositeExpression(
+                    Operation.AND,
+                    Expression(
+                        field="field",
+                        lookup=Lookup.EQUALS,
+                        value="another_value",
+                        exclude=False,
+                    ),
+                    Expression(
+                        field="another_field",
+                        lookup=Lookup.GTE,
+                        value=CustomFunction("startOfWeek", []),
+                        exclude=False,
+                    ),
+                ),
+                CompositeExpression(
+                    Operation.AND,
+                    Expression(
+                        field="yet_another_field",
+                        lookup=Lookup.EQUALS,
+                        value="value",
+                        exclude=False,
+                    ),
+                    CustomFunction("hasChildren", []),
                 ),
             ),
         )

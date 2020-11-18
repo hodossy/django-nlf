@@ -82,19 +82,19 @@ class DjangoNLFilterTestCase(BaseTestCase):
         self.assertEqual(qs.first(), self.p2)
 
     def test_simple_text_filter(self):
-        filter_expr = "title is like science"
+        filter_expr = "title contains science"
         qs = self.nl_filter.filter(Publication.objects.all(), filter_expr)
         self.assertEqual(qs.count(), 2)
         self.assertListEqual(list(qs.all()), [self.p2, self.p3])
 
     def test_composite_text_filter_or(self):
-        filter_expr = "title is like news or title is like journal"
+        filter_expr = "title contains news or title contains journal"
         qs = self.nl_filter.filter(Publication.objects.all(), filter_expr)
         self.assertEqual(qs.count(), 2)
         self.assertListEqual(list(qs.all()), [self.p2, self.p1])
 
     def test_negated_composite_text_filter_and(self):
-        filter_expr = "title is like science and title is not like news"
+        filter_expr = "title contains science and title does not contain news"
         qs = self.nl_filter.filter(Publication.objects.all(), filter_expr)
         self.assertEqual(qs.count(), 1)
         self.assertEqual(qs.first(), self.p3)
@@ -129,7 +129,7 @@ class DjangoNLFilterTestCase(BaseTestCase):
         self.assertEqual(qs.first(), self.p1)
 
     def test_text_field_filter(self):
-        filter_expr = "body is like NASA"
+        filter_expr = "body contains NASA"
         qs = self.nl_filter.filter(Article.objects.all(), filter_expr)
         self.assertEqual(qs.count(), 1)
         self.assertEqual(qs.first(), self.a2)
@@ -169,6 +169,17 @@ class DjangoNLFilterTestCase(BaseTestCase):
         qs = self.nl_filter.filter(Article.objects.all(), filter_expr)
         self.assertEqual(qs.count(), 3)
 
+    def test_boolean_filter_true_alt(self):
+        filter_expr = "is archived"
+        qs = self.nl_filter.filter(Article.objects.all(), filter_expr)
+        self.assertEqual(qs.count(), 1)
+        self.assertEqual(qs.first(), self.a3)
+
+    def test_boolean_filter_false_alt(self):
+        filter_expr = "is not archived"
+        qs = self.nl_filter.filter(Article.objects.all(), filter_expr)
+        self.assertEqual(qs.count(), 3)
+
     def test_foreignkey_filter_01(self):
         filter_expr = "author.is_active is false"
         qs = self.nl_filter.filter(Article.objects.all(), filter_expr)
@@ -180,7 +191,7 @@ class DjangoNLFilterTestCase(BaseTestCase):
         self.assertEqual(qs.count(), 1)
 
     def test_forward_many_to_many_filter(self):
-        filter_expr = "publications.title is like science"
+        filter_expr = "publications.title contains science"
         qs = self.nl_filter.filter(Article.objects.all(), filter_expr)
         self.assertEqual(qs.count(), 2)
         self.assertListEqual(list(qs.all()), [self.a2, self.a3])

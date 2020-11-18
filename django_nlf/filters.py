@@ -4,7 +4,7 @@ from django.db import models
 from django.db.models.constants import LOOKUP_SEP
 
 from .antlr import DjangoNLFLanguage
-from .conf import settings as nlf_settings
+from .conf import nlf_settings
 from .types import Expression, CompositeExpression, Operation, Lookup
 from .utils import coerce_bool, coerce_datetime
 
@@ -52,7 +52,8 @@ class NLFilterBase:
 class DjangoNLFilter(NLFilterBase):
     lookups = {
         Lookup.EQUALS: "iexact",
-        Lookup.LIKE: "icontains",
+        Lookup.CONTAINS: "icontains",
+        Lookup.REGEX: "iregex",
         Lookup.IN: "in",
         Lookup.GT: "gt",
         Lookup.GTE: "gte",
