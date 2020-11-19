@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from django.test import TestCase
 
-from django_nlf.filters import DjangoNLFilter
+from django_nlf.filters.django import DjangoNLFilter
 from .models import Article, Publication
 
 
