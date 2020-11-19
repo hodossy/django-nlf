@@ -24,6 +24,7 @@ class DjangoNLFilter(NLFilterBase):
 
     def __init__(self):
         super().__init__()
+        self.distinct = False
         self.model = None
         self.opts = None
 
@@ -33,6 +34,10 @@ class DjangoNLFilter(NLFilterBase):
         if hasattr(field, "get_path_info"):
             # This field is a relation, update opts to follow the relation
             path_info = field.get_path_info()
+
+            if any(path.m2m for path in path_info):
+                self.distinct = True
+
             opts = path_info[-1].to_opts
             return self.follow_field_path(opts, path[1:])
 
@@ -86,8 +91,14 @@ class DjangoNLFilter(NLFilterBase):
     def filter(self, queryset: models.QuerySet, value):
         self.model = queryset.model
         self.opts = queryset.model._meta  # pylint: disable=protected-access
+
         conditions = self.get_conditions(value)
-        return queryset.filter(conditions)
+        queryset = queryset.filter(conditions)
+
+        if self.distinct:
+            queryset = queryset.distinct()
+
+        return  queryset
 
     def coerce_bool(self, value):
         return coerce_bool(value)
