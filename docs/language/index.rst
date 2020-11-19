@@ -61,9 +61,9 @@ You can group these expressions as well:
 
     "title contains science and (author is john or published > 2020-01-01)"
 
-  .. warning::
+  .. note::
 
-    Currently one level of grouping is possible, i.e. one cannot have a grouped expression in a group.
+    You can nest these groups as you like.
 
 Advanced Use
 ------------

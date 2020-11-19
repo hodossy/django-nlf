@@ -24,34 +24,36 @@ from antlr4 import (
 def serializedATN():
     with StringIO() as buf:
         buf.write("\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\31")
-        buf.write("T\4\2\t\2\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b")
+        buf.write("Y\4\2\t\2\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b")
         buf.write("\t\b\4\t\t\t\3\2\5\2\24\n\2\3\2\3\2\5\2\30\n\2\3\3\5\3")
         buf.write("\33\n\3\3\3\3\3\6\3\37\n\3\r\3\16\3 \3\3\3\3\3\4\5\4&")
         buf.write("\n\4\3\4\3\4\5\4*\n\4\3\5\3\5\3\5\3\5\3\5\3\5\5\5\62\n")
-        buf.write("\5\3\6\3\6\3\6\3\6\7\68\n\6\f\6\16\6;\13\6\3\7\3\7\3\7")
-        buf.write("\3\7\3\b\3\b\5\bC\n\b\3\b\3\b\3\b\5\bH\n\b\7\bJ\n\b\f")
-        buf.write("\b\16\bM\13\b\3\t\5\tP\n\t\3\t\3\t\3\t\2\2\n\2\4\6\b\n")
-        buf.write("\f\16\20\2\6\3\2\17\21\3\2\3\4\3\2\3\16\3\2\26\31\2X\2")
-        buf.write("\23\3\2\2\2\4\32\3\2\2\2\6%\3\2\2\2\b\61\3\2\2\2\n\63")
-        buf.write("\3\2\2\2\f<\3\2\2\2\16B\3\2\2\2\20O\3\2\2\2\22\24\7\24")
-        buf.write("\2\2\23\22\3\2\2\2\23\24\3\2\2\2\24\25\3\2\2\2\25\27\t")
-        buf.write("\2\2\2\26\30\7\24\2\2\27\26\3\2\2\2\27\30\3\2\2\2\30\3")
-        buf.write("\3\2\2\2\31\33\7\24\2\2\32\31\3\2\2\2\32\33\3\2\2\2\33")
-        buf.write("\34\3\2\2\2\34\36\t\3\2\2\35\37\7\24\2\2\36\35\3\2\2\2")
-        buf.write('\37 \3\2\2\2 \36\3\2\2\2 !\3\2\2\2!"\3\2\2\2"#\7\26')
-        buf.write("\2\2#\5\3\2\2\2$&\7\24\2\2%$\3\2\2\2%&\3\2\2\2&'\3\2")
-        buf.write("\2\2')\t\4\2\2(*\7\24\2\2)(\3\2\2\2)*\3\2\2\2*\7\3\2")
-        buf.write("\2\2+\62\7\31\2\2,\62\5\4\3\2-.\7\26\2\2./\5\6\4\2/\60")
-        buf.write("\t\5\2\2\60\62\3\2\2\2\61+\3\2\2\2\61,\3\2\2\2\61-\3\2")
-        buf.write("\2\2\62\t\3\2\2\2\639\5\b\5\2\64\65\5\2\2\2\65\66\5\b")
-        buf.write("\5\2\668\3\2\2\2\67\64\3\2\2\28;\3\2\2\29\67\3\2\2\29")
-        buf.write(":\3\2\2\2:\13\3\2\2\2;9\3\2\2\2<=\7\22\2\2=>\5\n\6\2>")
-        buf.write("?\7\23\2\2?\r\3\2\2\2@C\5\n\6\2AC\5\f\7\2B@\3\2\2\2BA")
-        buf.write("\3\2\2\2CK\3\2\2\2DG\5\2\2\2EH\5\n\6\2FH\5\f\7\2GE\3\2")
-        buf.write("\2\2GF\3\2\2\2HJ\3\2\2\2ID\3\2\2\2JM\3\2\2\2KI\3\2\2\2")
-        buf.write("KL\3\2\2\2L\17\3\2\2\2MK\3\2\2\2NP\5\16\b\2ON\3\2\2\2")
-        buf.write("OP\3\2\2\2PQ\3\2\2\2QR\7\2\2\3R\21\3\2\2\2\16\23\27\32")
-        buf.write(" %)\619BGKO")
+        buf.write("\5\3\6\3\6\5\6\66\n\6\3\6\3\6\3\6\5\6;\n\6\7\6=\n\6\f")
+        buf.write("\6\16\6@\13\6\3\7\3\7\3\7\3\7\3\b\3\b\5\bH\n\b\3\b\3\b")
+        buf.write("\3\b\5\bM\n\b\7\bO\n\b\f\b\16\bR\13\b\3\t\5\tU\n\t\3\t")
+        buf.write("\3\t\3\t\2\2\n\2\4\6\b\n\f\16\20\2\6\3\2\17\21\3\2\3\4")
+        buf.write("\3\2\3\16\3\2\26\31\2_\2\23\3\2\2\2\4\32\3\2\2\2\6%\3")
+        buf.write("\2\2\2\b\61\3\2\2\2\n\65\3\2\2\2\fA\3\2\2\2\16G\3\2\2")
+        buf.write("\2\20T\3\2\2\2\22\24\7\24\2\2\23\22\3\2\2\2\23\24\3\2")
+        buf.write("\2\2\24\25\3\2\2\2\25\27\t\2\2\2\26\30\7\24\2\2\27\26")
+        buf.write("\3\2\2\2\27\30\3\2\2\2\30\3\3\2\2\2\31\33\7\24\2\2\32")
+        buf.write("\31\3\2\2\2\32\33\3\2\2\2\33\34\3\2\2\2\34\36\t\3\2\2")
+        buf.write("\35\37\7\24\2\2\36\35\3\2\2\2\37 \3\2\2\2 \36\3\2\2\2")
+        buf.write(' !\3\2\2\2!"\3\2\2\2"#\7\26\2\2#\5\3\2\2\2$&\7\24\2')
+        buf.write("\2%$\3\2\2\2%&\3\2\2\2&'\3\2\2\2')\t\4\2\2(*\7\24\2")
+        buf.write("\2)(\3\2\2\2)*\3\2\2\2*\7\3\2\2\2+\62\7\31\2\2,\62\5\4")
+        buf.write("\3\2-.\7\26\2\2./\5\6\4\2/\60\t\5\2\2\60\62\3\2\2\2\61")
+        buf.write("+\3\2\2\2\61,\3\2\2\2\61-\3\2\2\2\62\t\3\2\2\2\63\66\5")
+        buf.write("\b\5\2\64\66\5\f\7\2\65\63\3\2\2\2\65\64\3\2\2\2\66>\3")
+        buf.write("\2\2\2\67:\5\2\2\28;\5\b\5\29;\5\f\7\2:8\3\2\2\2:9\3\2")
+        buf.write("\2\2;=\3\2\2\2<\67\3\2\2\2=@\3\2\2\2><\3\2\2\2>?\3\2\2")
+        buf.write("\2?\13\3\2\2\2@>\3\2\2\2AB\7\22\2\2BC\5\n\6\2CD\7\23\2")
+        buf.write("\2D\r\3\2\2\2EH\5\n\6\2FH\5\f\7\2GE\3\2\2\2GF\3\2\2\2")
+        buf.write("HP\3\2\2\2IL\5\2\2\2JM\5\n\6\2KM\5\f\7\2LJ\3\2\2\2LK\3")
+        buf.write("\2\2\2MO\3\2\2\2NI\3\2\2\2OR\3\2\2\2PN\3\2\2\2PQ\3\2\2")
+        buf.write("\2Q\17\3\2\2\2RP\3\2\2\2SU\5\16\b\2TS\3\2\2\2TU\3\2\2")
+        buf.write("\2UV\3\2\2\2VW\7\2\2\3W\21\3\2\2\2\20\23\27\32 %)\61\65")
+        buf.write(":>GLPT")
         return buf.getvalue()
 
 
@@ -548,6 +550,12 @@ class DjangoNLFParser(Parser):
 
             return self.getTypedRuleContext(DjangoNLFParser.ExpressionContext, i)
 
+        def nested_comp_expr(self, i: int = None):
+            if i is None:
+                return self.getTypedRuleContexts(DjangoNLFParser.Nested_comp_exprContext)
+
+            return self.getTypedRuleContext(DjangoNLFParser.Nested_comp_exprContext, i)
+
         def operator(self, i: int = None):
             if i is None:
                 return self.getTypedRuleContexts(DjangoNLFParser.OperatorContext)
@@ -571,20 +579,52 @@ class DjangoNLFParser(Parser):
         self.enterRule(localctx, 8, self.RULE_composite_expr)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 49
-            self.expression()
-            self.state = 55
+            self.state = 51
             self._errHandler.sync(self)
-            _alt = self._interp.adaptivePredict(self._input, 7, self._ctx)
+            token = self._input.LA(1)
+            if token in [
+                DjangoNLFParser.EQUALS,
+                DjangoNLFParser.NEQUALS,
+                DjangoNLFParser.WHITESPACE,
+                DjangoNLFParser.TEXT,
+                DjangoNLFParser.FUNCTION,
+            ]:
+                self.state = 49
+                self.expression()
+            elif token in [DjangoNLFParser.OPEN_PAREN]:
+                self.state = 50
+                self.nested_comp_expr()
+            else:
+                raise NoViableAltException(self)
+
+            self.state = 60
+            self._errHandler.sync(self)
+            _alt = self._interp.adaptivePredict(self._input, 9, self._ctx)
             while _alt not in (2, ATN.INVALID_ALT_NUMBER):
                 if _alt == 1:
-                    self.state = 50
+                    self.state = 53
                     self.operator()
-                    self.state = 51
-                    self.expression()
-                self.state = 57
+                    self.state = 56
+                    self._errHandler.sync(self)
+                    token = self._input.LA(1)
+                    if token in [
+                        DjangoNLFParser.EQUALS,
+                        DjangoNLFParser.NEQUALS,
+                        DjangoNLFParser.WHITESPACE,
+                        DjangoNLFParser.TEXT,
+                        DjangoNLFParser.FUNCTION,
+                    ]:
+                        self.state = 54
+                        self.expression()
+                    elif token in [DjangoNLFParser.OPEN_PAREN]:
+                        self.state = 55
+                        self.nested_comp_expr()
+                    else:
+                        raise NoViableAltException(self)
+
+                self.state = 62
                 self._errHandler.sync(self)
-                _alt = self._interp.adaptivePredict(self._input, 7, self._ctx)
+                _alt = self._interp.adaptivePredict(self._input, 9, self._ctx)
 
         except RecognitionException as re:
             localctx.exception = re
@@ -625,11 +665,11 @@ class DjangoNLFParser(Parser):
         self.enterRule(localctx, 10, self.RULE_nested_comp_expr)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 58
+            self.state = 63
             self.match(DjangoNLFParser.OPEN_PAREN)
-            self.state = 59
+            self.state = 64
             self.composite_expr()
-            self.state = 60
+            self.state = 65
             self.match(DjangoNLFParser.CLOSE_PAREN)
         except RecognitionException as re:
             localctx.exception = re
@@ -680,25 +720,18 @@ class DjangoNLFParser(Parser):
         self._la = 0  # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 64
+            self.state = 69
             self._errHandler.sync(self)
-            token = self._input.LA(1)
-            if token in [
-                DjangoNLFParser.EQUALS,
-                DjangoNLFParser.NEQUALS,
-                DjangoNLFParser.WHITESPACE,
-                DjangoNLFParser.TEXT,
-                DjangoNLFParser.FUNCTION,
-            ]:
-                self.state = 62
+            la_ = self._interp.adaptivePredict(self._input, 10, self._ctx)
+            if la_ == 1:
+                self.state = 67
                 self.composite_expr()
-            elif token in [DjangoNLFParser.OPEN_PAREN]:
-                self.state = 63
-                self.nested_comp_expr()
-            else:
-                raise NoViableAltException(self)
 
-            self.state = 73
+            elif la_ == 2:
+                self.state = 68
+                self.nested_comp_expr()
+
+            self.state = 78
             self._errHandler.sync(self)
             _la = self._input.LA(1)
             while ((_la) & ~0x3F) == 0 and (
@@ -710,27 +743,20 @@ class DjangoNLFParser(Parser):
                     | (1 << DjangoNLFParser.WHITESPACE)
                 )
             ) != 0:
-                self.state = 66
+                self.state = 71
                 self.operator()
-                self.state = 69
+                self.state = 74
                 self._errHandler.sync(self)
-                token = self._input.LA(1)
-                if token in [
-                    DjangoNLFParser.EQUALS,
-                    DjangoNLFParser.NEQUALS,
-                    DjangoNLFParser.WHITESPACE,
-                    DjangoNLFParser.TEXT,
-                    DjangoNLFParser.FUNCTION,
-                ]:
-                    self.state = 67
+                la_ = self._interp.adaptivePredict(self._input, 11, self._ctx)
+                if la_ == 1:
+                    self.state = 72
                     self.composite_expr()
-                elif token in [DjangoNLFParser.OPEN_PAREN]:
-                    self.state = 68
-                    self.nested_comp_expr()
-                else:
-                    raise NoViableAltException(self)
 
-                self.state = 75
+                elif la_ == 2:
+                    self.state = 73
+                    self.nested_comp_expr()
+
+                self.state = 80
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
 
@@ -771,7 +797,7 @@ class DjangoNLFParser(Parser):
         self._la = 0  # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 77
+            self.state = 82
             self._errHandler.sync(self)
             _la = self._input.LA(1)
             if ((_la) & ~0x3F) == 0 and (
@@ -785,10 +811,10 @@ class DjangoNLFParser(Parser):
                     | (1 << DjangoNLFParser.FUNCTION)
                 )
             ) != 0:
-                self.state = 76
+                self.state = 81
                 self.filter_expr()
 
-            self.state = 79
+            self.state = 84
             self.match(DjangoNLFParser.EOF)
         except RecognitionException as re:
             localctx.exception = re

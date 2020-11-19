@@ -277,6 +277,66 @@ class DjangoNLFListenerNestedExpressionsTestCase(unittest.TestCase):
         res = self.nl_filter.parse(expr)
         self.assertEqual(res, expected)
 
+    def test_three_nested_deeply_with_precedence(self):
+        expr = (
+            "(field is value and another_field equals another_value) and "
+            "((field is another_value and another_field is value) or "
+            "(yet_another_field is value and some_other_field is empty))"
+        )
+        expected = CompositeExpression(
+            Operation.AND,
+            CompositeExpression(
+                Operation.AND,
+                Expression(
+                    field="field",
+                    lookup=Lookup.EQUALS,
+                    value="value",
+                    exclude=False,
+                ),
+                Expression(
+                    field="another_field",
+                    lookup=Lookup.EQUALS,
+                    value="another_value",
+                    exclude=False,
+                ),
+            ),
+            CompositeExpression(
+                Operation.OR,
+                CompositeExpression(
+                    Operation.AND,
+                    Expression(
+                        field="field",
+                        lookup=Lookup.EQUALS,
+                        value="another_value",
+                        exclude=False,
+                    ),
+                    Expression(
+                        field="another_field",
+                        lookup=Lookup.EQUALS,
+                        value="value",
+                        exclude=False,
+                    ),
+                ),
+                CompositeExpression(
+                    Operation.AND,
+                    Expression(
+                        field="yet_another_field",
+                        lookup=Lookup.EQUALS,
+                        value="value",
+                        exclude=False,
+                    ),
+                    Expression(
+                        field="some_other_field",
+                        lookup=Lookup.EQUALS,
+                        value="empty",
+                        exclude=False,
+                    ),
+                ),
+            ),
+        )
+        res = self.nl_filter.parse(expr)
+        self.assertEqual(res, expected)
+
     def test_three_nested_with_function_and_boolean_expr(self):
         expr = (
             "(field is value and is not archived) or "
