@@ -3,25 +3,28 @@ grammar DjangoNLF;
 /*
  * Parser rules
  */
-operator            : WHITESPACE? (AND | OR | NOT) WHITESPACE? ;
+operator            : WHITESPACE? (AND | OR) WHITESPACE? ;
 boolean_expr        : WHITESPACE? (EQUALS | NEQUALS) WHITESPACE+ field=TEXT ;
 lookup              : WHITESPACE? (EQUALS | NEQUALS | CONTAINS | NCONTAINS | REGEX | NREGEX | IN | NIN | GT | GTE | LT | LTE) WHITESPACE? ;
-expression          : value=FUNCTION | boolean_expr | (field=TEXT lookup value=(TEXT | QUOTED_TEXT | LISTING | FUNCTION)) ;
+expression          : (NOT WHITESPACE)? value=FUNCTION
+                    | boolean_expr
+                    | ((NOT WHITESPACE)? field=TEXT lookup value=(TEXT | QUOTED_TEXT | LISTING | FUNCTION)) ;
 composite_expr      : (expression | nested_comp_expr) (operator (expression | nested_comp_expr))* ;
-nested_comp_expr    : OPEN_PAREN composite_expr CLOSE_PAREN ;
+nested_comp_expr    : (NOT WHITESPACE)? OPEN_PAREN composite_expr CLOSE_PAREN ;
 filter_expr         : (composite_expr | nested_comp_expr) (operator (composite_expr | nested_comp_expr))* ;
 parse               : filter_expr? EOF ;
+
 /*
  * Lexer rules
  */
 
 // Field lookups
 EQUALS              : I S | E Q U A L S | '=' ;
-NEQUALS             : I S ' ' N O T | N O T ' ' E Q U A L S | '!=' ;
+NEQUALS             : I S ' ' N O T | D O (E S)? ' ' N O T ' ' E Q U A L | '!=' ;
 CONTAINS            : C O N T A I N S ;
-NCONTAINS           : D O E? S? ' ' N O T ' ' C O N T A I N ;
+NCONTAINS           : D O (E S)? ' ' N O T ' ' C O N T A I N ;
 REGEX               : M A T C H E S | '~' ;
-NREGEX              : D O E? S? ' ' N O T ' ' M A T C H | '!~' ;
+NREGEX              : D O (E S)? ' ' N O T ' ' M A T C H | '!~' ;
 IN                  : I N ;
 NIN                 : N O T ' ' I N ;
 GT                  : '>' ;
@@ -36,7 +39,7 @@ NOT                 : N O T ;
 
 OPEN_PAREN          : '(' ;
 CLOSE_PAREN         : ')' ;
-WHITESPACE         : (' ' | '\t') ;
+WHITESPACE          : (' ' | '\t') ;
 NEWLINE             : ('\r'? '\n' | '\r')+ ;
 /* WHITESPACE          : (INLINESPACE | NEWLINE)+ ; */
 TEXT                : (LOWERCASE | UPPERCASE | NUMBER | SYMBOL)+ ;

@@ -1,24 +1,24 @@
 # Generated from DjangoNLF.g4 by ANTLR 4.8
 from antlr4 import ParseTreeListener
 
-from .generated import DjangoNLFParser, DjangoNLFLexer
-from ..types import Lookup, Operation, Expression, CompositeExpression, CustomFunction
+from django_nlf.types import CompositeExpression, CustomFunction, Expression, Lookup, Operation
+from .generated import DjangoNLFLexer, DjangoNLFParser
 
 
 class Operator:
-    def __init__(self, value, depth=0):
+    def __init__(self, value: int, depth: int = 0):
         self.value = depth * 2 + value
 
-    def is_and(self):
+    def is_and(self) -> bool:
         return self.value % 2 == 0
 
-    def has_precedence(self, other):
+    def has_precedence(self, other: "Operator") -> bool:
         return self.is_and() and self.value == other.value - 1
 
-    def to_operation(self):
+    def to_operation(self) -> Operation:
         return Operation.AND if self.is_and() else Operation.OR
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         operation = "AND" if self.is_and() else "OR"
         return f"<Operator.{operation}: {self.value}>"
 
@@ -68,6 +68,24 @@ def sanitize_value(value):
     raise ValueError("Invalid value")
 
 
+def negate(output):
+    if isinstance(output, Operator):
+        if output.is_and():
+            output.value += 1
+        else:
+            output.value -= 1
+
+        return output
+
+    if isinstance(output, Expression):
+        output.exclude = not output.exclude
+        return output
+
+    return [
+        negate(part) for part in output
+    ]
+
+
 # This class defines a complete listener for a parse tree produced by DjangoNLFParser.
 class DjangoNLFListener(ParseTreeListener):
     def __init__(self):
@@ -93,6 +111,9 @@ class DjangoNLFListener(ParseTreeListener):
         ):
             return sanitize_value(ctx.value)
 
+        if ctx.NOT() is not None:
+            self.exclude = not self.exclude
+
         return Expression(
             lookup=self.lookup,
             field=ctx.field.text,
@@ -101,22 +122,22 @@ class DjangoNLFListener(ParseTreeListener):
         )
 
     # # Enter a parse tree produced by DjangoNLFParser#operator.
-    # def enter_operator(self, ctx: DjangoNLFParser.OperatorContext):
+    # def enterOperator(self, ctx: DjangoNLFParser.OperatorContext):
     #     pass
 
     # Exit a parse tree produced by DjangoNLFParser#operator.
-    def exit_operator(self, ctx: DjangoNLFParser.OperatorContext):
+    def exitOperator(self, ctx: DjangoNLFParser.OperatorContext):
         if ctx.AND() is not None:
             self.operator = Operator(0, self.depth)
         elif ctx.OR() is not None:
             self.operator = Operator(1, self.depth)
 
     # # Enter a parse tree produced by DjangoNLFParser#boolean_expr.
-    # def enter_boolean_expr(self, ctx:DjangoNLFParser.Boolean_exprContext):
+    # def enterBoolean_expr(self, ctx:DjangoNLFParser.Boolean_exprContext):
     #     pass
 
     # Exit a parse tree produced by DjangoNLFParser#boolean_expr.
-    def exit_boolean_expr(self, ctx: DjangoNLFParser.Boolean_exprContext):
+    def exitBoolean_expr(self, ctx: DjangoNLFParser.Boolean_exprContext):
         value = ctx.EQUALS() is not None
         self.boolean_expr = Expression(
             lookup=Lookup.EQUALS,
@@ -126,11 +147,11 @@ class DjangoNLFListener(ParseTreeListener):
         )
 
     # # Enter a parse tree produced by DjangoNLFParser#lookup.
-    # def enter_lookup(self, ctx: DjangoNLFParser.LookupContext):
+    # def enterLookup(self, ctx: DjangoNLFParser.LookupContext):
     #     pass
 
     # Exit a parse tree produced by DjangoNLFParser#lookup.
-    def exit_lookup(self, ctx: DjangoNLFParser.LookupContext):
+    def exitLookup(self, ctx: DjangoNLFParser.LookupContext):
         if ctx.EQUALS() is not None:
             self.lookup = Lookup.EQUALS
         elif ctx.NEQUALS() is not None:
@@ -161,11 +182,11 @@ class DjangoNLFListener(ParseTreeListener):
             self.lookup = Lookup.LTE
 
     # # Enter a parse tree produced by DjangoNLFParser#expression.
-    # def enter_expression(self, ctx: DjangoNLFParser.ExpressionContext):
+    # def enterExpression(self, ctx: DjangoNLFParser.ExpressionContext):
     #     pass
 
     # Exit a parse tree produced by DjangoNLFParser#expression.
-    def exit_expression(self, ctx: DjangoNLFParser.ExpressionContext):
+    def exitExpression(self, ctx: DjangoNLFParser.ExpressionContext):
         current_expression = self.get_current_expression(ctx)
         self.boolean_expr = None
         self.lookup = None
@@ -180,15 +201,15 @@ class DjangoNLFListener(ParseTreeListener):
             self.operator = None
 
     # # Enter a parse tree produced by DjangoNLFParser#composite_expr.
-    # def enter_composite_expr(self, ctx: DjangoNLFParser.Composite_exprContext):
+    # def enterComposite_expr(self, ctx: DjangoNLFParser.Composite_exprContext):
     #     pass
 
     # # Exit a parse tree produced by DjangoNLFParser#composite_expr.
-    # def exit_composite_expr(self, ctx: DjangoNLFParser.Composite_exprContext):
+    # def exitComposite_expr(self, ctx: DjangoNLFParser.Composite_exprContext):
     #     pass
 
     # Enter a parse tree produced by DjangoNLFParser#nested_comp_expr.
-    def enter_nested_comp_expr(
+    def enterNested_comp_expr(
         self, ctx: DjangoNLFParser.Nested_comp_exprContext
     ):  # pylint: disable=unused-argument
         self.stage.append((self.operator, self.output))
@@ -198,11 +219,14 @@ class DjangoNLFListener(ParseTreeListener):
         self.operator = None
 
     # Exit a parse tree produced by DjangoNLFParser#nested_comp_expr.
-    def exit_nested_comp_expr(
+    def exitNested_comp_expr(
         self, ctx: DjangoNLFParser.Nested_comp_exprContext
     ):  # pylint: disable=unused-argument
         operator, left = self.stage.pop()
-        right = self.output
+        if ctx.NOT() is not None:
+            right = negate(self.output)
+        else:
+            right = self.output
 
         if operator:
             step = handle_precedence(operator, left[0], right[0])
@@ -212,21 +236,21 @@ class DjangoNLFListener(ParseTreeListener):
         self.depth -= 1
 
     # # Enter a parse tree produced by DjangoNLFParser#filter_exp.
-    # def enter_filter_expr(self, ctx: DjangoNLFParser.Filter_exprContext):
+    # def enterFilter_expr(self, ctx: DjangoNLFParser.Filter_exprContext):
     #     pass
 
     # Exit a parse tree produced by DjangoNLFParser#filter_exp.
-    def exit_filter_expr(
+    def exitFilter_expr(
         self, ctx: DjangoNLFParser.Filter_exprContext
     ):  # pylint: disable=unused-argument
         self.output = normalize_operators(self.output)
 
     # # Enter a parse tree produced by DjangoNLFParser#parse.
-    # def enter_parse(self, ctx: DjangoNLFParser.ParseContext):
+    # def enterParse(self, ctx: DjangoNLFParser.ParseContext):
     #     pass
     #
     # # Exit a parse tree produced by DjangoNLFParser#parse.
-    # def exit_parse(self, ctx: DjangoNLFParser.ParseContext):
+    # def exitParse(self, ctx: DjangoNLFParser.ParseContext):
     #     pass
 
 

@@ -15,6 +15,11 @@ Or
 
 Can be expressed as :code:`or`.
 
+Not
+***
+
+Can be expressed as :code:`not` in front of *functions*, *expressions* or group of *expressions*.
+
 Groups
 ******
 

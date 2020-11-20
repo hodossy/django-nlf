@@ -12,7 +12,7 @@ Supported Lookups
 Equals
 ******
 
-Can be expressed as :code:`is`, :code:`equals` or :code:`=`, and means a case insensitive equality check. Can be negated as :code:`is not`, :code:`not equals` or :code:`!=` respectively.
+Can be expressed as :code:`is`, :code:`equals` or :code:`=`, and means a case insensitive equality check. Can be negated as :code:`is not`, :code:`do(es) not equal` or :code:`!=` respectively.
 
 Contains
 ********

@@ -28,7 +28,7 @@ class DjangoNLFListenerSingleExpressionTestCase(unittest.TestCase):
     def test_not_equals(self):
         expressions = [
             "field is not value",
-            "field not equals value",
+            "field does not equal value",
             "field!=value",
             "field != value",
         ]
@@ -218,6 +218,17 @@ class DjangoNLFListenerSingleExpressionTestCase(unittest.TestCase):
             lookup=Lookup.EQUALS,
             value=False,
             exclude=False,
+        )
+        res = self.nl_filter.parse(expr)
+        self.assertEqual(res, expected)
+
+    def test_negated_equals(self):
+        expr = "not field is value"
+        expected = Expression(
+            field="field",
+            lookup=Lookup.EQUALS,
+            value="value",
+            exclude=True,
         )
         res = self.nl_filter.parse(expr)
         self.assertEqual(res, expected)

@@ -2,10 +2,11 @@ import typing
 
 from antlr4 import CommonTokenStream, InputStream, ParseTreeWalker
 
+from django_nlf.types import Expression, CompositeExpression
+
 from .error_listener import DjangoNLFErrorListener
 from .generated import DjangoNLFLexer, DjangoNLFParser
 from .listener import DjangoNLFListener
-from ..types import Expression, CompositeExpression
 
 
 class DjangoNLFLanguage:

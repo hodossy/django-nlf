@@ -123,6 +123,18 @@ class DjangoNLFilterSimpleTestCase(BaseTestCase):
         self.assertEqual(qs.count(), 1)
         self.assertEqual(qs.first(), self.p1)
 
+    def test_negated_composite_filter(self):
+        filter_expr = "not subscription_fee >= 1.12 and subscription_fee < 10"
+        qs = self.nl_filter.filter(Publication.objects.all(), filter_expr)
+        self.assertEqual(qs.count(), 1)
+        self.assertEqual(qs.first(), self.p2)
+
+    def test_negated_nested_filter(self):
+        filter_expr = "not (subscription_fee >= 1.12 and subscription_fee < 10)"
+        qs = self.nl_filter.filter(Publication.objects.all(), filter_expr)
+        self.assertEqual(qs.count(), 2)
+        self.assertListEqual(list(qs.all()), [self.p2, self.p3])
+
     def test_float_filter(self):
         filter_expr = "market_share >= 0.2"
         qs = self.nl_filter.filter(Publication.objects.all(), filter_expr)
