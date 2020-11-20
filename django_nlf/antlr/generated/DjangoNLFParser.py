@@ -32,31 +32,32 @@ def serializedATN():
         buf.write("\3\6\3\6\3\6\5\6C\n\6\7\6E\n\6\f\6\16\6H\13\6\3\7\3\7")
         buf.write("\5\7L\n\7\3\7\3\7\3\7\3\7\3\b\3\b\5\bT\n\b\3\b\3\b\3\b")
         buf.write("\5\bY\n\b\7\b[\n\b\f\b\16\b^\13\b\3\t\5\ta\n\t\3\t\3\t")
-        buf.write("\3\t\2\2\n\2\4\6\b\n\f\16\20\2\6\3\2\17\20\3\2\3\4\3\2")
-        buf.write("\3\16\3\2\26\31\2n\2\23\3\2\2\2\4\32\3\2\2\2\6%\3\2\2")
-        buf.write("\2\b9\3\2\2\2\n=\3\2\2\2\fK\3\2\2\2\16S\3\2\2\2\20`\3")
-        buf.write("\2\2\2\22\24\7\24\2\2\23\22\3\2\2\2\23\24\3\2\2\2\24\25")
-        buf.write("\3\2\2\2\25\27\t\2\2\2\26\30\7\24\2\2\27\26\3\2\2\2\27")
-        buf.write("\30\3\2\2\2\30\3\3\2\2\2\31\33\7\24\2\2\32\31\3\2\2\2")
-        buf.write("\32\33\3\2\2\2\33\34\3\2\2\2\34\36\t\3\2\2\35\37\7\24")
-        buf.write("\2\2\36\35\3\2\2\2\37 \3\2\2\2 \36\3\2\2\2 !\3\2\2\2!")
-        buf.write('"\3\2\2\2"#\7\26\2\2#\5\3\2\2\2$&\7\24\2\2%$\3\2\2\2')
-        buf.write("%&\3\2\2\2&'\3\2\2\2')\t\4\2\2(*\7\24\2\2)(\3\2\2\2")
-        buf.write(")*\3\2\2\2*\7\3\2\2\2+,\7\21\2\2,.\7\24\2\2-+\3\2\2\2")
-        buf.write("-.\3\2\2\2./\3\2\2\2/:\7\31\2\2\60:\5\4\3\2\61\62\7\21")
-        buf.write("\2\2\62\64\7\24\2\2\63\61\3\2\2\2\63\64\3\2\2\2\64\65")
-        buf.write("\3\2\2\2\65\66\7\26\2\2\66\67\5\6\4\2\678\t\5\2\28:\3")
-        buf.write("\2\2\29-\3\2\2\29\60\3\2\2\29\63\3\2\2\2:\t\3\2\2\2;>")
-        buf.write("\5\b\5\2<>\5\f\7\2=;\3\2\2\2=<\3\2\2\2>F\3\2\2\2?B\5\2")
-        buf.write("\2\2@C\5\b\5\2AC\5\f\7\2B@\3\2\2\2BA\3\2\2\2CE\3\2\2\2")
-        buf.write("D?\3\2\2\2EH\3\2\2\2FD\3\2\2\2FG\3\2\2\2G\13\3\2\2\2H")
-        buf.write("F\3\2\2\2IJ\7\21\2\2JL\7\24\2\2KI\3\2\2\2KL\3\2\2\2LM")
-        buf.write("\3\2\2\2MN\7\22\2\2NO\5\n\6\2OP\7\23\2\2P\r\3\2\2\2QT")
-        buf.write("\5\n\6\2RT\5\f\7\2SQ\3\2\2\2SR\3\2\2\2T\\\3\2\2\2UX\5")
-        buf.write("\2\2\2VY\5\n\6\2WY\5\f\7\2XV\3\2\2\2XW\3\2\2\2Y[\3\2\2")
-        buf.write("\2ZU\3\2\2\2[^\3\2\2\2\\Z\3\2\2\2\\]\3\2\2\2]\17\3\2\2")
-        buf.write("\2^\\\3\2\2\2_a\5\16\b\2`_\3\2\2\2`a\3\2\2\2ab\3\2\2\2")
-        buf.write("bc\7\2\2\3c\21\3\2\2\2\23\23\27\32 %)-\639=BFKSX\\`")
+        buf.write("\3\t\2\2\n\2\4\6\b\n\f\16\20\2\7\3\2\17\20\3\2\3\4\3\2")
+        buf.write("\3\16\4\2\26\26\31\31\3\2\26\31\2n\2\23\3\2\2\2\4\32\3")
+        buf.write("\2\2\2\6%\3\2\2\2\b9\3\2\2\2\n=\3\2\2\2\fK\3\2\2\2\16")
+        buf.write("S\3\2\2\2\20`\3\2\2\2\22\24\7\24\2\2\23\22\3\2\2\2\23")
+        buf.write("\24\3\2\2\2\24\25\3\2\2\2\25\27\t\2\2\2\26\30\7\24\2\2")
+        buf.write("\27\26\3\2\2\2\27\30\3\2\2\2\30\3\3\2\2\2\31\33\7\24\2")
+        buf.write("\2\32\31\3\2\2\2\32\33\3\2\2\2\33\34\3\2\2\2\34\36\t\3")
+        buf.write("\2\2\35\37\7\24\2\2\36\35\3\2\2\2\37 \3\2\2\2 \36\3\2")
+        buf.write('\2\2 !\3\2\2\2!"\3\2\2\2"#\7\26\2\2#\5\3\2\2\2$&\7\24')
+        buf.write("\2\2%$\3\2\2\2%&\3\2\2\2&'\3\2\2\2')\t\4\2\2(*\7\24")
+        buf.write("\2\2)(\3\2\2\2)*\3\2\2\2*\7\3\2\2\2+,\7\21\2\2,.\7\24")
+        buf.write("\2\2-+\3\2\2\2-.\3\2\2\2./\3\2\2\2/:\7\31\2\2\60:\5\4")
+        buf.write("\3\2\61\62\7\21\2\2\62\64\7\24\2\2\63\61\3\2\2\2\63\64")
+        buf.write("\3\2\2\2\64\65\3\2\2\2\65\66\t\5\2\2\66\67\5\6\4\2\67")
+        buf.write("8\t\6\2\28:\3\2\2\29-\3\2\2\29\60\3\2\2\29\63\3\2\2\2")
+        buf.write(":\t\3\2\2\2;>\5\b\5\2<>\5\f\7\2=;\3\2\2\2=<\3\2\2\2>F")
+        buf.write("\3\2\2\2?B\5\2\2\2@C\5\b\5\2AC\5\f\7\2B@\3\2\2\2BA\3\2")
+        buf.write("\2\2CE\3\2\2\2D?\3\2\2\2EH\3\2\2\2FD\3\2\2\2FG\3\2\2\2")
+        buf.write("G\13\3\2\2\2HF\3\2\2\2IJ\7\21\2\2JL\7\24\2\2KI\3\2\2\2")
+        buf.write("KL\3\2\2\2LM\3\2\2\2MN\7\22\2\2NO\5\n\6\2OP\7\23\2\2P")
+        buf.write("\r\3\2\2\2QT\5\n\6\2RT\5\f\7\2SQ\3\2\2\2SR\3\2\2\2T\\")
+        buf.write("\3\2\2\2UX\5\2\2\2VY\5\n\6\2WY\5\f\7\2XV\3\2\2\2XW\3\2")
+        buf.write("\2\2Y[\3\2\2\2ZU\3\2\2\2[^\3\2\2\2\\Z\3\2\2\2\\]\3\2\2")
+        buf.write("\2]\17\3\2\2\2^\\\3\2\2\2_a\5\16\b\2`_\3\2\2\2`a\3\2\2")
+        buf.write("\2ab\3\2\2\2bc\7\2\2\3c\21\3\2\2\2\23\23\27\32 %)-\63")
+        buf.write("9=BFKSX\\`")
         return buf.getvalue()
 
 
@@ -216,7 +217,7 @@ class DjangoNLFParser(Parser):
 
             self.state = 19
             _la = self._input.LA(1)
-            if not (_la == DjangoNLFParser.AND or _la == DjangoNLFParser.OR):
+            if _la not in (DjangoNLFParser.AND, DjangoNLFParser.OR):
                 self._errHandler.recoverInline(self)
             else:
                 self._errHandler.reportMatch(self)
@@ -434,8 +435,11 @@ class DjangoNLFParser(Parser):
             self.value = None  # Token
             self.field = None  # Token
 
-        def FUNCTION(self):
-            return self.getToken(DjangoNLFParser.FUNCTION, 0)
+        def FUNCTION(self, i: int = None):
+            if i is None:
+                return self.getTokens(DjangoNLFParser.FUNCTION)
+
+            return self.getToken(DjangoNLFParser.FUNCTION, i)
 
         def NOT(self):
             return self.getToken(DjangoNLFParser.NOT, 0)
@@ -512,7 +516,13 @@ class DjangoNLFParser(Parser):
                     self.match(DjangoNLFParser.WHITESPACE)
 
                 self.state = 51
-                localctx.field = self.match(DjangoNLFParser.TEXT)
+                localctx.field = self._input.LT(1)
+                _la = self._input.LA(1)
+                if _la not in (DjangoNLFParser.TEXT, DjangoNLFParser.FUNCTION):
+                    localctx.field = self._errHandler.recoverInline(self)
+                else:
+                    self._errHandler.reportMatch(self)
+                    self.consume()
                 self.state = 52
                 self.lookup()
                 self.state = 53
@@ -600,7 +610,7 @@ class DjangoNLFParser(Parser):
             self.state = 68
             self._errHandler.sync(self)
             _alt = self._interp.adaptivePredict(self._input, 11, self._ctx)
-            while _alt != 2 and _alt != ATN.INVALID_ALT_NUMBER:
+            while _alt not in (2, ATN.INVALID_ALT_NUMBER):
                 if _alt == 1:
                     self.state = 61
                     self.operator()

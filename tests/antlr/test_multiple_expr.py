@@ -255,7 +255,7 @@ class DjangoNLFListenerMultipleExpressionsTestCase(unittest.TestCase):
     def test_four_exprs_with_function_and_boolean_expr(self):
         expr = (
             "field is value or field matches function(multiple, params) and "
-            'is not archived or anotherFunction("quoted param")'
+            'is not archived or not anotherFunction("quoted param")'
         )
         expected = CompositeExpression(
             Operation.OR,
@@ -283,7 +283,7 @@ class DjangoNLFListenerMultipleExpressionsTestCase(unittest.TestCase):
                     ),
                 ),
             ),
-            CustomFunction("anotherFunction", ["quoted param"]),
+            CustomFunction("anotherFunction", ["quoted param"], {"exclude": True}),
         )
         res = self.nl_filter.parse(expr)
         self.assertEqual(res, expected)

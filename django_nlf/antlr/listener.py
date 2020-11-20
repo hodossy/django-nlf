@@ -102,15 +102,15 @@ class DjangoNLFListener(ParseTreeListener):
         if self.boolean_expr is not None:
             return self.boolean_expr
 
+        if ctx.NOT() is not None:
+            self.exclude = not self.exclude
+
         if (
             ctx.field is None
             and ctx.value is not None
             and ctx.value.type == DjangoNLFLexer.FUNCTION
         ):
             return sanitize_value(ctx.value, exclude=self.exclude)
-
-        if ctx.NOT() is not None:
-            self.exclude = not self.exclude
 
         return Expression(
             lookup=self.lookup,

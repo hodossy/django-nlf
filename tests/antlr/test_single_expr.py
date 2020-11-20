@@ -13,8 +13,30 @@ class DjangoNLFListenerSingleExpressionTestCase(unittest.TestCase):
         res = self.nl_filter.parse(expr)
         self.assertEqual(res, expected)
 
+    def test_new_line_ignores(self):
+        expressions = [
+            "\nfield\tis\r\nvalue",
+            "field        equals\r\n\r\n\r\nvalue",
+            "field=value\n\n\t",
+        ]
+        expected = Expression(
+            field="field",
+            lookup=Lookup.EQUALS,
+            value="value",
+            exclude=False,
+        )
+        for expr in expressions:
+            res = self.nl_filter.parse(expr)
+            self.assertEqual(res, expected)
+
     def test_equals(self):
-        expressions = ["field is value", "field equals value", "field=value", "field = value"]
+        expressions = [
+            "field is value",
+            "field equals value",
+            "field=value",
+            "field = value",
+            "not field is not value",
+        ]
         expected = Expression(
             field="field",
             lookup=Lookup.EQUALS,
@@ -31,6 +53,7 @@ class DjangoNLFListenerSingleExpressionTestCase(unittest.TestCase):
             "field does not equal value",
             "field!=value",
             "field != value",
+            "not field is value",
         ]
         expected = Expression(
             field="field",
@@ -66,11 +89,14 @@ class DjangoNLFListenerSingleExpressionTestCase(unittest.TestCase):
             self.assertEqual(res, expected)
 
     def test_regex(self):
-        expressions = ["field matches value", "field~value", "field ~ value"]
+        # TODO: Make this work
+        # regex = r"/^(?:[^\d\S].*|([cfdrp][^a].*)|[\w]a[^n].*|.{4,}|.{0,2})$/"
+        regex = "value"
+        expressions = [f"field matches {regex}", f"field~{regex}", f"field ~ {regex}"]
         expected = Expression(
             field="field",
             lookup=Lookup.REGEX,
-            value="value",
+            value=f"{regex}",
             exclude=False,
         )
         for expr in expressions:
@@ -179,7 +205,7 @@ class DjangoNLFListenerSingleExpressionTestCase(unittest.TestCase):
 
     def test_custom_function_as_expression(self):
         expr = "myFunction(param)"
-        expected = CustomFunction("myFunction", ["param"])
+        expected = CustomFunction("myFunction", ["param"], {"exclude": False})
         res = self.nl_filter.parse(expr)
         self.assertEqual(res, expected)
 
@@ -196,7 +222,9 @@ class DjangoNLFListenerSingleExpressionTestCase(unittest.TestCase):
 
     def test_custom_function_multiple_args_as_expression(self):
         expr = 'myFunction(param, "another param", param2)'
-        expected = CustomFunction("myFunction", ["param", "another param", "param2"])
+        expected = CustomFunction(
+            "myFunction", ["param", "another param", "param2"], {"exclude": False}
+        )
         res = self.nl_filter.parse(expr)
         self.assertEqual(res, expected)
 

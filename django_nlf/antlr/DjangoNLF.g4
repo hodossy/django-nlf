@@ -40,8 +40,7 @@ NOT                 : N O T ;
 OPEN_PAREN          : '(' ;
 CLOSE_PAREN         : ')' ;
 WHITESPACE          : (' ' | '\t') ;
-NEWLINE             : ('\r'? '\n' | '\r')+ ;
-/* WHITESPACE          : (INLINESPACE | NEWLINE)+ ; */
+NEWLINE             : ('\r'? '\n' | '\r') -> skip;
 TEXT                : (LOWERCASE | UPPERCASE | NUMBER | SYMBOL)+ ;
 QUOTED_TEXT         : QUOTE (LOWERCASE | UPPERCASE | NUMBER | SYMBOL | WHITESPACE)* QUOTE ;
 LISTING             : OPEN_PAREN? WHITESPACE? (TEXT | QUOTED_TEXT) (COMA WHITESPACE? (TEXT | QUOTED_TEXT))+ WHITESPACE? CLOSE_PAREN? ;

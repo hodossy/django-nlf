@@ -1,5 +1,5 @@
 import typing
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import Enum, auto
 
 
@@ -29,16 +29,18 @@ class Expression:
     exclude: bool
 
 
-class CompositeExpression(typing.NamedTuple):
+@dataclass()
+class CompositeExpression:
     op: Operation
     left: typing.Union[Expression, "CompositeExpression"]
     right: typing.Union[Expression, "CompositeExpression"]
 
 
-class CustomFunction(typing.NamedTuple):
+@dataclass()
+class CustomFunction:
     name: str
     args: typing.Iterable[str]
-    kwargs: typing.Mapping
+    kwargs: typing.Mapping = field(default_factory=dict)
 
 
 class FunctionRole(Enum):
@@ -49,5 +51,5 @@ class FunctionRole(Enum):
 
 @dataclass()
 class FunctionMeta:
-    role: FunctionRole
-    models: typing.Iterable["django.db.models.Model"]
+    role: FunctionRole = FunctionRole.VALUE
+    models: typing.Iterable["django.db.models.Model"] = tuple()

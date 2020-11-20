@@ -47,7 +47,7 @@ class NLFilterBase:
 
     def resolve_function(self, func: CustomFunction, field_name: str = None):
         context = self.get_function_context()
-        fn = self.function_factory.get_function(func.name, **context)
+        fn = self.function_factory.get_function(func.name, context.get("model"))
 
         return fn(*func.args, **context, field_name=field_name)
 

@@ -445,7 +445,7 @@ class DjangoNLFListenerNestedExpressionsTestCase(unittest.TestCase):
                         value="value",
                         exclude=False,
                     ),
-                    CustomFunction("hasChildren", []),
+                    CustomFunction("hasChildren", [], {"exclude": False}),
                 ),
             ),
         )

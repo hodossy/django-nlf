@@ -11,7 +11,7 @@ format:
 
 .PHONY: test
 test:
-	@python runtests.py
+	@python runtests.py $(tc)
 
 
 .PHONY: coverage
