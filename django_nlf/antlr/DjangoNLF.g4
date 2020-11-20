@@ -8,7 +8,7 @@ boolean_expr        : WHITESPACE? (EQUALS | NEQUALS) WHITESPACE+ field=TEXT ;
 lookup              : WHITESPACE? (EQUALS | NEQUALS | CONTAINS | NCONTAINS | REGEX | NREGEX | IN | NIN | GT | GTE | LT | LTE) WHITESPACE? ;
 expression          : (NOT WHITESPACE)? value=FUNCTION
                     | boolean_expr
-                    | ((NOT WHITESPACE)? field=TEXT lookup value=(TEXT | QUOTED_TEXT | LISTING | FUNCTION)) ;
+                    | ((NOT WHITESPACE)? field=(TEXT | FUNCTION) lookup value=(TEXT | QUOTED_TEXT | LISTING | FUNCTION)) ;
 composite_expr      : (expression | nested_comp_expr) (operator (expression | nested_comp_expr))* ;
 nested_comp_expr    : (NOT WHITESPACE)? OPEN_PAREN composite_expr CLOSE_PAREN ;
 filter_expr         : (composite_expr | nested_comp_expr) (operator (composite_expr | nested_comp_expr))* ;

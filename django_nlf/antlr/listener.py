@@ -47,7 +47,7 @@ def normalize_operators(output):
     return normalized
 
 
-def sanitize_value(value):
+def sanitize_value(value, **kwargs):
     if value.type == DjangoNLFLexer.TEXT:
         return value.text
 
@@ -62,7 +62,7 @@ def sanitize_value(value):
         function_name = value.text[:open_paren_pos]
         params_str = value.text[open_paren_pos + 1 : -1]
         args = [arg.strip(' "') for arg in params_str.split(",")] if params_str else []
-        return CustomFunction(function_name, args)
+        return CustomFunction(function_name, args, kwargs)
 
     # TODO: Proper error msg
     raise ValueError("Invalid value")
@@ -81,9 +81,7 @@ def negate(output):
         output.exclude = not output.exclude
         return output
 
-    return [
-        negate(part) for part in output
-    ]
+    return [negate(part) for part in output]
 
 
 # This class defines a complete listener for a parse tree produced by DjangoNLFParser.
@@ -109,14 +107,14 @@ class DjangoNLFListener(ParseTreeListener):
             and ctx.value is not None
             and ctx.value.type == DjangoNLFLexer.FUNCTION
         ):
-            return sanitize_value(ctx.value)
+            return sanitize_value(ctx.value, exclude=self.exclude)
 
         if ctx.NOT() is not None:
             self.exclude = not self.exclude
 
         return Expression(
             lookup=self.lookup,
-            field=ctx.field.text,
+            field=sanitize_value(ctx.field),
             value=sanitize_value(ctx.value),
             exclude=self.exclude,
         )

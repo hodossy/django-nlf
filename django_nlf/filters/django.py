@@ -22,8 +22,11 @@ class DjangoNLFilter(NLFilterBase):
     path_sep = nlf_settings.PATH_SEPARATOR
     empty_val = nlf_settings.EMPTY_VALUE
 
-    def __init__(self):
+    def __init__(self, request=None, view=None):
         super().__init__()
+        self.request = request
+        self.view = view
+
         self.distinct = False
         self.model = None
         self.opts = None
@@ -57,7 +60,9 @@ class DjangoNLFilter(NLFilterBase):
             for val, display in field.choices:
                 if value.lower() == display.lower():
                     return val
-            raise ValueError("Invalid choice")
+
+            choices = ", ".join([display for _, display in field.choices])
+            raise ValueError(f"Invalid {field_name}! Must be one of {choices}")
 
         if isinstance(field, (models.DateField, models.DateTimeField)):
             return self.coerce_datetime(value)
@@ -65,9 +70,6 @@ class DjangoNLFilter(NLFilterBase):
         if isinstance(field, (models.BooleanField, models.NullBooleanField)):
             return self.coerce_bool(value)
 
-        if value.startswith('"') and value.endswith('"'):
-            # remove quotes
-            return value[1:-1]
         return value
 
     def get_condition(self, field, lookup, value):
@@ -85,7 +87,9 @@ class DjangoNLFilter(NLFilterBase):
 
     def get_function_context(self):
         return {
-            "model": self.model
+            "model": self.model,
+            "request": self.request,
+            "view": self.view,
         }
 
     def filter(self, queryset: models.QuerySet, value):
@@ -98,7 +102,7 @@ class DjangoNLFilter(NLFilterBase):
         if self.distinct:
             queryset = queryset.distinct()
 
-        return  queryset
+        return queryset
 
     def coerce_bool(self, value):
         return coerce_bool(value)

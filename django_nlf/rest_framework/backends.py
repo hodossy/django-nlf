@@ -18,7 +18,7 @@ class DjangoNLFilterBackend(BaseFilterBackend):
         return nl_filter.filter(queryset, filter_expr) if filter_expr else queryset
 
     def get_filter(self, request, queryset, view):  # pylint: disable=unused-argument
-        return self.filter_class()
+        return self.filter_class(request, view)
 
     def get_filter_expr(self, request):
         return request.query_params.get(self.filter_param)

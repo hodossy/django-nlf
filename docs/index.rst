@@ -6,7 +6,9 @@
 Welcome to Django Natural Language Filter's documentation!
 ==========================================================
 
-Django NLF provides a simple and easy way to filter :class:`QuerySets <django:django.db.models.QuerySet>`. This natural language approach enables building nested complex queries quickly for your users, which are otherwise cumbersome with other libraries.
+The goal of Django NLF is to provide a simple and easy way to express complex filtering criteria. This natural language approach enables building nested complex queries quickly for your users, which are otherwise cumbersome with other libraries.
+
+It provides an intuitive way to start with simpler criteria, but tries not to get in the way of more advanced use cases that need regular expressions, annotations or aggregations.
 
 .. warning::
 

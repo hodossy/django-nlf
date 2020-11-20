@@ -1,17 +1,19 @@
 from functools import wraps
 from typing import Callable
 
+from django_nlf.types import FunctionMeta
+
 
 class FunctionFactory:
 
     registry = {}
 
     @classmethod
-    def register(cls, fn_name: str, func: Callable, models=()):
+    def register(cls, fn_name: str, func: Callable, meta: FunctionMeta):
         if fn_name in cls.registry:
             pass
 
-        cls.registry[fn_name] = (func, models)
+        cls.registry[fn_name] = (func, meta)
 
     @classmethod
     def get_function(cls, fn_name: str, model=None) -> Callable:
@@ -26,9 +28,10 @@ class FunctionFactory:
         return fn
 
 
-def nlf_function(fn_name, models=()):
+def nlf_function(fn_name: str = None, meta: FunctionMeta = None):
     def decorator(func):
-        FunctionFactory.register(fn_name, func, models)
+        name = fn_name or func.__name__
+        FunctionFactory.register(name, func, meta)
 
         @wraps(func)
         def wrapper(func):

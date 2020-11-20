@@ -5,6 +5,7 @@ from enum import Enum, auto
 
 class Lookup(Enum):
     """Enumeration of supported lookups"""
+
     EQUALS = auto()
     CONTAINS = auto()
     REGEX = auto()
@@ -37,3 +38,16 @@ class CompositeExpression(typing.NamedTuple):
 class CustomFunction(typing.NamedTuple):
     name: str
     args: typing.Iterable[str]
+    kwargs: typing.Mapping
+
+
+class FunctionRole(Enum):
+    FIELD = auto()
+    VALUE = auto()
+    EXPRESSION = auto()
+
+
+@dataclass()
+class FunctionMeta:
+    role: FunctionRole
+    models: typing.Iterable["django.db.models.Model"]

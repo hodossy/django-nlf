@@ -4,10 +4,8 @@ from django.db import models
 from django.db.models.constants import LOOKUP_SEP
 
 from django_nlf.antlr import DjangoNLFLanguage
-from django_nlf.conf import nlf_settings
 from django_nlf.functions import FunctionFactory
-from django_nlf.types import CompositeExpression, CustomFunction, Expression, Lookup, Operation
-from django_nlf.utils import coerce_bool, coerce_datetime
+from django_nlf.types import CompositeExpression, CustomFunction, Expression, Operation
 
 
 class NLFilterBase:
@@ -19,7 +17,10 @@ class NLFilterBase:
         return self.build_conditions(filter_tree)
 
     def resolve_expression(self, expression: Expression):
-        field_name = self.normalize_field_name(expression.field)
+        if isinstance(expression.field, CustomFunction):
+            field_name = self.resolve_function(expression.field)
+        else:
+            field_name = self.normalize_field_name(expression.field)
 
         if isinstance(expression.value, CustomFunction):
             value = self.resolve_function(expression.value, field_name=field_name)
