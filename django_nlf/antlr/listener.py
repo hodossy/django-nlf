@@ -51,8 +51,9 @@ def sanitize_value(value, **kwargs):
     if value.type == DjangoNLFLexer.TEXT:
         return value.text
 
-    if value.type == DjangoNLFLexer.QUOTED_TEXT:
-        return value.text.strip('"')
+    if (value.type == DjangoNLFLexer.QUOTED_TEXT
+        or value.type == DjangoNLFLexer.REGULAR_EXPR):
+        return value.text[1:-1]
 
     if value.type == DjangoNLFLexer.LISTING:
         return [val.strip('"') for val in value.text[1:-1].split(", ")]

@@ -88,11 +88,114 @@ class DjangoNLFListenerSingleExpressionTestCase(unittest.TestCase):
             res = self.nl_filter.parse(expr)
             self.assertEqual(res, expected)
 
-    def test_regex(self):
-        # TODO: Make this work
-        # regex = r"/^(?:[^\d\S].*|([cfdrp][^a].*)|[\w]a[^n].*|.{4,}|.{0,2})$/"
+    def test_regex_simple(self):
         regex = "value"
         expressions = [f"field matches {regex}", f"field~{regex}", f"field ~ {regex}"]
+        expected = Expression(
+            field="field",
+            lookup=Lookup.REGEX,
+            value=f"{regex}",
+            exclude=False,
+        )
+        for expr in expressions:
+            res = self.nl_filter.parse(expr)
+            self.assertEqual(res, expected)
+
+    def test_regex_startswith(self):
+        regex = "^value"
+        expressions = [f"field matches /{regex}/", f"field~/{regex}/", f"field ~ /{regex}/"]
+        expected = Expression(
+            field="field",
+            lookup=Lookup.REGEX,
+            value=f"{regex}",
+            exclude=False,
+        )
+        for expr in expressions:
+            res = self.nl_filter.parse(expr)
+            self.assertEqual(res, expected)
+
+    def test_regex_endswith(self):
+        regex = "value$"
+        expressions = [f"field matches /{regex}/", f"field~/{regex}/", f"field ~ /{regex}/"]
+        expected = Expression(
+            field="field",
+            lookup=Lookup.REGEX,
+            value=f"{regex}",
+            exclude=False,
+        )
+        for expr in expressions:
+            res = self.nl_filter.parse(expr)
+            self.assertEqual(res, expected)
+
+    def test_regex_brackets(self):
+        regex = "[a-zA-Z]{8,12}"
+        expressions = [f"field matches /{regex}/", f"field~/{regex}/", f"field ~ /{regex}/"]
+        expected = Expression(
+            field="field",
+            lookup=Lookup.REGEX,
+            value=f"{regex}",
+            exclude=False,
+        )
+        for expr in expressions:
+            res = self.nl_filter.parse(expr)
+            self.assertEqual(res, expected)
+
+    def test_regex_match_all(self):
+        regex = "[0-9]+_.*"
+        expressions = [f"field matches /{regex}/", f"field~/{regex}/", f"field ~ /{regex}/"]
+        expected = Expression(
+            field="field",
+            lookup=Lookup.REGEX,
+            value=f"{regex}",
+            exclude=False,
+        )
+        for expr in expressions:
+            res = self.nl_filter.parse(expr)
+            self.assertEqual(res, expected)
+
+    def test_regex_group(self):
+        regex = "(P<id>[0-9]+)_.*"
+        expressions = [f"field matches /{regex}/", f"field~/{regex}/", f"field ~ /{regex}/"]
+        expected = Expression(
+            field="field",
+            lookup=Lookup.REGEX,
+            value=f"{regex}",
+            exclude=False,
+        )
+        for expr in expressions:
+            res = self.nl_filter.parse(expr)
+            self.assertEqual(res, expected)
+
+    def test_regex_or(self):
+        regex = "abc|def"
+        expressions = [f"field matches /{regex}/", f"field~/{regex}/", f"field ~ /{regex}/"]
+        expected = Expression(
+            field="field",
+            lookup=Lookup.REGEX,
+            value=f"{regex}",
+            exclude=False,
+        )
+        for expr in expressions:
+            res = self.nl_filter.parse(expr)
+            self.assertEqual(res, expected)
+
+    def test_regex_escaped_slash(self):
+        regex = "abc\/def"
+        expressions = [f"field matches /{regex}/", f"field~/{regex}/", f"field ~ /{regex}/"]
+        expected = Expression(
+            field="field",
+            lookup=Lookup.REGEX,
+            value=f"{regex}",
+            exclude=False,
+        )
+        for expr in expressions:
+            res = self.nl_filter.parse(expr)
+            self.assertEqual(res, expected)
+
+    def test_regex_really_complex(self):
+        regex = r"^(?:[^\d\S].*|([cfdrp][^a].*)|[\w]a[^n].*|.{4,}|.{0,2})$"
+        # regex = "value"
+        expressions = [f"field matches /{regex}/", f"field~/{regex}/", f"field ~ /{regex}/"]
         expected = Expression(
             field="field",
             lookup=Lookup.REGEX,

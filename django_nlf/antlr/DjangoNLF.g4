@@ -3,16 +3,16 @@ grammar DjangoNLF;
 /*
  * Parser rules
  */
-operator            : WHITESPACE? (AND | OR) WHITESPACE? ;
-boolean_expr        : WHITESPACE? (EQUALS | NEQUALS) WHITESPACE+ field=TEXT ;
-lookup              : WHITESPACE? (EQUALS | NEQUALS | CONTAINS | NCONTAINS | REGEX | NREGEX | IN | NIN | GT | GTE | LT | LTE) WHITESPACE? ;
-expression          : (NOT WHITESPACE)? value=FUNCTION
+operator            : WHITESPACE* (AND | OR) WHITESPACE* ;
+boolean_expr        : WHITESPACE* (EQUALS | NEQUALS) WHITESPACE+ field=TEXT ;
+lookup              : WHITESPACE* (EQUALS | NEQUALS | CONTAINS | NCONTAINS | REGEX | NREGEX | IN | NIN | GT | GTE | LT | LTE) WHITESPACE* ;
+expression          : (NOT WHITESPACE*)? value=FUNCTION
                     | boolean_expr
-                    | ((NOT WHITESPACE)? field=(TEXT | FUNCTION) lookup value=(TEXT | QUOTED_TEXT | LISTING | FUNCTION)) ;
+                    | ((NOT WHITESPACE*)? field=(TEXT | FUNCTION) lookup value=(TEXT | QUOTED_TEXT | LISTING | FUNCTION | REGULAR_EXPR)) ;
 composite_expr      : (expression | nested_comp_expr) (operator (expression | nested_comp_expr))* ;
-nested_comp_expr    : (NOT WHITESPACE)? OPEN_PAREN composite_expr CLOSE_PAREN ;
+nested_comp_expr    : (NOT WHITESPACE*)? OPEN_PAREN composite_expr CLOSE_PAREN ;
 filter_expr         : (composite_expr | nested_comp_expr) (operator (composite_expr | nested_comp_expr))* ;
-parse               : filter_expr? EOF ;
+parse               : filter_expr? WHITESPACE* EOF ;
 
 /*
  * Lexer rules
@@ -42,9 +42,11 @@ CLOSE_PAREN         : ')' ;
 WHITESPACE          : (' ' | '\t') ;
 NEWLINE             : ('\r'? '\n' | '\r') -> skip;
 TEXT                : (LOWERCASE | UPPERCASE | NUMBER | SYMBOL)+ ;
-QUOTED_TEXT         : QUOTE (LOWERCASE | UPPERCASE | NUMBER | SYMBOL | WHITESPACE)* QUOTE ;
-LISTING             : OPEN_PAREN? WHITESPACE? (TEXT | QUOTED_TEXT) (COMA WHITESPACE? (TEXT | QUOTED_TEXT))+ WHITESPACE? CLOSE_PAREN? ;
-FUNCTION            : (LOWERCASE | UPPERCASE | NUMBER | UNDERSCORE)+ OPEN_PAREN (TEXT | QUOTED_TEXT | LISTING)? CLOSE_PAREN ;
+QUOTED_TEXT         : QUOTE (TEXT | WHITESPACE)* QUOTE ;
+ARGUMENT            : TEXT | QUOTED_TEXT ;
+LISTING             : OPEN_PAREN? WHITESPACE* (ARGUMENT) (COMA WHITESPACE* (ARGUMENT))+ WHITESPACE* CLOSE_PAREN? ;
+FUNCTION            : (LOWERCASE | UPPERCASE | NUMBER | UNDERSCORE)+ OPEN_PAREN (ARGUMENT)? (COMA WHITESPACE* (ARGUMENT))* CLOSE_PAREN ;
+REGULAR_EXPR        : SLASH ('\\/' | ~[/])* SLASH ;
 
 fragment COMA       : ',' ;
 fragment QUOTE      : '"' ;
@@ -52,7 +54,8 @@ fragment LOWERCASE  : [a-z] ;
 fragment UPPERCASE  : [A-Z] ;
 fragment NUMBER     : [0-9] ;
 fragment UNDERSCORE : '_' ;
-fragment SYMBOL     : '.' | UNDERSCORE | '-' | '/' | ':' ;
+fragment SLASH      : '/' ;
+fragment SYMBOL     : '.' | UNDERSCORE | '-' | SLASH | ':' ;
 fragment A          : [aA] ;
 fragment B          : [bB] ;
 fragment C          : [cC] ;

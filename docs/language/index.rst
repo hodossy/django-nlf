@@ -39,12 +39,13 @@ All fields are available for a given model, including relationships as well. You
 Values
 ------
 
-Values can be anything, but if you need to spaces to it, you must quote the value. For some *lookups*, a list of values can be defined as well.
+Values can be anything, but if you need whitespace in it, you must quote the value. For some *lookups*, a list of values can be defined as well. List of values are defined as a coma separated list within parenthesis. Regular expressions can be defined between two forward slashes.
 
   .. code-block:: python
 
     'title contains "science news"'
     "author.username is in (john, jane)"
+    "payment_details matches /[\d]{4}(-[\d]{4}){3}/"
 
 Complicating things
 -------------------
