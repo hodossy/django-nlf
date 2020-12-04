@@ -51,8 +51,7 @@ def sanitize_value(value, **kwargs):
     if value.type == DjangoNLFLexer.TEXT:
         return value.text
 
-    if (value.type == DjangoNLFLexer.QUOTED_TEXT
-        or value.type == DjangoNLFLexer.REGULAR_EXPR):
+    if value.type == DjangoNLFLexer.QUOTED_TEXT or value.type == DjangoNLFLexer.REGULAR_EXPR:
         return value.text[1:-1]
 
     if value.type == DjangoNLFLexer.LISTING:
