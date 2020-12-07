@@ -30,17 +30,17 @@ class Expression:
 
 
 @dataclass()
-class CompositeExpression:
-    op: Operation
-    left: typing.Union[Expression, "CompositeExpression"]
-    right: typing.Union[Expression, "CompositeExpression"]
+class CustomFunction:
+    name: str
+    args: typing.Iterable[str] = field(default_factory=list)
+    kwargs: typing.Mapping = field(default_factory=dict)
 
 
 @dataclass()
-class CustomFunction:
-    name: str
-    args: typing.Iterable[str]
-    kwargs: typing.Mapping = field(default_factory=dict)
+class CompositeExpression:
+    op: Operation
+    left: typing.Union[Expression, "CompositeExpression", CustomFunction]
+    right: typing.Union[Expression, "CompositeExpression", CustomFunction]
 
 
 class FunctionRole(Enum):

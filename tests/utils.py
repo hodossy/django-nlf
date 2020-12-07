@@ -11,8 +11,6 @@ User = get_user_model()
 class BaseTestCase(TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.nl_filter = DjangoNLFilter()
-
         cls.p1 = Publication(title="The Python Journal", subscription_fee=1.99, market_share=0.254)
         cls.p1.save()
         cls.p2 = Publication(title="Science News", subscription_fee=0.99, market_share=0.04)
@@ -71,6 +69,9 @@ class BaseTestCase(TestCase):
         cls.a1.publications.add(cls.p1)
         cls.a2.publications.add(cls.p1, cls.p3)
         cls.a3.publications.add(cls.p2)
+
+    def setUp(self):
+        self.nl_filter = DjangoNLFilter()
 
     @classmethod
     def tearDownClass(cls):

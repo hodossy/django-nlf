@@ -21,6 +21,7 @@ class DjangoNLFilter(NLFilterBase):
     }
     path_sep = nlf_settings.PATH_SEPARATOR
     empty_val = nlf_settings.EMPTY_VALUE
+    # field_shortcuts = {}
 
     def __init__(self, request=None, view=None):
         super().__init__()
@@ -30,6 +31,8 @@ class DjangoNLFilter(NLFilterBase):
         self.distinct = False
         self.model = None
         self.opts = None
+
+        self.annotations = {}
 
     def follow_field_path(self, opts, path):
         field = opts.get_field(path[0])
@@ -46,11 +49,33 @@ class DjangoNLFilter(NLFilterBase):
 
         return field
 
+    def normalize_field_function(self, value):
+        annotation, *other = value.items()
+        if other:
+            raise ValueError("Multiple annotations returned!")
+        self.annotations.update(**value)
+        field_name, _ = annotation
+        return field_name
+
+    def normalize_value_function(self, value):
+        return value
+
+    def normalize_expression_function(self, value):
+        annotations, condition = value
+        self.annotations.update(**annotations)
+
+        return condition
+
     def normalize_field_name(self, field_name: str) -> str:
+        # field_name = self.field_shortcuts.get(field_name, field_name)
         return field_name.replace(self.path_sep, LOOKUP_SEP)
 
     def normalize_value(self, field_name, value):
-        if value == self.empty_val:
+        if (
+            field_name in self.annotations
+            or value == self.empty_val
+            or isinstance(value, (models.F, models.Aggregate, models.Subquery, models.Window))
+        ):
             return value
 
         parts = field_name.split(LOOKUP_SEP)
@@ -97,6 +122,8 @@ class DjangoNLFilter(NLFilterBase):
         self.opts = queryset.model._meta  # pylint: disable=protected-access
 
         conditions = self.get_conditions(value)
+        if self.annotations:
+            queryset = queryset.annotate(**self.annotations)
         queryset = queryset.filter(conditions)
 
         if self.distinct:

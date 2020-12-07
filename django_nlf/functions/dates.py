@@ -8,7 +8,8 @@ from .factory import nlf_function
 #: Django uses 0 for Sunday and 1 for Monday. `FIRST_DAY_OF_WEEK` holds
 #: a :mod:`calendar <python:calendar>` compatible value,
 #: i.e. 0 for Monday and 6 for Sunday.
-FIRST_DAY_OF_WEEK = (formats.get_format('FIRST_DAY_OF_WEEK') - 1) % 7
+FIRST_DAY_OF_WEEK = (formats.get_format("FIRST_DAY_OF_WEEK") - 1) % 7
+
 
 @nlf_function("startOfWeek")
 def start_of_week(*args, **kwargs):  # pylint: disable=unused-argument

@@ -18,7 +18,6 @@ MID_WEEK_ANOTHER_YEAR = Mock()
 MID_WEEK_ANOTHER_YEAR.now.return_value = datetime(2021, 1, 2, 13, 26, 43, 1234)
 
 
-
 class DateFunctionsMidweekTestCase(TestCase):
     @patch("django_nlf.functions.dates.timezone", MID_WEEK)
     def test_start_of_year(self):
@@ -38,7 +37,6 @@ class DateFunctionsMidweekTestCase(TestCase):
             self.assertEqual(start_of_week(), datetime(2020, 11, 16))
         with patch("django_nlf.functions.dates.FIRST_DAY_OF_WEEK", 5):
             self.assertEqual(start_of_week(), datetime(2020, 11, 14))
-
 
     @patch("django_nlf.functions.dates.timezone", MID_WEEK_ANOTHER_MONTH)
     def test_start_of_week_in_previous_month_midweek(self):
