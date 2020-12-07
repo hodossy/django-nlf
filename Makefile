@@ -16,7 +16,7 @@ test:
 
 .PHONY: coverage
 coverage:
-	@python -m coverage run --branch runtests.py
+	@python -m coverage run runtests.py
 	@python -m coverage report --show-missing --include "**/django_nlf/**"
 
 
