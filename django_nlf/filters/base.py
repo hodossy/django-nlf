@@ -5,13 +5,19 @@ from django.db import models
 from django.db.models.constants import LOOKUP_SEP
 
 from django_nlf.antlr import DjangoNLFLanguage
-from django_nlf.functions import FunctionFactory
-from django_nlf.types import CompositeExpression, CustomFunction, Expression, Operation
+from django_nlf.functions import FunctionRegistry
+from django_nlf.types import (
+    CompositeExpression,
+    CustomFunction,
+    Expression,
+    FunctionRole,
+    Operation,
+)
 
 
 class NLFilterBase(abc.ABC):
     language_class = DjangoNLFLanguage
-    function_factory = FunctionFactory
+    function_factory = FunctionRegistry
 
     def get_conditions(self, expression):
         filter_tree = self.get_language().parse(expression)
@@ -19,13 +25,15 @@ class NLFilterBase(abc.ABC):
 
     def resolve_expression(self, expression: Expression):
         if isinstance(expression.field, CustomFunction):
-            field_name = self.normalize_field_function(self.resolve_function(expression.field))
+            field_name = self.normalize_field_function(
+                self.resolve_function(expression.field, FunctionRole.FIELD)
+            )
         else:
             field_name = self.normalize_field_name(expression.field)
 
         if isinstance(expression.value, CustomFunction):
             value = self.normalize_value_function(
-                self.resolve_function(expression.value, field_name=field_name)
+                self.resolve_function(expression.value, FunctionRole.VALUE, field_name=field_name)
             )
         else:
             value = self.normalize_value(field_name, expression.value)
@@ -41,7 +49,9 @@ class NLFilterBase(abc.ABC):
             return self.resolve_expression(filter_tree)
 
         if isinstance(filter_tree, CustomFunction):
-            return self.normalize_expression_function(self.resolve_function(filter_tree))
+            return self.normalize_expression_function(
+                self.resolve_function(filter_tree, FunctionRole.EXPRESSION)
+            )
 
         left = self.build_conditions(filter_tree.left)
         right = self.build_conditions(filter_tree.right)
@@ -50,11 +60,11 @@ class NLFilterBase(abc.ABC):
             return left | right
         return left & right
 
-    def resolve_function(self, func: CustomFunction, field_name: str = None):
+    def resolve_function(self, func: CustomFunction, role: FunctionRole, field_name: str = None):
         context = self.get_function_context()
         func.kwargs.update(context)
 
-        fn = self.function_factory.get_function(func.name, context.get("model"))
+        fn = self.function_factory.get_function(func.name, role, context.get("model"))
         return fn(*func.args, **func.kwargs, field_name=field_name)
 
     def get_language(self):

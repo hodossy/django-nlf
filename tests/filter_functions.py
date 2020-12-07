@@ -12,7 +12,7 @@ def total_views(*args, **kwargs):
     return {"total_views": Sum("articles__views")}
 
 
-@nlf_function("hasBeenPublished", role=FunctionRole.FIELD, models=[Article])
+@nlf_function("hasBeenPublished", role=FunctionRole.EXPRESSION, models=[Article])
 def has_been_published(*args, exclude=False, **kwargs):
     """Test function to be used as an expression"""
     if len(args) == 0:

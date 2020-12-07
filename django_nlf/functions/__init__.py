@@ -1,8 +1,8 @@
 from .dates import *
-from .factory import FunctionFactory, nlf_function
+from .registry import FunctionRegistry, nlf_function
 
 
 __all__ = [
-    "FunctionFactory",
+    "FunctionRegistry",
     "nlf_function",
 ]
