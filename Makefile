@@ -6,7 +6,7 @@ lint:
 
 .PHONY: format
 format:
-	@python -m black django_nlf tests
+	@python -m black django_nlf tests runtests.py setup.py
 
 
 .PHONY: test
