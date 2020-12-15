@@ -1,7 +1,14 @@
+"""
+Configuration module
+"""
 import warnings
 
-from django.conf import settings as dj_settings
-from django.core.signals import setting_changed
+try:
+    from django.conf import settings as dj_settings
+    from django.core.signals import setting_changed
+except ImportError:
+    dj_settings = object()
+    setting_changed = None
 
 
 DEFAULTS = {
@@ -64,4 +71,6 @@ class Settings:
 
 
 nlf_settings = Settings()
-setting_changed.connect(nlf_settings.change_setting)
+
+if setting_changed is not None:
+    setting_changed.connect(nlf_settings.change_setting)

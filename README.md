@@ -1,3 +1,8 @@
+[![PyPi Version](https://img.shields.io/pypi/v/django-nlf)](https://pypi.org/project/django-nlf/)
+[![PyPi Downloads](https://img.shields.io/pypi/dw/django-nlf)](https://pypi.org/project/django-nlf/)
+![Tests](https://github.com/hodossy/django-nlf/workflows/.github/workflows/unittest-matrix.yaml/badge.svg?branch=main)
+![Weekly](https://github.com/hodossy/django-nlf/workflows/.github/workflows/weekly.yaml/badge.svg?branch=main)
+[![Documentation](https://img.shields.io/readthedocs/django-nlf)](https://django-nlf.readthedocs.io/en/latest/)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 # django-nlf
@@ -20,12 +25,12 @@ from .models import Article
 
 nl_filter = DjangoNLFilter()
 qs = Article.objects.all()
-q = 'author.username is john or title ~ news'
+q = 'author.username is john or title contains news'
 # equivalent to Article.objects.filter(Q(author__username="user") | Q(title__icontains="news"))
 articles = nl_filter.filter(qs, q)
 
 # Nested logical operators are also supported:
-q = 'author.username is john and (title ~ news or created_at <= 2020-06-05)'
+q = 'author.username is john and (title contains news or created_at <= 2020-06-05)'
 # equivalent to
 # Article.objects.filter(
 #   Q(author__username="user") & (Q(title__icontains="news") | Q(created_at__lte="2020-06-05"))

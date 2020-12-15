@@ -84,7 +84,7 @@ def negate(output):
     return [negate(part) for part in output]
 
 
-# This class defines a complete listener for a parse tree produced by DjangoNLFParser.
+#  pylint: disable=invalid-name
 class DjangoNLFListener(ParseTreeListener):
     def __init__(self):
         super().__init__()

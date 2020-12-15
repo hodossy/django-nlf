@@ -1,3 +1,6 @@
+"""
+Django REST Framework integration with a filter backend.
+"""
 from django.template import loader
 from rest_framework.filters import BaseFilterBackend
 from rest_framework import compat
@@ -7,7 +10,11 @@ from django_nlf.filters.django import DjangoNLFilter
 
 
 class DjangoNLFilterBackend(BaseFilterBackend):
+    """A Django REST Framework filtering backend to integrate the natural language filter."""
+
+    #: The name of the query parameter where the filtering expression arrives
     filter_param = nlf_settings.QUERY_PARAM
+    #: The class of the filter to be used
     filter_class = DjangoNLFilter
     description = ""
     template = "django_nlf/rest_framework/form.html"

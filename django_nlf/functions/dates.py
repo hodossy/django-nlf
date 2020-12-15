@@ -1,3 +1,6 @@
+"""
+Default date functions
+"""
 import calendar
 
 from django.core.exceptions import ImproperlyConfigured

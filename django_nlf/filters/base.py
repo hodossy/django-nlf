@@ -1,9 +1,6 @@
 import abc
 import typing
 
-from django.db import models
-from django.db.models.constants import LOOKUP_SEP
-
 from django_nlf.antlr import DjangoNLFLanguage
 from django_nlf.functions import FunctionRegistry
 from django_nlf.types import (
@@ -19,7 +16,7 @@ class NLFilterBase(abc.ABC):
     language_class = DjangoNLFLanguage
     function_factory = FunctionRegistry
 
-    def get_conditions(self, expression):
+    def get_conditions(self, expression: str):
         filter_tree = self.get_language().parse(expression)
         return self.build_conditions(filter_tree)
 
@@ -56,7 +53,7 @@ class NLFilterBase(abc.ABC):
         left = self.build_conditions(filter_tree.left)
         right = self.build_conditions(filter_tree.right)
 
-        if filter_tree.op == Operation.OR:
+        if filter_tree.operation == Operation.OR:
             return left | right
         return left & right
 
