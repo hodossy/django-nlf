@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from setuptools import setup
+from setuptools import setup, find_packages
 
 from django_nlf import __version__ as dnlf_version
 
@@ -24,7 +24,7 @@ setup(
     url='https://github.com/hodossy/django-nlf',
     license='MIT',
     platforms='any',
-    packages=['django_nlf'],
+    packages=find_packages('django_nlf'),
     keywords=['django', 'natural-Language', 'filtering'],
     classifiers=[
         'Development Status :: 1 - Planning',
