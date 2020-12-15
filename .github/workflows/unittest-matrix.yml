@@ -1,4 +1,4 @@
-name: Unit test matrix
+name: Unit tests
 
 on:
   push:
