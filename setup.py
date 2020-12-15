@@ -25,6 +25,7 @@ setup(
     license="MIT",
     platforms="any",
     packages=find_packages(exclude=["tests*"]),
+    include_package_data=True,
     keywords=["django", "natural-Language", "filtering"],
     classifiers=[
         "Development Status :: 4 - Beta",
