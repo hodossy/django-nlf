@@ -1,14 +1,3 @@
-Available Functions
-===================
-
-Functions can be used in three ways: as a *field*, a *value* or a whole *expression*.
-
-Date functions
-**************
-
-.. automodule:: django_nlf.functions.dates
-    :members:
-
 .. _custom-functions:
 
 Writing your own function
@@ -47,7 +36,7 @@ If the function is used as a field, it must return a dictionary with a single ke
 Expression functions
 ********************
 
-Expression functions are passed an additional keyword argument `exclude` to specify if the function has been negated (:code:`exclude=True`) or not (:code:`exclude=False`). It must return a tuple of a dictionary holding annotations as for field functions and a :class:`Q object <django:django.db.models.Q>`.
+Expression functions are passed an additional keyword argument :code:`exclude` to specify if the function has been negated (:code:`exclude=True`) or not (:code:`exclude=False`). It must return a tuple of a dictionary holding annotations as for field functions and a :class:`Q object <django:django.db.models.Q>`.
 
 .. warning::
 

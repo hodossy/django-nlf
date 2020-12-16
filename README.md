@@ -17,7 +17,16 @@ Install using `pip`,
 pip install django-nlf
 ```
 
-Then you can use the `DjangoNLFilter` with a queryset and a string, containing the filter expression. Please see the [Language Reference]() for more details.
+And add :code:`django_nlf` to your :code:`INSTALLED_APPS`.
+
+```
+INSTALLED_APPS = [
+    ...
+    "django_nlf",
+]
+```
+
+Then you can use the `DjangoNLFilter` with a queryset and a string, containing the filter expression. Please see the [Language Reference](https://django-nlf.readthedocs.io/en/stable/language/index.html) for more details.
 
 ```python
 from django_nlf import DjangoNLFilter
@@ -44,10 +53,9 @@ You just need to simply add the natural language filter backend to your filter b
 
 ```
 REST_FRAMEWORK = {
-  ...
   'DEFAULT_FILTER_BACKENDS': (
+    ...
     'django_nlf.rest_framework.DjangoNLFilterBackend',
   ),
-  ...
 }
 ```

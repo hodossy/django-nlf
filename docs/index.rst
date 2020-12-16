@@ -8,7 +8,7 @@ Welcome to Django Natural Language Filter's documentation!
 
 The goal of Django NLF is to provide a simple and easy way to express complex filtering criteria. This natural language approach enables building nested complex queries quickly for your users, which are otherwise cumbersome with other libraries.
 
-It provides an intuitive way to start with simpler criteria, but tries not to get in the way of more advanced use cases that need regular expressions, annotations or aggregations.
+It provides an intuitive way to start with simpler criteria, but tries not to get in the way of more advanced use cases that need regular expressions, annotations or aggregations etc.
 
 .. warning::
 
@@ -21,7 +21,16 @@ Install using ``pip``,
 
 .. code-block:: bash
 
-  pip install django-nlf
+  $ pip install django-nlf
+
+And add :code:`django_nlf` to your :code:`INSTALLED_APPS`.
+
+.. code-block:: python
+
+  INSTALLED_APPS = [
+      ...
+      "django_nlf",
+  ]
 
 Then you can use the ``DjangoNLFilter`` with a queryset and a string, containing the filter expression. Please see the :ref:`language-reference` for more details.
 
@@ -33,12 +42,12 @@ Then you can use the ``DjangoNLFilter`` with a queryset and a string, containing
 
   nl_filter = DjangoNLFilter()
   qs = Article.objects.all()
-  q = 'author.username is john or title ~ news'
+  q = "author.username is john or title ~ news"
   # equivalent to Article.objects.filter(Q(author__username="user") | Q(title__icontains="news"))
   articles = nl_filter.filter(qs, q)
 
   # Nested logical operators are also supported:
-  q = 'author.username is john and (title ~ news or created_at <= 2020-06-05)'
+  q = "author.username is john and (title ~ news or created_at <= 2020-06-05)"
   # equivalent to
   # Article.objects.filter(
   #   Q(author__username="user") & (Q(title__icontains="news") | Q(created_at__lte="2020-06-05"))
@@ -53,24 +62,30 @@ You just need to simply add the natural language filter backend to your filter b
 .. code-block:: python
 
   REST_FRAMEWORK = {
-    ...
-    'DEFAULT_FILTER_BACKENDS': (
-      'django_nlf.rest_framework.DjangoNLFilterBackend',
+    "DEFAULT_FILTER_BACKENDS": (
+      ...
+      "django_nlf.rest_framework.DjangoNLFilterBackend",
     ),
-    ...
   }
-
 
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
+   :caption: User Guide
    :hidden:
    :titlesonly:
 
    language/index.rst
+   customizations/index.rst
    configuration.rst
 
+.. toctree::
+   :maxdepth: 2
+   :caption: Developer Guide
+   :hidden:
+   :titlesonly:
+
+   development/index.rst
 
 Indices and tables
 ==================

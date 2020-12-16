@@ -69,15 +69,17 @@ You can group these expressions as well:
 Advanced Use
 ------------
 
-To express the most complicated filtering criteria, functions can be used in the language as an *expression* or a *value*.
+To express the most complicated filtering criteria, functions can be used in the language as a *field*, a *value* or an *expression*.
 On how to develop such functions, see the :ref:`Writing your own function Guide <custom-functions>`.
 
 For example if we have an *articles* table for a science site, we could do the following, where :code:`hasBeenPeerReviewed()` hides a nasty join detail to check if a submitted paper has already been reviewed.
 
+Some functions are available by default. More info on the :ref:`Available functions <available-functions>`
+
   .. code-block:: python
 
-    "author is john and hasBeenPeerReviewed()"
-    "published > startOfYear()"
+    q1 = "author is john and hasBeenPeerReviewed()"
+    q2 = "published > startOfYear()"
 
 See Also
 --------
@@ -87,4 +89,4 @@ See Also
 
    lookups.rst
    operators.rst
-   functions.rst
+   available_functions.rst
