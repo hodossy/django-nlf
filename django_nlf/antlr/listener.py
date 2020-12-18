@@ -65,7 +65,7 @@ def sanitize_value(value, **kwargs):
         return CustomFunction(function_name, args, kwargs)
 
     # TODO: Proper error msg
-    raise ValueError("Invalid value")
+    raise ValueError(f"Unknown value type {value.type}")
 
 
 def negate(output):
@@ -127,7 +127,7 @@ class DjangoNLFListener(ParseTreeListener):
     def exitOperator(self, ctx: DjangoNLFParser.OperatorContext):
         if ctx.AND() is not None:
             self.operator = Operator(0, self.depth)
-        elif ctx.OR() is not None:
+        elif ctx.OR() is not None:  # pragma: no branch
             self.operator = Operator(1, self.depth)
 
     # # Enter a parse tree produced by DjangoNLFParser#boolean_expr.
@@ -176,7 +176,7 @@ class DjangoNLFListener(ParseTreeListener):
             self.lookup = Lookup.GTE
         elif ctx.LT() is not None:
             self.lookup = Lookup.LT
-        elif ctx.LTE() is not None:
+        elif ctx.LTE() is not None:  # pragma: no branch
             self.lookup = Lookup.LTE
 
     # # Enter a parse tree produced by DjangoNLFParser#expression.

@@ -28,7 +28,7 @@ class DjangoNLFilterBackend(BaseFilterBackend):
         return self.filter_class(request, view)
 
     def get_filter_expr(self, request):
-        return request.query_params.get(self.filter_param, '')
+        return request.query_params.get(self.filter_param, "")
 
     def to_html(self, request, queryset, view):  # pylint: disable=unused-argument
         template = loader.get_template(self.template)

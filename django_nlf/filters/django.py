@@ -1,4 +1,4 @@
-from typing import Any, Union
+from typing import Any, Union, Mapping
 
 from django.db import models
 from django.db.models.constants import LOOKUP_SEP
@@ -11,7 +11,8 @@ from .base import NLFilterBase
 
 
 class DjangoNLFilter(NLFilterBase):
-    lookups: dict = {
+    generic_shortcuts_key = "__all__"
+    lookups: Mapping[Lookup, str] = {
         Lookup.EQUALS: "iexact",
         Lookup.CONTAINS: "icontains",
         Lookup.REGEX: "iregex",
@@ -23,7 +24,7 @@ class DjangoNLFilter(NLFilterBase):
     }
     path_sep: str = nlf_settings.PATH_SEPARATOR
     empty_val: str = nlf_settings.EMPTY_VALUE
-    # field_shortcuts = {}
+    field_shortcuts: Mapping[str, Mapping[str, str]] = nlf_settings.FIELD_SHORTCUTS
 
     def __init__(self, request=None, view=None):
         super().__init__()
@@ -35,6 +36,7 @@ class DjangoNLFilter(NLFilterBase):
         self.opts = None
 
         self.annotations = {}
+        self.orig_field_name = None
 
     def follow_field_path(self, opts, path):
         """Resolves the field path on the model to get a Field instance. If any many to many
@@ -98,6 +100,24 @@ class DjangoNLFilter(NLFilterBase):
 
         return condition
 
+    def resolve_shortcut(self, field_name: str) -> str:
+        """Resolves the final field name according to the FIELD_SHORTCUTS setting.
+
+        :param str field_name: The field name arrived in the filter expression.
+        :return: The resolved final field name.
+        :rtype: str
+        """
+        if self.field_shortcuts:
+            model_shortcuts = self.field_shortcuts.get(self.opts.label, {})
+            if field_name in model_shortcuts:
+                return model_shortcuts[field_name]
+
+            generic_shortcuts = self.field_shortcuts.get(self.generic_shortcuts_key, {})
+            if field_name in generic_shortcuts:
+                return generic_shortcuts[field_name]
+
+        return field_name
+
     def normalize_field_name(self, field_name: str) -> str:
         """Normalizes field name. By default it replaces PATH_SEPARATOR characters with Django's LOOKUP_SEP.
 
@@ -105,7 +125,8 @@ class DjangoNLFilter(NLFilterBase):
         :return: Normalized field name.
         :rtype: str
         """
-        # field_name = self.field_shortcuts.get(field_name, field_name)
+        self.orig_field_name = field_name
+        field_name = self.resolve_shortcut(field_name)
         return field_name.replace(self.path_sep, LOOKUP_SEP)
 
     def normalize_value(
@@ -139,7 +160,7 @@ class DjangoNLFilter(NLFilterBase):
                     return val
 
             choices = ", ".join([display for _, display in field.choices])
-            raise ValueError(f"Invalid {field_name}! Must be one of {choices}")
+            raise ValueError(f"Invalid {self.orig_field_name}! Must be one of {choices}")
 
         if isinstance(field, (models.DateField, models.DateTimeField)):
             return self.coerce_datetime(value)
@@ -150,13 +171,13 @@ class DjangoNLFilter(NLFilterBase):
         return value
 
     def get_condition(self, field: str, lookup: Lookup, value: Any):
-        """Constructs a :class:`Q object <>` based on parameters.
+        """Constructs a :class:`Q object <django:django.db.models.Q>` based on parameters.
 
         :param str field: The field name.
         :param Lookup lookup: The lookup to be used.
         :param Any value: The filtering value.
         :return: The matching Q object, the filtering condition.
-        :rtype: :class:`Q <>`
+        :rtype: :class:`Q <django:django.db.models.Q>`
         """
         if isinstance(value, bool):
             lookup_str = None

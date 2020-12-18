@@ -140,3 +140,19 @@ class DjangoNLFilterSimpleTestCase(BaseTestCase):
         qs = self.nl_filter.filter(Publication.objects.all(), filter_expr)
         self.assertEqual(qs.count(), 2)
         self.assertListEqual(list(qs.all()), [self.p2, self.p1])
+
+
+class DjangoNLFilterShortcutsTestCase(BaseTestCase):
+    def test_model_shortcuts(self):
+        self.nl_filter.field_shortcuts = {"tests.Publication": {"views": "articles.views"}}
+        filter_expr = "views > 10000 or views < 5000"
+        qs = self.nl_filter.filter(Publication.objects.all(), filter_expr)
+        self.assertEqual(qs.count(), 2)
+        self.assertListEqual(list(qs.all()), [self.p2, self.p1])
+
+    def test_generic_shortcuts(self):
+        self.nl_filter.field_shortcuts = {"__all__": {"views": "articles.views"}}
+        filter_expr = "views > 10000 or views < 5000"
+        qs = self.nl_filter.filter(Publication.objects.all(), filter_expr)
+        self.assertEqual(qs.count(), 2)
+        self.assertListEqual(list(qs.all()), [self.p2, self.p1])

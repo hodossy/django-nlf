@@ -12,10 +12,11 @@ except ImportError:
 
 
 DEFAULTS = {
-    "QUERY_PARAM": "q",
-    "PATH_SEPARATOR": ".",
     "EMPTY_VALUE": "EMPTY",
     "FALSE_VALUES": ("0", "f"),
+    "FIELD_SHORTCUTS": {},
+    "PATH_SEPARATOR": ".",
+    "QUERY_PARAM": "q",
 }
 
 
