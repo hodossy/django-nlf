@@ -1,3 +1,5 @@
+from django.test import override_settings
+
 from .models import Article, Publication
 from .utils import BaseTestCase
 
@@ -156,3 +158,12 @@ class DjangoNLFilterShortcutsTestCase(BaseTestCase):
         qs = self.nl_filter.filter(Publication.objects.all(), filter_expr)
         self.assertEqual(qs.count(), 2)
         self.assertListEqual(list(qs.all()), [self.p2, self.p1])
+
+
+class DjangoNLFilterConverterTestCase(BaseTestCase):
+    @override_settings(NLF_FIELD_NAME_CONVERTER="django_nlf.utils.camel_to_snake_case")
+    def test_camel_case_fields(self):
+        filter_expr = "createdAt > 2016-05-01"
+        qs = self.nl_filter.filter(Article.objects.all(), filter_expr)
+        self.assertEqual(qs.count(), 1)
+        self.assertEqual(qs.first(), self.a4)

@@ -19,6 +19,15 @@ Default: ``("0", "f")``
 
 Used in boolean coercion to determine the boolean value of a string. If the first character of the value coerced to boolean matches any listed character, the value is considered ``False``, otherwise ``True``.
 
+NLF_FIELD_NAME_CONVERTER
+************************
+
+Default: ``None``
+
+A function or an import path to a function that applies a conversion to the field name. Can be used to automatically convert between cases, e.g. *camelCase* to *snake_case*.
+
+One such converter function is readily available as ``django_nlf.utils.camel_to_snake_case``.
+
 NLF_FIELD_SHORTCUTS
 *******************
 

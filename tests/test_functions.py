@@ -28,6 +28,11 @@ class DjangoNLFilterFunctionsTestCase(BaseTestCase):
         with self.assertRaises(ValueError):
             self.nl_filter.filter(Article.objects.all(), filter_expr)
 
+    def test_function_wrong_role(self):
+        filter_expr = "market_share < totalViews()"
+        with self.assertRaises(ValueError):
+            self.nl_filter.filter(Publication.objects.all(), filter_expr)
+
     def test_function_as_expression_no_params(self):
         filter_expr = "hasBeenPublished()"
         qs = self.nl_filter.filter(Article.objects.all(), filter_expr)

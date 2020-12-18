@@ -119,7 +119,8 @@ class DjangoNLFilter(NLFilterBase):
         return field_name
 
     def normalize_field_name(self, field_name: str) -> str:
-        """Normalizes field name. By default it replaces PATH_SEPARATOR characters with Django's LOOKUP_SEP.
+        """Normalizes field name. First it resolves and shortcuts and then applies the conversion,
+        then  it replaces PATH_SEPARATOR characters with Django's LOOKUP_SEP.
 
         :param str field_name: The name of the field.
         :return: Normalized field name.
@@ -127,6 +128,11 @@ class DjangoNLFilter(NLFilterBase):
         """
         self.orig_field_name = field_name
         field_name = self.resolve_shortcut(field_name)
+
+        converter = nlf_settings.FIELD_NAME_CONVERTER
+        if converter and callable(converter):
+            field_name = converter(field_name)
+
         return field_name.replace(self.path_sep, LOOKUP_SEP)
 
     def normalize_value(
