@@ -37,7 +37,7 @@ Then you can use the ``DjangoNLFilter`` with a queryset and a string, containing
 .. code-block:: python
   :linenos:
 
-  from django_nlf import DjangoNLFilter
+  from django_nlf.filters import DjangoNLFilter
   from .models import Article
 
   nl_filter = DjangoNLFilter()

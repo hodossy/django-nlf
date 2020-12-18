@@ -29,7 +29,7 @@ INSTALLED_APPS = [
 Then you can use the `DjangoNLFilter` with a queryset and a string, containing the filter expression. Please see the [Language Reference](https://django-nlf.readthedocs.io/en/stable/language/index.html) for more details.
 
 ```python
-from django_nlf import DjangoNLFilter
+from django_nlf.filters import DjangoNLFilter
 from .models import Article
 
 nl_filter = DjangoNLFilter()
