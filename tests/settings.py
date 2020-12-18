@@ -10,6 +10,7 @@ INSTALLED_APPS = (
     "django.contrib.staticfiles",
     "django.contrib.auth",
     "django_nlf",
+    "rest_framework",
     "tests",
 )
 
@@ -25,3 +26,13 @@ TEMPLATES = [
 ]
 
 STATIC_URL = "/static/"
+
+ROOT_URLCONF = "tests.urls"
+
+REST_FRAMEWORK = {
+    "DEFAULT_FILTER_BACKENDS": ("django_nlf.rest_framework.DjangoNLFilterBackend",),
+    "TEST_REQUEST_RENDERER_CLASSES": (
+        "rest_framework.renderers.JSONRenderer",
+        "rest_framework.renderers.TemplateHTMLRenderer",
+    ),
+}
