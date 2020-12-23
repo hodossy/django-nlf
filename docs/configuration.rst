@@ -57,7 +57,3 @@ NLF_QUERY_PARAM
 Default: ``"q"``
 
 This applies to the Django RESTFramework Backend. This parameter is used for extracting the filter expression from the ``GET`` query parameters.
-
-
-  "PATH_SEPARATOR": ".",
-  "QUERY_PARAM": "q",

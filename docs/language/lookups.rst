@@ -5,10 +5,6 @@ Supported Lookups
 
     The lookups are all case insensitive.
 
-  .. note::
-
-    Custom lookups are not supported currently.
-
 Equals
 ******
 
@@ -38,3 +34,7 @@ Lower than (or equal)
 ***********************
 
 Can be expressed as :code:`<` and :code:`<=`, and means a comparison against the given value.
+
+  .. note::
+
+    Custom lookups are not supported currently.

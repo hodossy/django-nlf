@@ -1,6 +1,17 @@
 Converting field names
 ======================
 
+You may not like the snake case convention widely used in Python to be used in the filtering expressions your user write. Therefore you can use one of the built in case coverters or write your own.
+
+Built in converters
+*******************
+
+.. autofunction:: django_nlf.utils.camel_to_snake_case
+
+
+Custom converter
+****************
+
 To support automatic case conversion, a custom implementation can be provided.
 
 .. code-block:: python

@@ -25,8 +25,8 @@ All development dependencies are listed in :code:`dev_requirements.txt`.
 
 A :code:`Makefile` is available with the most common operations that are need to be run. The following targets are available:
 
-- :code:`make lint`: Runs [black](https://black.readthedocs.io/en/stable/) in check mode and [pylint](http://pylint.pycqa.org/)
-- :code:`make format`: Runs [black](https://black.readthedocs.io/en/stable/) and formats each file
+- :code:`make lint`: Runs `black <https://black.readthedocs.io/en/stable/>`_ in check mode and `pylint <http://pylint.pycqa.org/>`_
+- :code:`make format`: Runs `black <https://black.readthedocs.io/en/stable/>`_ and formats each file
 - :code:`make test`: Runs the test suite
 - :code:`make coverage`: Runs the test suite and measures coverage
 - :code:`make docs`: Builds the documentation
