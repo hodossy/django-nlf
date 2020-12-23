@@ -8,7 +8,6 @@ Built in converters
 
 .. autofunction:: django_nlf.utils.camel_to_snake_case
 
-
 Custom converter
 ****************
 

@@ -4,6 +4,8 @@
 ![Weekly](https://github.com/hodossy/django-nlf/workflows/Weekly/badge.svg?branch=main)
 [![Documentation](https://img.shields.io/readthedocs/django-nlf)](https://django-nlf.readthedocs.io/en/latest/)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![Total alerts](https://img.shields.io/lgtm/alerts/g/hodossy/django-nlf.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/hodossy/django-nlf/alerts/)
+[![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/hodossy/django-nlf.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/hodossy/django-nlf/context:python)
 
 # django-nlf
 
