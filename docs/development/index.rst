@@ -23,7 +23,7 @@ All development dependencies are listed in :code:`dev_requirements.txt`.
 
   $ pip install -r dev_requirements.txt
 
-A :code:`Makefile` is available with the most common operations that are need to be run. The following targets are available:
+A :code:`Makefile` is available with the most common operations that are needed during development. The following targets are available:
 
 - :code:`make lint`: Runs `black <https://black.readthedocs.io/en/stable/>`_ in check mode and `pylint <http://pylint.pycqa.org/>`_
 - :code:`make format`: Runs `black <https://black.readthedocs.io/en/stable/>`_ and formats each file
