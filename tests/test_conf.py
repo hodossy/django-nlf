@@ -28,10 +28,10 @@ class NLFSettingsTestCase(TestCase):
 
     @override_settings(NLF_EMPTY_VALUE="django_nlf.utils.coerce_bool")
     def test_import_string(self):
-        self.nlf_settings.IMPORT_STRINGS = ("EMPTY_VALUE")
+        self.nlf_settings.IMPORT_STRINGS = "EMPTY_VALUE"
         self.assertTrue(callable(self.nlf_settings.EMPTY_VALUE))
 
-    @override_settings(NLF_EMPTY_VALUE=("django_nlf.utils.coerce_bool", ))
+    @override_settings(NLF_EMPTY_VALUE=("django_nlf.utils.coerce_bool",))
     def test_import_list(self):
         self.nlf_settings.IMPORT_STRINGS = ["EMPTY_VALUE"]
         self.assertEqual(len(self.nlf_settings.EMPTY_VALUE), 1)
