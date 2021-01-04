@@ -7,9 +7,9 @@
 [![Total alerts](https://img.shields.io/lgtm/alerts/g/hodossy/django-nlf.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/hodossy/django-nlf/alerts/)
 [![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/hodossy/django-nlf.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/hodossy/django-nlf/context:python)
 
-# django-nlf
+# Django Natural Language Filter
 
-Django Natural Language Filter
+Django NLF provides a simple and easy way to express complex filtering criteria with a filtering language as close to natural language as possible, while providing APIs to further customize the user experience.
 
 ## Installation
 
@@ -21,7 +21,7 @@ pip install django-nlf
 
 And add `django_nlf` to your `INSTALLED_APPS`.
 
-```
+```python
 INSTALLED_APPS = [
     ...
     "django_nlf",
@@ -37,26 +37,25 @@ from .models import Article
 nl_filter = DjangoNLFilter()
 qs = Article.objects.all()
 q = "author.username is john or title contains news"
-# equivalent to Article.objects.filter(Q(author__username="user") | Q(title__icontains="news"))
+# equivalent to Article.objects.filter(Q(author__username="john") | Q(title__icontains="news"))
 articles = nl_filter.filter(qs, q)
 
 # Nested logical operators are also supported:
 q = "author.username is john and (title contains news or created_at <= 2020-06-05)"
 # equivalent to
 # Article.objects.filter(
-#   Q(author__username="user") & (Q(title__icontains="news") | Q(created_at__lte="2020-06-05"))
+#   Q(author__username="john") & (Q(title__icontains="news") | Q(created_at__lte="2020-06-05"))
 # )
 articles = nl_filter.filter(qs, q)
 ```
 
-## Rest framework integration
+## Django REST framework integration
 
-You just need to simply add the natural language filter backend to your filter backends list.
+Simply add the natural language filter backend to your filter backends list.
 
 ```python
 REST_FRAMEWORK = {
   "DEFAULT_FILTER_BACKENDS": (
-    ...
     "django_nlf.rest_framework.DjangoNLFilterBackend",
   ),
 }
