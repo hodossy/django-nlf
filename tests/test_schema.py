@@ -1,6 +1,8 @@
 import dataclasses
 from unittest import TestCase
 
+from django.test import TestCase as DjangoTestCase
+
 from django_nlf.schema import NLFModelSchemaBuilder
 from django_nlf.types import FieldFilterSchema
 
@@ -207,3 +209,14 @@ class NLFModelSchemaBuilderTestCase(TestCase):
         self.assertTrue("fields" in schema)
         self.assertTrue("functions" in schema)
         self.assertTrue("empty_val" in schema)
+
+
+class SchemaViewTestCase(DjangoTestCase):
+
+    def test_schema_view_for_article(self):
+        response = self.client.get("/schemas/tests/article")
+        self.assertEqual(response.status_code, 200)
+
+    def test_schema_view_for_unknown(self):
+        response = self.client.get("/schemas/tests/author")
+        self.assertEqual(response.status_code, 404)
