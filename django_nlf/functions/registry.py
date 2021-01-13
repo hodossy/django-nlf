@@ -8,7 +8,6 @@ class FunctionRegistry:
     """A Registry that holds supported functions.
     :attr Dict[str, Tuple[Callable, FunctionMeta]] registry: Dictionary of registered functions
                                                              and meta data.
-
     """
 
     registry: Dict[str, Tuple[Callable, FunctionMeta]] = {}
@@ -59,6 +58,25 @@ class FunctionRegistry:
 
         return func
 
+    @classmethod
+    def get_functions_for(cls, model: "django.db.models.Model") -> Dict[FunctionRole, str]:
+        """Returns available functions for a given model.
+
+        :param "django.db.models.Model" model: The current model that is operated on..
+        :return: A dictionary of function names where the key is the function role.
+        :rtype: list
+        """
+        function_map = {
+            FunctionRole.FIELD: [],
+            FunctionRole.VALUE: [],
+            FunctionRole.EXPRESSION: [],
+        }
+        for fn_name, (_, meta) in cls.registry.items():
+            if not meta.models or model in meta.models:
+                function_map[meta.role].append((fn_name, meta.help))
+
+        return function_map
+
 
 def nlf_function(fn_name: str = None, **kwargs) -> Callable:
     """Decorator to register custom functions for the filter language.
@@ -70,7 +88,6 @@ def nlf_function(fn_name: str = None, **kwargs) -> Callable:
     :return: A decorator function that registers the decorated function.
     :rtype: Callable
     """
-
     meta = FunctionMeta(**kwargs)
 
     def decorator(func: Callable) -> Callable:

@@ -1,3 +1,8 @@
+from unittest import TestCase
+
+from django_nlf.functions import FunctionRegistry
+from django_nlf.types import FunctionRole
+
 from .models import Article, Publication
 from .utils import BaseTestCase
 
@@ -56,3 +61,21 @@ class DjangoNLFilterFunctionsTestCase(BaseTestCase):
         qs = self.nl_filter.filter(Article.objects.all(), filter_expr)
         self.assertEqual(qs.count(), 3)
         self.assertListEqual(list(qs.all()), [self.a1, self.a2, self.a3])
+
+
+class FunctionRegistryTestCase(TestCase):
+    DATE_FUNCTIONS = [
+        ("startOfWeek", ""),
+        ("startOfMonth", ""),
+        ("startOfYear", ""),
+    ]
+
+    def test_get_functions_for_article(self):
+        functions = FunctionRegistry.get_functions_for(Article)
+        self.assertListEqual(functions[FunctionRole.VALUE], self.DATE_FUNCTIONS)
+        self.assertListEqual(functions[FunctionRole.EXPRESSION], [("hasBeenPublished", "")])
+
+    def test_get_functions_for_publication(self):
+        functions = FunctionRegistry.get_functions_for(Publication)
+        self.assertListEqual(functions[FunctionRole.VALUE], self.DATE_FUNCTIONS)
+        self.assertListEqual(functions[FunctionRole.FIELD], [("totalViews", "")])

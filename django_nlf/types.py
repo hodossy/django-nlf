@@ -73,3 +73,4 @@ class FunctionMeta:
 
     role: FunctionRole = FunctionRole.VALUE
     models: typing.Iterable["django.db.models.Model"] = tuple()
+    help: str = ""
