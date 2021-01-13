@@ -11,6 +11,7 @@ class Publication(models.Model):
     category = models.SmallIntegerField(choices=CATEGORIES, default=DIGITAL)
     subscription_fee = models.DecimalField(max_digits=5, decimal_places=2)
     market_share = models.FloatField()
+    editor = models.ForeignKey(User, to_field="username", null=True, on_delete=models.SET_NULL)
 
     class Meta:
         ordering = ["title"]

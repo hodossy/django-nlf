@@ -49,14 +49,11 @@ class DjangoNLFilter(NLFilterBase):
         """
         field = opts.get_field(path[0])
 
-        if hasattr(field, "get_path_info"):
-            # This field is a relation, update opts to follow the relation
-            path_info = field.get_path_info()
-
-            if any(path.m2m for path in path_info):
+        if field.is_relation:
+            if field.many_to_many:
                 self.distinct = True
 
-            opts = path_info[-1].to_opts
+            opts = field.related_model._meta  # pylint: disable=protected-access
             return self.follow_field_path(opts, path[1:])
 
         return field
@@ -160,12 +157,12 @@ class DjangoNLFilter(NLFilterBase):
         parts = field_name.split(LOOKUP_SEP)
         field = self.follow_field_path(self.opts, parts)
 
-        if field.choices:
-            for val, display in field.choices:
+        if field.flatchoices:
+            for val, display in field.flatchoices:
                 if value.lower() == display.lower():
                     return val
 
-            choices = ", ".join([display for _, display in field.choices])
+            choices = ", ".join([display for _, display in field.flatchoices])
             raise ValueError(f"Invalid {self.orig_field_name}! Must be one of {choices}")
 
         if isinstance(field, (models.DateField, models.DateTimeField)):

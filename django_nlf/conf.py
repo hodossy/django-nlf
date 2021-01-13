@@ -53,6 +53,8 @@ class NLFSettings:
         "FIELD_SHORTCUTS": {},
         "PATH_SEPARATOR": ".",
         "QUERY_PARAM": "q",
+        "SEARCH_URL_MAP": {},
+        "SEARCH_PARAM": "search",
     }
 
     DEPRECATED_SETTINGS = []

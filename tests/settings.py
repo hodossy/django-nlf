@@ -30,7 +30,10 @@ STATIC_URL = "/static/"
 ROOT_URLCONF = "tests.urls"
 
 REST_FRAMEWORK = {
-    "DEFAULT_FILTER_BACKENDS": ("django_nlf.rest_framework.DjangoNLFilterBackend",),
+    "DEFAULT_FILTER_BACKENDS": (
+        "django_nlf.rest_framework.DjangoNLFilterBackend",
+        "rest_framework.filters.SearchFilter",
+    ),
     "TEST_REQUEST_RENDERER_CLASSES": (
         "rest_framework.renderers.JSONRenderer",
         "rest_framework.renderers.TemplateHTMLRenderer",

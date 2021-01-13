@@ -74,3 +74,26 @@ class FunctionMeta:
     role: FunctionRole = FunctionRole.VALUE
     models: typing.Iterable["django.db.models.Model"] = tuple()
     help: str = ""
+
+
+@dataclass()
+class FieldFilterSchema:
+    """The schema definiton of a model field. Used for autocomplete"""
+
+    path: str
+    type: str
+    help: str
+    nullable: bool
+    choices: typing.Iterable[str] = None
+    search_url: str = None
+    search_param: str = None
+    target_field: str = None
+
+
+@dataclass()
+class ModelFilterSchema:
+    """The schema definition for a model. Used for autocomplete."""
+
+    fields: typing.Iterable[FieldFilterSchema]
+    functions: typing.Iterable[CustomFunction]
+    empty_val: str
