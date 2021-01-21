@@ -5,6 +5,10 @@ line-length = 100
 branch = true
 
 [tool.coverage.report]
+show_missing = true
+include = [
+  "**/django_nlf/**",
+]
 # Regexes for lines to exclude from consideration
 exclude_lines = [
   # Have to re-enable the standard pragma

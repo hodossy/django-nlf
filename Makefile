@@ -6,18 +6,18 @@ lint:
 
 .PHONY: format
 format:
-	@python -m black django_nlf tests runtests.py setup.py
+	@python -m black django_nlf tests manage.py setup.py
 
 
 .PHONY: test
 test:
-	@python runtests.py $(tc)
+	@python manage.py test $(tc)
 
 
 .PHONY: coverage
 coverage:
-	@python -m coverage run runtests.py
-	@python -m coverage report --show-missing --include "**/django_nlf/**"
+	@python -m coverage run manage.py test
+	@python -m coverage report
 
 
 .PHONY: docs
@@ -33,3 +33,8 @@ publish:
 .PHONY: lang
 lang:
 	@$(MAKE) -C ./django_nlf/antlr
+
+
+# All commands that can be proxied to manage.py
+.DEFAULT:
+	@python manage.py $@ $(PARAMS)

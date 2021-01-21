@@ -30,4 +30,4 @@ jobs:
         pip install "django${{ matrix.django-version }}"
     - name: Running unit test
       run: |
-        python runtests.py
+        python manage.py test

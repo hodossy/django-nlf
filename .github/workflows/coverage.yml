@@ -24,5 +24,5 @@ jobs:
         pip install -r test_requirements.txt
     - name: Measuring unit test coverage of the code
       run: |
-        coverage run runtests.py
-        coverage report --show-missing --include "**/django_nlf/**"
+        coverage run manage.py test
+        coverage report

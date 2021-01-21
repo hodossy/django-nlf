@@ -19,4 +19,4 @@ jobs:
         pip install -r test_requirements.txt
     - name: Running unit test
       run: |
-        python runtests.py
+        python manage.py test
