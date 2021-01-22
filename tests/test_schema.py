@@ -202,8 +202,13 @@ class NLFModelSchemaBuilderTestCase(TestCase):
         self.assertEqual(field_schema, expected)
 
     def test_get_schema_for_publication(self):
-         # requesting twice to test cache usage
-        self.builder.get_schema_for(Publication)
+        # requesting twice to test cache usage
+        initial_schema = self.builder.get_schema_for(Publication)
+        schema = self.builder.get_schema_for(Publication)
+        self.assertTrue(initial_schema is schema)
+
+    def test_get_schema_for_publication(self):
+        # requesting twice to test cache usage
         schema = self.builder.get_schema_for(Publication)
         schema = dataclasses.asdict(schema)
         self.assertTrue("fields" in schema)
@@ -212,11 +217,11 @@ class NLFModelSchemaBuilderTestCase(TestCase):
 
 
 class SchemaViewTestCase(DjangoTestCase):
-
     def test_schema_view_for_article(self):
         response = self.client.get("/schemas/tests/article")
         self.assertEqual(response.status_code, 200)
 
     def test_schema_view_for_unknown(self):
         response = self.client.get("/schemas/tests/author")
+        self.assertEqual(response.status_code, 404)
         self.assertEqual(response.status_code, 404)
