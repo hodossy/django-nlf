@@ -1,0 +1,89 @@
+{% load nlf_autocomplete %}
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Django NLF demo</title>
+    <style media="screen">
+      body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      input[type="search"]:before {
+        content: "\002315";
+        font-size: inherit;
+        margin-left: 14px;
+      }
+
+      h1 {
+        color: green;
+      }
+
+      .nlf-autocomplete {
+        box-sizing: border-box;
+        width: 377px;
+        border: 1px solid black;
+        border-radius: 4px;
+        max-height: 200px;
+        overflow-y: scroll;
+      }
+
+      .nlf-autocomplete__input {
+        padding: 0.5em;
+      }
+
+      .nlf-autocomplete__list {
+        list-style: none;
+        padding: 0;
+        margin-block-start: 0;
+      }
+
+      .nlf-autocomplete__option {
+        position: relative;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.5em;
+        border-radius: 0.2em;
+      }
+
+      .nlf-autocomplete__option--active {
+        background-color: rgba(0, 0, 0, 0.1);
+      }
+
+      .nlf-autocomplete__hint {
+        font-size: 0.8em;
+        color: rgba(0, 0, 0, 0.6);
+        right: 0;
+        width: 33%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Simple search box example</h1>
+    <input class="nlf-autocomplete__input" type="search" name="" value="">
+
+    {% nlf_autocomplete_js %}
+
+    <div class="nlf-autocomplete">
+      <ul class="nlf-autocomplete__list">
+        <li class="nlf-autocomplete__option">option 1 <span class="nlf-autocomplete__hint" title ="just a really long help text">just a really long help text</span></li>
+        <li class="nlf-autocomplete__option nlf-autocomplete__option--active">option 2 <span class="nlf-autocomplete__hint">help text</span></li>
+        <li class="nlf-autocomplete__option">option 3 <span class="nlf-autocomplete__hint">help text</span></li>
+        <li class="nlf-autocomplete__option">option 4 <span class="nlf-autocomplete__hint">help text</span></li>
+        <li class="nlf-autocomplete__option">option 5 <span class="nlf-autocomplete__hint">help text</span></li>
+        <li class="nlf-autocomplete__option">option 6 <span class="nlf-autocomplete__hint">help text</span></li>
+        <li class="nlf-autocomplete__option">option 7 <span class="nlf-autocomplete__hint">help text</span></li>
+        <li class="nlf-autocomplete__option">option 8 <span class="nlf-autocomplete__hint">help text</span></li>
+        <li class="nlf-autocomplete__option">option 9 <span class="nlf-autocomplete__hint">help text</span></li>
+        <li class="nlf-autocomplete__option">option 10 <span class="nlf-autocomplete__hint">help text</span></li>
+      </ul>
+    </div>
+  </body>
+</html>

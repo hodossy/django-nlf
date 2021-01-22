@@ -1,7 +1,7 @@
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
-        "NAME": ":memory:",
+        "NAME": "db.sqlite3",
     },
 }
 
@@ -28,6 +28,8 @@ TEMPLATES = [
 STATIC_URL = "/static/"
 
 ROOT_URLCONF = "tests.urls"
+ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
+DEBUG = True
 
 REST_FRAMEWORK = {
     "DEFAULT_FILTER_BACKENDS": (
