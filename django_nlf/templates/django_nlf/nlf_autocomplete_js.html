@@ -1,0 +1,5 @@
+{% load static %}
+
+{{ init | json_script:"suggestionInit" }}
+<script src="{% static 'django_nlf/js/suggestion.js' %}" charset="utf-8"></script>
+<script src="{% static 'django_nlf/js/autocomplete.js' %}" charset="utf-8"></script>
