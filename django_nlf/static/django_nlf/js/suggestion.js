@@ -22,6 +22,14 @@
       console.log('DjangoNLF: ' + msg.toString());
     }
 
+    function suggestion(value, display, help) {
+      return {
+        value: value,
+        display: display,
+        help: help || '',
+      }
+    }
+
     var Suggester = function(appLabel, model, options) {
       this.options = options || defaultOptions;
       this.schemaUrl = `${this.options.schemaRootUrl}/${appLabel}/${model}`;
@@ -36,28 +44,29 @@
     }
 
     Suggester.prototype = {
-      notSuggestion: { value: 'not ', display: 'not', help: '' },
+      notSuggestion: suggestion('not ', 'not', ''),
       operatorSuggestions: [
-        { value: 'and ', display: 'and', help: '' },
-        { value: 'or ', display: 'or', help: '' },
-        { value: 'not ', display: 'not', help: '' },
-        { value: 'and not ', display: 'and not', help: '' },
-        { value: 'or not ', display: 'or not', help: '' },
+        suggestion('and ', 'and', ''),
+        suggestion('or ', 'or', ''),
+        suggestion('not ', 'not', ''),
+        suggestion('and not ', 'and not', ''),
+        suggestion('or not ', 'or not', ''),
       ],
       lookupSuggestions: [
-        { value: 'is ', display: 'is', help: '' },
-        { value: 'is not ', display: 'is not', help: '' },
-        { value: 'contains ', display: 'contains', help: '' },
-        { value: 'does not contain ', display: 'does not contain', help: '' },
-        { value: 'matches ', display: 'matches', help: '' },
-        { value: 'does not match ', display: 'does not match', help: '' },
-        { value: 'in ', display: 'in', help: '' },
-        { value: 'not in ', display: 'not in', help: '' },
-        { value: '> ', display: 'greater than', help: '' },
-        { value: '>= ', display: 'greater than or equal', help: '' },
-        { value: '< ', display: 'lower than', help: '' },
-        { value: '<= ', display: 'lower than or equal', help: '' },
+        suggestion('is ', 'is', ''),
+        suggestion('is not ', 'is not', ''),
+        suggestion('contains ', 'contains', ''),
+        suggestion('does not contain ', 'does not contain', ''),
+        suggestion('matches ', 'matches', ''),
+        suggestion('does not match ', 'does not match', ''),
+        suggestion('in ', 'in', ''),
+        suggestion('not in ', 'not in', ''),
+        suggestion('> ', 'greater than', ''),
+        suggestion('>= ', 'greater than or equal', ''),
+        suggestion('< ', 'lower than', ''),
+        suggestion('<= ', 'lower than or equal', ''),
       ],
+      depthRegex: /\./g,
       getContext: function(expression) {
         var context = {
           scope: null,
@@ -80,6 +89,15 @@
 
           switch (context.scope) {
             case 'field':
+              const depth = context.searchTerm
+                ? (context.searchTerm.match(this.depthRegex) || []).length
+                : 0;
+              suggestions = this.schema.fields
+                .filter((fieldSchema) => (fieldSchema.path.match(this.depthRegex) || []).length === depth)
+                .map((fieldSchema) => {
+                  const suffix = fieldSchema.search_url ? '' : ' ';
+                  return suggestion(fieldSchema.path + suffix, fieldSchema.path);
+                });
               break;
             case 'lookup':
               suggestions = context.searchTerm
@@ -88,21 +106,34 @@
               break;
             case 'value':
               if (context.field.choices) {
-                suggestions = context.field.choices.map((choice) => {})
+                suggestions = context.field.choices
+                  .map((choice) => suggestion(choice + ' ', choice));
               } else if (context.field.search_url) {
                 this.fetchRelated(field, context.searchTerm)
-                  .then((res) => resolve(res))
+                  .then((res) => {
+                    const objects = this.options.getObjects(res);
+                    resolve(
+                      objects.map(this.options.mapToSuggestion)
+                    );
+                  })
                   .catch((err) => reject(err));
                 return;
+              } else {
+                suggestions = this.schema.functions.VALUE
+                  .map((func) => {
+                    const suffix = true ? '()' : '('; // TODO: check the number of parameters
+                    return suggestion(func[0] + suffix, func[0], func[1]);
+                  });
               }
               break;
             case 'operator':
-              suggestions = context.searchTerm
-                ? this.operatorSuggestions.filter((s) => s.display.startsWith(searchTerm))
-                : this.operatorSuggestions;
+              suggestions = this.operatorSuggestions;
               break;
           }
 
+          suggestions = context.searchTerm
+            ? suggestions.filter((s) => s.display.startsWith(searchTerm))
+            : suggestions;
           resolve(suggestions);
         }.bind(this);
         return new Promise(execFn);
@@ -168,7 +199,9 @@
     }
 
     return {
-      Suggester: Suggester
+      Suggester: Suggester,
+      OptionRenderer: null,
+      Completion: null,
     };
   }
 ));

@@ -29,6 +29,11 @@
         border-radius: 4px;
         max-height: 200px;
         overflow-y: scroll;
+        position: absolute;
+      }
+
+      .nlf-autocomplete--hidden {
+        display: none;
       }
 
       .nlf-autocomplete__input {
@@ -54,6 +59,10 @@
         background-color: rgba(0, 0, 0, 0.1);
       }
 
+      .nlf-autocomplete__option--active .nlf-autocomplete__value {
+        font-weight: bold;
+      }
+
       .nlf-autocomplete__hint {
         font-size: 0.8em;
         color: rgba(0, 0, 0, 0.6);
@@ -71,19 +80,49 @@
 
     {% nlf_autocomplete_js %}
 
-    <div class="nlf-autocomplete">
+    <!-- <div class="nlf-autocomplete">
       <ul class="nlf-autocomplete__list">
-        <li class="nlf-autocomplete__option">option 1 <span class="nlf-autocomplete__hint" title ="just a really long help text">just a really long help text</span></li>
-        <li class="nlf-autocomplete__option nlf-autocomplete__option--active">option 2 <span class="nlf-autocomplete__hint">help text</span></li>
-        <li class="nlf-autocomplete__option">option 3 <span class="nlf-autocomplete__hint">help text</span></li>
-        <li class="nlf-autocomplete__option">option 4 <span class="nlf-autocomplete__hint">help text</span></li>
-        <li class="nlf-autocomplete__option">option 5 <span class="nlf-autocomplete__hint">help text</span></li>
-        <li class="nlf-autocomplete__option">option 6 <span class="nlf-autocomplete__hint">help text</span></li>
-        <li class="nlf-autocomplete__option">option 7 <span class="nlf-autocomplete__hint">help text</span></li>
-        <li class="nlf-autocomplete__option">option 8 <span class="nlf-autocomplete__hint">help text</span></li>
-        <li class="nlf-autocomplete__option">option 9 <span class="nlf-autocomplete__hint">help text</span></li>
-        <li class="nlf-autocomplete__option">option 10 <span class="nlf-autocomplete__hint">help text</span></li>
+        <li class="nlf-autocomplete__option">
+          <span class="nlf-autocomplete__value">option 1</span>
+          <span class="nlf-autocomplete__hint" title="just a really long help text">just a really long help text</span>
+        </li>
+        <li class="nlf-autocomplete__option nlf-autocomplete__option--active">
+          <span class="nlf-autocomplete__value">option 2</span>
+          <span class="nlf-autocomplete__hint">help text</span>
+        </li>
+        <li class="nlf-autocomplete__option">
+          <span class="nlf-autocomplete__value">option 3</span>
+          <span class="nlf-autocomplete__hint">help text</span>
+        </li>
+        <li class="nlf-autocomplete__option">
+          <span class="nlf-autocomplete__value">option 4</span>
+          <span class="nlf-autocomplete__hint">help text</span>
+        </li>
+        <li class="nlf-autocomplete__option">
+          <span class="nlf-autocomplete__value">option 5</span>
+          <span class="nlf-autocomplete__hint">help text</span>
+        </li>
+        <li class="nlf-autocomplete__option">
+          <span class="nlf-autocomplete__value">option 6</span>
+          <span class="nlf-autocomplete__hint">help text</span>
+        </li>
+        <li class="nlf-autocomplete__option">
+          <span class="nlf-autocomplete__value">option 7</span>
+          <span class="nlf-autocomplete__hint">help text</span>
+        </li>
+        <li class="nlf-autocomplete__option">
+          <span class="nlf-autocomplete__value">option 8</span>
+          <span class="nlf-autocomplete__hint">help text</span>
+        </li>
+        <li class="nlf-autocomplete__option">
+          <span class="nlf-autocomplete__value">option 9</span>
+          <span class="nlf-autocomplete__hint">help text</span>
+        </li>
+        <li class="nlf-autocomplete__option">
+          <span class="nlf-autocomplete__value">option 10</span>
+          <span class="nlf-autocomplete__hint">help text</span>
+        </li>
       </ul>
-    </div>
+    </div> -->
   </body>
 </html>
