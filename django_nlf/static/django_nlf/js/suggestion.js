@@ -59,24 +59,59 @@
         suggestion('does not contain ', 'does not contain', ''),
         suggestion('matches ', 'matches', ''),
         suggestion('does not match ', 'does not match', ''),
-        suggestion('in ', 'in', ''),
-        suggestion('not in ', 'not in', ''),
+        suggestion('in (', 'in', ''),
+        suggestion('not in (', 'not in', ''),
         suggestion('> ', 'greater than', ''),
         suggestion('>= ', 'greater than or equal', ''),
         suggestion('< ', 'lower than', ''),
         suggestion('<= ', 'lower than or equal', ''),
       ],
       depthRegex: /\./g,
+
       getContext: function(expression) {
         var context = {
           scope: null,
           field: null,
-          searchTerm: null,
+          searchTerm: "",
         };
+        var lookBehindTokens = [];
 
-        if (!expression) {
+        if (expression.trim().length === 0) {
           context.scope = 'field';
           return context;
+        }
+
+        const tokens = expression.split(' ');
+        for (var i in tokens) {
+          if (!tokens[i] && !tokens[i-1]) {
+            // skip for multiple spaces
+            continue;
+          }
+          switch (context.scope) { // prepresents previous scope
+            case null:
+              // first token must be a field
+              context.scope = 'field';
+              context.searchTerm = tokens[i];
+              break;
+            case 'field':
+              // fields cannot contain any space, so we must enter a lookup
+              context.scope = 'lookup';
+              context.searchTerm = tokens[i];
+              break;
+            case 'lookup':
+              // lookups can contain spaces, so we must ensure to only switch
+              // context when srictly necessary, i.e there is a correct
+              if (tokens[i].startsWith('(') || tokens[i].startsWith('"')) {
+                context.scope = 'value';
+              }
+              break;
+            case 'value':
+              context.scope = 'operator';
+              break;
+            case 'operator':
+              context.scope = 'field';
+              break;
+          }
         }
 
         return context;
@@ -84,7 +119,7 @@
 
       suggestFor: function (expression) {
         var execFn = function (resolve, reject) {
-          var context = this.getContext();
+          var context = this.getContext(expression);
           var suggestions = [];
 
           switch (context.scope) {
@@ -100,9 +135,7 @@
                 });
               break;
             case 'lookup':
-              suggestions = context.searchTerm
-              ? this.lookupSuggestions.filter((s) => s.display.startsWith(searchTerm))
-              : this.lookupSuggestions;
+              suggestions = this.lookupSuggestions;
               break;
             case 'value':
               if (context.field.choices) {
@@ -132,11 +165,17 @@
           }
 
           suggestions = context.searchTerm
-            ? suggestions.filter((s) => s.display.startsWith(searchTerm))
+            ? suggestions.filter((s) => s.display.startsWith(context.searchTerm))
             : suggestions;
           resolve(suggestions);
         }.bind(this);
         return new Promise(execFn);
+      },
+
+      mergeSelection: function (value, selected) {
+        const context = this.getContext(value);
+        // just replace the search term we had with the selected value
+        return value.slice(0, value.length - context.searchTerm.length) + selected;
       },
 
       setLoading: function (isLoading) {

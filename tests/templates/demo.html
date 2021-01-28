@@ -28,7 +28,7 @@
         border: 1px solid black;
         border-radius: 4px;
         max-height: 200px;
-        overflow-y: scroll;
+        overflow-y: auto;
         position: absolute;
       }
 
@@ -79,6 +79,11 @@
     <input class="nlf-autocomplete__input" type="search" name="" value="">
 
     {% nlf_autocomplete_js %}
+
+    <script type="text/javascript">
+      co = {rendererOptions: {selector: 'input'}, suggestionOptions: {}};
+      c = new DjangoNLF.Completion('tests', 'article', co);
+    </script>
 
     <!-- <div class="nlf-autocomplete">
       <ul class="nlf-autocomplete__list">
