@@ -1,0 +1,32 @@
+name: Javascript unit tests
+
+on:
+  push:
+    branches: [ feature/autocomplete ]
+    paths:
+      - '**.js'
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    name: Testing with ${{ matrix.browser }} on ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.x
+    - name: Install dependencies
+      run: |
+        sudo apt install google-chrome-stable
+        python -m pip install --upgrade pip
+        pip install seleniumbase jasmine
+        sbase install chromedriver latest
+    - name: Running unit test
+      run: |
+        python -m jasmine ci --config jasmine.yml

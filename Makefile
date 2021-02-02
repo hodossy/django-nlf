@@ -14,6 +14,11 @@ test:
 	@python manage.py test $(tc)
 
 
+.PHONY: test-js
+test-js:
+	@python -m jasmine server --config jamine.yml
+
+
 .PHONY: coverage
 coverage:
 	@python -m coverage run manage.py test
