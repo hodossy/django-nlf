@@ -3,18 +3,13 @@ name: Javascript unit tests
 on:
   push:
     branches: [ feature/autocomplete ]
-    paths:
-      - '**.js'
   pull_request:
     branches: [ main ]
 
 jobs:
   test:
-    runs-on: ${{ matrix.os }}
-    name: Testing with ${{ matrix.browser }} on ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ubuntu-latest
+    name: Testing with Chrome
     steps:
     - uses: actions/checkout@v2
     - name: Set up Python ${{ matrix.python-version }}
