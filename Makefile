@@ -16,7 +16,7 @@ test:
 
 .PHONY: test-js
 test-js:
-	@python -m jasmine server --config jamine.yml
+	@jasmine server --config jamine.yml
 
 
 .PHONY: coverage

@@ -24,4 +24,4 @@ jobs:
         sbase install chromedriver latest
     - name: Running unit test
       run: |
-        python -m jasmine ci --config jasmine.yml
+        jasmine ci --config jasmine.yml
