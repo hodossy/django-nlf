@@ -16,12 +16,11 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: 3.x
+    - name: Setup ChromeDriver
+      uses: nanasess/setup-chromedriver@master
     - name: Install dependencies
       run: |
-        sudo apt install google-chrome-stable
-        python -m pip install --upgrade pip
-        pip install seleniumbase jasmine
-        sbase install chromedriver latest
+        pip install jasmine
     - name: Running unit test
       run: |
         jasmine ci --config jasmine.yml
