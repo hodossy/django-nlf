@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "npx karma start --browser Chrome"
+    "test": "npx karma start --browser Chrome",
     "testci": "npx karma start --browser ChromeCI"
   },
   "author": "",
