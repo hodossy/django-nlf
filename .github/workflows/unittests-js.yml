@@ -23,4 +23,4 @@ jobs:
         pip install jasmine
     - name: Running unit test
       run: |
-        jasmine ci --config jasmine.yml
+        jasmine ci --config jasmine.yml --browser chrome
