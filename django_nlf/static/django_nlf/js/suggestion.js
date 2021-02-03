@@ -15,8 +15,6 @@
   }
 }(this, function () {
     'use strict';
-    // Comming from the Django template tag
-    var defaultOptions = JSON.parse(document.querySelector('#suggestionInit').textContent);
 
     function logError(msg) {
       console.log('DjangoNLF: ' + msg.toString());
@@ -31,7 +29,7 @@
     }
 
     var Suggester = function(appLabel, model, options) {
-      this.options = options || defaultOptions;
+      this.options = options;
       this.schemaUrl = `${this.options.schemaRootUrl}/${appLabel}/${model}`;
       this.schema = null;
       this.schemaRequest = null;
