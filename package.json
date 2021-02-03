@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "npx karma start --browser Chrome",
-    "testci": "npx karma start --browser ChromeCI"
+    "test": "npx karma start",
+    "testci": "npx karma start karma-ci.conf.js"
   },
   "author": "",
   "license": "MIT",

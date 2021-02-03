@@ -21,4 +21,4 @@ jobs:
         npm ci
     - name: Running unit test
       run: |
-        npm testci
+        npm run testci

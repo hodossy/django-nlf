@@ -7,17 +7,19 @@ module.exports = function(config) {
       "tests/javascripts/**/*.spec.js",
     ],
     frameworks: ["jasmine"],
-    browsers: ["Chrome"],
-    client: {
-      clearContext: false, // leave Jasmine Spec Runner output visible in browser
-    },
-    reporters: ["progress", "kjhtml"],
+    browsers: ["ChromeCI"],
+    reporters: ["dots"],
     plugins: [
       "karma-chrome-launcher",
       "karma-jasmine",
-      "karma-jasmine-html-reporter"
     ],
-    singleRun: false,
-    restartOnFileChange: true,
+    customLaunchers: {
+      ChromeCI: {
+        base: "ChromeHeadless",
+        flags: ["--no-sandbox"],
+      },
+    },
+    singleRun: true,
+    restartOnFileChange: false,
   });
 };
