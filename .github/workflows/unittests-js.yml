@@ -12,15 +12,13 @@ jobs:
     name: Testing with Chrome
     steps:
     - uses: actions/checkout@v2
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
+    - name: Set up Node
+      uses: actions/setup-node@v2
       with:
-        python-version: 3.x
-    - name: Setup ChromeDriver
-      uses: nanasess/setup-chromedriver@master
+        node-version: '14'
     - name: Install dependencies
       run: |
-        pip install jasmine
+        npm ci
     - name: Running unit test
       run: |
-        jasmine ci --config jasmine.yml --browser chrome
+        npm testci
