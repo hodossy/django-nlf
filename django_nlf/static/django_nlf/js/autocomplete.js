@@ -1,13 +1,21 @@
 (function (root) {
-  if (root.DjangoNLF === undefined) {
+  if (root['DjangoNLF'] === undefined) {
     return;
   }
+
+  function checkInput(input) {
+    if (input === null) {
+      throw new Error("Either 'input' or 'selector' must be defined!");
+    }
+  }
+
   var OptionRenderer = function(options) {
-    this.autoselectFirst = options.autoselectFirst || true;
-    this.input = document.querySelector(options.selector);
-    this.onselect = options.onselect || null;
+    this.autoselectFirst = options['autoselectFirst'] || true;
+    this.input = options['input'] || document.querySelector(options['selector']);
+    checkInput(this.input);
 
     this.optionElements = [];
+    this.onOptionClicked = null;
     this.selected = null;
     this.suggestions = [];
 
@@ -17,14 +25,21 @@
   OptionRenderer.prototype = {
     optionContainer: null,
     optionList: null,
-    onOptionClicked: null,
+    blockName: 'nlf-autocomplete',
+    blockHiddenClass: 'nlf-autocomplete--hidden',
+    optionClass: 'nlf-autocomplete__option',
+    optionActiveClass: 'nlf-autocomplete__option--active',
+    optionListClass: 'nlf-autocomplete__list',
+    optionValueClass: 'nlf-autocomplete__value',
+    optionHintClass: 'nlf-autocomplete__hint',
 
     initOptionContainer: function () {
       this.optionContainer = document.createElement('div');
-      this.optionContainer.className = 'nlf-autocomplete nlf-autocomplete--hidden';
+      this.optionContainer.classList.add(this.blockName);
+      this.optionContainer.classList.add(this.blockHiddenClass);
 
       this.optionList = document.createElement('ul');
-      this.optionList.className = 'nlf-autocomplete__list';
+      this.optionList.classList.add(this.optionListClass);
       this.optionContainer.appendChild(this.optionList);
 
       document.body.appendChild(this.optionContainer);
@@ -35,15 +50,15 @@
 
       for (var i = 0; i < this.suggestions.length; i++) {
         // make sure we have enough li elements
-        if (this.optionElements[i] === undefined) {
-          this.optionElements[i] = this.createOptionLi();
+        if (this.optionElements[i] == undefined) {
+          this.optionElements[i] = this.createOption();
         }
 
         const suggestion = this.suggestions[i];
-        this.optionElements[i].children[0].innerText = suggestion.display;
-        if (suggestion.help) {
-          this.optionElements[i].children[1].innerText = suggestion.help;
-          this.optionElements[i].children[1].title = suggestion.help;
+        this.optionElements[i].children[0].innerText = suggestion['display'];
+        if (suggestion['help']) {
+          this.optionElements[i].children[1].innerText = suggestion['help'];
+          this.optionElements[i].children[1].title = suggestion['help'];
         }
       }
 
@@ -53,50 +68,51 @@
       }
 
       if (this.suggestions.length) {
+        this.showPanel();
         if (this.autoselectFirst) {
           this.select(0);
         }
-        this.showPanel();
       } else {
         this.hidePanel();
       }
     },
 
-    createOptionLi: function () {
+    createOption: function () {
       const li = document.createElement('li');
-      li.className = 'nlf-autocomplete__option';
+      li.classList.add(this.optionClass);
       li.onclick = function (e) {
         this.onClick(e);
       }.bind(this);
 
-      li.appendChild(this.createOptionSpan('value'));
-      li.appendChild(this.createOptionSpan('hint'));
+      li.appendChild(this.createOptionContent());
+      li.appendChild(this.createOptionContent(true));
 
       this.optionList.appendChild(li);
-      return li
+      return li;
     },
 
-    createOptionSpan: function(role) {
+    createOptionContent: function(isHint) {
       const span = document.createElement('span');
-      span.className = `nlf-autocomplete__${role}`;
+      span.classList.add(isHint ? this.optionHintClass : this.optionValueClass);
       return span;
     },
 
     showPanel: function () {
       const rect = this.input.getBoundingClientRect();
+      this.optionContainer.style.position = 'absolute';
       this.optionContainer.style.left = `${rect.left}px`;
       this.optionContainer.style.top = `${rect.top + rect.height}px`;
       this.optionContainer.style.width = `${rect.width}px`;
 
-      if (this.optionContainer.className.includes('hidden')) {
-        this.optionContainer.className = 'nlf-autocomplete';
-      }
+      this.optionContainer.classList.remove(this.blockHiddenClass);
     },
 
     hidePanel: function () {
-      if (!this.optionContainer.className.includes('hidden')) {
-        this.optionContainer.className += ' nlf-autocomplete--hidden';
+      if (!this.optionContainer.classList.contains(this.blockHiddenClass)) {
+        this.optionContainer.classList.add(this.blockHiddenClass);
+        return true;
       }
+      return false;
     },
 
     onClick: function (e) {
@@ -109,16 +125,15 @@
 
     select: function (index) {
       if (this.selected !== null) {
-        this.optionElements[this.selected].className = 'nlf-autocomplete__option';
+        this.optionElements[this.selected].classList.remove(this.optionActiveClass);
       }
       if (index != null) {
         this.selected = Math.min(Math.max(0, index), this.optionElements.length - 1);
-        this.optionElements[this.selected].className += ' nlf-autocomplete__option--active';
+        this.optionElements[this.selected].classList.add(this.optionActiveClass);
         this.scrollToSelection();
       } else {
         this.selected = null;
       }
-
     },
 
     scrollToSelection: function () {
@@ -144,32 +159,68 @@
       return this.selected === null ? null : this.suggestions[this.selected].value;
     }
   };
+  OptionRenderer.prototype.constructor = OptionRenderer;
 
-  var Completion = function (appLabel, model, options) {
-    this.suggester = options.suggester || new root.DjangoNLF.Suggester(appLabel, model, options.suggetionOptions);
-    this.renderer = options.renderer || new OptionRenderer(options.rendererOptions);
+  var Completion = function (options) {
+    if (options === undefined) {
+      // TODO: documentation link to available options
+      throw Error("Mandatory options must be defined! See the documentation!");
+    }
+
+    this.suggester = options['suggester'] || this.getDefaultSuggester(options);
+    this.renderer = options['renderer'] || this.getDefaultRenderer(options);
     this.renderer.onOptionClicked = function () {
       this.completeInput();
     }.bind(this);
-    this.debounce = options.debounce || 225;
 
-    this.input = document.querySelector(options.rendererOptions.selector);
-    this.input.addEventListener('keydown', function (e) {
-      this.onKeyDown(e);
-    }.bind(this));
-    this.input.addEventListener('input', function (e) {
-      this.onInput(e);
-    }.bind(this));
-    this.input.addEventListener('focus', function (e) {
-      this.onInput(e);
-    }.bind(this));
-    this.input.addEventListener('blur', function () {
-      this.renderer.hidePanel();
-    }.bind(this));
+    this.debounce = options['debounce'] || 225;
+    this.inputDebounceTimer = null;
+
+    this.lastValue = null;
+    this.input = options['input'] || document.querySelector(options['selector']);
+    checkInput(this.input);
+    this.setUpListeners();
   }
 
   Completion.prototype = {
-    inputDebounceTimer: null,
+    getDefaultSuggester: function (options) {
+      const suggetionOptions = options['suggetionOptions'] || {};
+      suggetionOptions['appLabel'] = options['appLabel'];
+      suggetionOptions['model'] = options['model'];
+      return new root.DjangoNLF.Suggester(suggetionOptions);
+    },
+
+    getDefaultRenderer: function (options) {
+      const rendererOptions = options['rendererOptions'] || {};
+      rendererOptions['input'] = options['input'];
+      rendererOptions['selector'] = options['selector'];
+      return new OptionRenderer(rendererOptions);
+    },
+
+    setUpListeners: function () {
+      this.input.addEventListener('keydown', function (e) {
+        this.onKeyDown(e);
+      }.bind(this));
+      this.input.addEventListener('input', function (e) {
+        this.onInput(e);
+      }.bind(this));
+      this.input.addEventListener('focus', function (e) {
+        this.onFocus(e);
+      }.bind(this));
+      this.input.addEventListener('blur', function () {
+        this.renderer.hidePanel();
+      }.bind(this));
+    },
+
+    onFocus: function(e) {
+      // prevent the re-render of the same options,
+      // it could be expensive for relations
+      if (this.lastValue === e.target.value) {
+        this.renderer.showPanel();
+      } else {
+        this.onInput(e);
+      }
+    },
 
     onInput: function (e) {
       if (this.inputDebounceTimer) {
@@ -177,9 +228,9 @@
         this.inputDebounceTimer = null;
       }
 
-      const val = e.target.value;
+      this.lastValue = e.target.value;
       this.inputDebounceTimer = setTimeout(function () {
-        this.suggester.suggestFor(val).then(function (suggestions) {
+        this.suggester.suggestFor(this.lastValue).then(function (suggestions) {
           this.renderer.render(suggestions);
         }.bind(this));
       }.bind(this), this.debounce);
@@ -206,6 +257,7 @@
           break;
 
         case 39:  // right arrow
+        case 13:  // Enter
         case 9:   // Tab, may not be a good idea for accessibility
           if (this.renderer.selected !== null) {
             this.completeInput();
@@ -213,23 +265,12 @@
           }
           break;
 
-        case 13:  // Enter
-          if (this.renderer.selected !== null) {
-            this.completeInput();
-            e.preventDefault();
-          }
-          break;
-
         case 27:  // Esc
-          this.renderer.hidePanel();
-          break;
-
-        case 16:  // Shift
-        case 17:  // Ctrl
-        case 18:  // Alt
-        case 91:  // Windows Key or Left Cmd on Mac
-        case 93:  // Windows Menu or Right Cmd on Mac
-          // Control keys do not trigger panel popup
+          // Esc clears the selection for input[type='search']
+          // we intend to keep that functionality
+          if (this.renderer.hidePanel()) {
+            e.preventDefault();
+          };
           break;
       }
     },
@@ -241,7 +282,8 @@
       this.onInput({target: {value: this.input.value}});
     }
   };
+  Completion.prototype.constructor = Completion;
 
-  root.DjangoNLF.OptionRenderer = OptionRenderer;
-  root.DjangoNLF.Completion = Completion;
+  root['DjangoNLF']['OptionRenderer'] = OptionRenderer;
+  root['DjangoNLF']['Completion'] = Completion;
 }(this))

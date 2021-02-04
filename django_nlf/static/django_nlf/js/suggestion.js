@@ -28,9 +28,9 @@
       }
     }
 
-    var Suggester = function(appLabel, model, options) {
+    var Suggester = function(options) {
       this.options = options;
-      this.schemaUrl = `${this.options.schemaRootUrl}/${appLabel}/${model}`;
+      this.schemaUrl = this.options['schemaRootUrl'] + '/' + this.options['appLabel'] + '/' + this.options['model'];
       this.schema = null;
       this.schemaRequest = null;
 
@@ -142,9 +142,9 @@
               } else if (context.field.search_url) {
                 this.fetchRelated(field, context.searchTerm)
                   .then((res) => {
-                    const objects = this.options.getObjects(res);
+                    const objects = this.options['getObjects'](res);
                     resolve(
-                      objects.map(this.options.mapToSuggestion)
+                      objects.map(this.options['mapToSuggestion'])
                     );
                   })
                   .catch((err) => reject(err));
