@@ -7,9 +7,18 @@
     <title>Django NLF demo</title>
     <style media="screen">
       body {
+      }
+
+      section {
+        height: 50vh;
+        width: 100%;
         display: flex;
         flex-direction: column;
         align-items: center;
+      }
+
+      section:nth-child(even) {
+        background-color: rgba(0, 0, 0, 0.05);
       }
 
       input[type="search"]:before {
@@ -38,6 +47,7 @@
 
       .nlf-autocomplete__input {
         padding: 0.5em;
+        width: 350px;
       }
 
       .nlf-autocomplete__list {
@@ -75,59 +85,33 @@
     </style>
   </head>
   <body>
-    <h1>Simple search box example</h1>
-    <input class="nlf-autocomplete__input" type="search" name="" value="">
+    <section>
+      <h1>Search input example</h1>
+      <input class="nlf-autocomplete__input" type="search" name="" value="" placeholder="Start typing...">
+
+    </section>
+
+    <section>
+      <h1>Text input example</h1>
+      <input class="nlf-autocomplete__input" name="" value="" placeholder="Start typing...">
+    </section>
+
+    <section>
+      <h1>Textarea example</h1>
+      <textarea class="nlf-autocomplete__input" name="" value="" placeholder="Start typing..."></textarea>
+    </section>
 
     {% nlf_autocomplete_js %}
 
     <script type="text/javascript">
-      co = {rendererOptions: {selector: 'input'}, suggestionOptions: {}};
-      c = new DjangoNLF.Completion('tests', 'article', co);
+    co = {
+      selector: 'input[type="search"]',
+      rendererOptions: {},
+      suggestionOptions: {
+        schemaUrl: "/schemas/tests/article"
+      }
+    };
+    c = new DjangoNLF.Completion(co);
     </script>
-
-    <!-- <div class="nlf-autocomplete">
-      <ul class="nlf-autocomplete__list">
-        <li class="nlf-autocomplete__option">
-          <span class="nlf-autocomplete__value">option 1</span>
-          <span class="nlf-autocomplete__hint" title="just a really long help text">just a really long help text</span>
-        </li>
-        <li class="nlf-autocomplete__option nlf-autocomplete__option--active">
-          <span class="nlf-autocomplete__value">option 2</span>
-          <span class="nlf-autocomplete__hint">help text</span>
-        </li>
-        <li class="nlf-autocomplete__option">
-          <span class="nlf-autocomplete__value">option 3</span>
-          <span class="nlf-autocomplete__hint">help text</span>
-        </li>
-        <li class="nlf-autocomplete__option">
-          <span class="nlf-autocomplete__value">option 4</span>
-          <span class="nlf-autocomplete__hint">help text</span>
-        </li>
-        <li class="nlf-autocomplete__option">
-          <span class="nlf-autocomplete__value">option 5</span>
-          <span class="nlf-autocomplete__hint">help text</span>
-        </li>
-        <li class="nlf-autocomplete__option">
-          <span class="nlf-autocomplete__value">option 6</span>
-          <span class="nlf-autocomplete__hint">help text</span>
-        </li>
-        <li class="nlf-autocomplete__option">
-          <span class="nlf-autocomplete__value">option 7</span>
-          <span class="nlf-autocomplete__hint">help text</span>
-        </li>
-        <li class="nlf-autocomplete__option">
-          <span class="nlf-autocomplete__value">option 8</span>
-          <span class="nlf-autocomplete__hint">help text</span>
-        </li>
-        <li class="nlf-autocomplete__option">
-          <span class="nlf-autocomplete__value">option 9</span>
-          <span class="nlf-autocomplete__hint">help text</span>
-        </li>
-        <li class="nlf-autocomplete__option">
-          <span class="nlf-autocomplete__value">option 10</span>
-          <span class="nlf-autocomplete__hint">help text</span>
-        </li>
-      </ul>
-    </div> -->
   </body>
 </html>

@@ -184,8 +184,8 @@
 
   Completion.prototype = {
     getDefaultSuggester: function (options) {
-      const suggetionOptions = options['suggetionOptions'] || {};
-      return new root.DjangoNLF.Suggester(suggetionOptions);
+      const suggestionOptions = options['suggestionOptions'] || {};
+      return new root.DjangoNLF.Suggester(suggestionOptions);
     },
 
     getDefaultRenderer: function (options) {

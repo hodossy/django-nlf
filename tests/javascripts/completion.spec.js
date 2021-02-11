@@ -54,7 +54,7 @@ describe('Completion', () => {
         });
         const comp = new DjangoNLF.Completion({
           input: input,
-          suggetionOptions: {
+          suggestionOptions: {
             schemaUrl: schemaUrl
           }
         });
