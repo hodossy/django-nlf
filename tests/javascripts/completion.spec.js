@@ -46,9 +46,22 @@ describe('Completion', () => {
     });
 
     it('should create with default renderer/suggester', () => {
-      const comp = new DjangoNLF.Completion({input: input});
-      expect(completion.renderer).toBe(mockRenderer);
-      expect(completion.suggester).toBe(mockSuggester);
+      const schemaUrl = '/schema';
+      jasmine.Ajax.withMock(() => {
+        jasmine.Ajax.stubRequest(schemaUrl).andReturn({
+          status: 200,
+          responseText: "{}",
+        });
+        const comp = new DjangoNLF.Completion({
+          input: input,
+          suggetionOptions: {
+            schemaUrl: schemaUrl
+          }
+        });
+
+        expect(comp.renderer).toEqual(jasmine.any(DjangoNLF.OptionRenderer));
+        expect(comp.suggester).toEqual(jasmine.any(DjangoNLF.Suggester));
+      });
     });
 
     it('should set onOptionClicked callback', () => {

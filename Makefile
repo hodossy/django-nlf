@@ -9,14 +9,19 @@ format:
 	@python -m black django_nlf tests manage.py setup.py
 
 
-.PHONY: test
-test:
+.PHONY: test-py
+test-py:
 	@python manage.py test $(tc)
 
 
 .PHONY: test-js
 test-js:
-	@jasmine server --config jamine.yml
+	@npx karma start
+
+
+.PHONY: test
+test: test-py
+	@npx karma start --single-run
 
 
 .PHONY: coverage

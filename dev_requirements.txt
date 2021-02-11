@@ -8,4 +8,3 @@ setuptools
 twine
 wheel
 black
-jasmine

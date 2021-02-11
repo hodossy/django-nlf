@@ -185,8 +185,6 @@
   Completion.prototype = {
     getDefaultSuggester: function (options) {
       const suggetionOptions = options['suggetionOptions'] || {};
-      suggetionOptions['appLabel'] = options['appLabel'];
-      suggetionOptions['model'] = options['model'];
       return new root.DjangoNLF.Suggester(suggetionOptions);
     },
 
