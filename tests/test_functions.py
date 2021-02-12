@@ -71,11 +71,13 @@ class FunctionRegistryTestCase(TestCase):
     ]
 
     def test_get_functions_for_article(self):
-        functions = FunctionRegistry.get_functions_for(Article)
-        self.assertListEqual(functions[FunctionRole.VALUE], self.DATE_FUNCTIONS)
-        self.assertListEqual(functions[FunctionRole.EXPRESSION], [("hasBeenPublished", "")])
+        functions = list(map(lambda x: x.name, FunctionRegistry.get_functions_for(Article)))
+        self.assertListEqual(
+            functions, ["startOfWeek", "startOfMonth", "startOfYear", "hasBeenPublished"]
+        )
 
     def test_get_functions_for_publication(self):
-        functions = FunctionRegistry.get_functions_for(Publication)
-        self.assertListEqual(functions[FunctionRole.VALUE], self.DATE_FUNCTIONS)
-        self.assertListEqual(functions[FunctionRole.FIELD], [("totalViews", "")])
+        functions = list(map(lambda x: x.name, FunctionRegistry.get_functions_for(Publication)))
+        self.assertListEqual(
+            functions, ["startOfWeek", "startOfMonth", "startOfYear", "totalViews"]
+        )

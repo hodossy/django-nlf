@@ -33,10 +33,9 @@ class NLFModelSchemaBuilder:
 
     def _build_schema_for(self, model: "django.db.models.Model") -> ModelFilterSchema:
         fields = self._get_fields(model._meta)  # pylint: disable=protected-access
-        functions = FunctionRegistry.get_functions_for(model)
         return ModelFilterSchema(
             fields=[self._build_field_schema_for(field, path) for path, field in fields],
-            functions={key.name: value for key, value in functions.items()},
+            functions=[meta.to_repr() for meta in FunctionRegistry.get_functions_for(model)],
             empty_val=self.empty_val,
         )
 

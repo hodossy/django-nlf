@@ -1,3 +1,4 @@
+import inspect
 from functools import wraps
 from typing import Callable, Dict, Tuple
 
@@ -66,16 +67,9 @@ class FunctionRegistry:
         :return: A dictionary of function names where the key is the function role.
         :rtype: list
         """
-        function_map = {
-            FunctionRole.FIELD: [],
-            FunctionRole.VALUE: [],
-            FunctionRole.EXPRESSION: [],
-        }
-        for fn_name, (_, meta) in cls.registry.items():
-            if not meta.models or model in meta.models:
-                function_map[meta.role].append((fn_name, meta.help))
-
-        return function_map
+        return [
+            meta for _, meta in cls.registry.values() if not meta.models or model in meta.models
+        ]
 
 
 def nlf_function(fn_name: str = None, **kwargs) -> Callable:
@@ -88,10 +82,17 @@ def nlf_function(fn_name: str = None, **kwargs) -> Callable:
     :return: A decorator function that registers the decorated function.
     :rtype: Callable
     """
-    meta = FunctionMeta(**kwargs)
 
     def decorator(func: Callable) -> Callable:
         name = fn_name or func.__name__
+        signature = inspect.signature(func)
+        meta = FunctionMeta(
+            **kwargs,
+            name=name,
+            params=[p for p in signature.parameters],
+            rtype=str(signature.return_annotation),
+        )
+
         FunctionRegistry.register(name, func, meta)
 
         @wraps(func)

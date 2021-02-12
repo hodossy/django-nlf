@@ -11,10 +11,7 @@ def schema_view(request, app, model):
     try:
         model = ContentType.objects.get(app_label=app, model=model).model_class()
     except ContentType.DoesNotExist:
-        return JsonResponse(
-            {"details": "No such resource found"},
-            status=HTTPStatus.NOT_FOUND
-        )
+        return JsonResponse({"details": "No such resource found"}, status=HTTPStatus.NOT_FOUND)
 
     builder = NLFModelSchemaBuilder()
     data = builder.get_schema_for(model)

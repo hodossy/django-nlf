@@ -71,9 +71,21 @@ class FunctionRole(Enum):
 class FunctionMeta:
     """The metadata for custom functions that help verify their usage in the language."""
 
+    name: str = None
+    params: typing.Mapping = field(default_factory=dict)
+    rtype: str = ""
     role: FunctionRole = FunctionRole.VALUE
     models: typing.Iterable["django.db.models.Model"] = tuple()
     help: str = ""
+
+    def to_repr(self):
+        return {
+            "name": self.name,
+            "params": self.params,
+            "rtype": self.rtype,
+            "role": self.role.name,
+            "help": self.help,
+        }
 
 
 @dataclass()
@@ -95,5 +107,5 @@ class ModelFilterSchema:
     """The schema definition for a model. Used for autocomplete."""
 
     fields: typing.Iterable[FieldFilterSchema]
-    functions: typing.Iterable[CustomFunction]
+    functions: typing.Iterable[FunctionMeta]
     empty_val: str

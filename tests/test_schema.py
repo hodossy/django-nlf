@@ -224,4 +224,3 @@ class SchemaViewTestCase(DjangoTestCase):
     def test_schema_view_for_unknown(self):
         response = self.client.get("/schemas/tests/author")
         self.assertEqual(response.status_code, 404)
-        self.assertEqual(response.status_code, 404)
