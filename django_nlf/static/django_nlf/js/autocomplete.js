@@ -124,7 +124,7 @@
     },
 
     select: function (index) {
-      if (this.selected !== null) {
+      if (this.selected !== null && this.optionElements[this.selected] !== undefined) {
         this.optionElements[this.selected].classList.remove(this.optionActiveClass);
       }
       if (index != null) {

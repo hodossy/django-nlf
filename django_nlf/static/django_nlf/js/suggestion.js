@@ -66,7 +66,11 @@
       this.schema = options['schema']
       if (this.schema === undefined) {
         this.fetchSchema(options['schemaUrl']);
+        this.baseModel = options['schemaUrl'].split("/").slice(-2).join(".");
+      } else {
+        this.baseModel = options['baseModel'] || Object.getOwnPropertyNames(this.schema)[0];
       }
+
       this.getObjects = options['getObjectsFn'] || generateGetObjects(options['objectsProperty']);
       this.optionDisplay = options['optionDisplayFn'] || null;
       this.optionHelp = options['optionHelpFn'] || null;
@@ -110,10 +114,9 @@
         if (!field.startsWith("is")) {
           return false;
         }
-        const fieldPath = field.slice(2).toLowerCase();
-        return this.schema['fields'].filter((f) => {
-          return f['type'] === "boolean" && f['path'] === fieldPath;
-        }).length === 1;
+        const fieldPath = field.split(' ').slice(-1)[0];
+        const fieldSchema = this.schema[this.baseModel]['fields'][fieldPath]
+        return fieldSchema && fieldSchema["type"] === "boolean";
       },
 
       isFunction: function(value) {
@@ -121,14 +124,13 @@
         return match && match.length > 0;
       },
 
-      scopeAfterFunction: function(value) {
+      scopeAfterFunction: function(value, field) {
+        const model = field ? this.getModelFromPath(field) : this.baseModel;
         const openParenIndex = value.indexOf("(");
         if ( openParenIndex > 0 && value.indexOf(")") === -1) return 'function';
 
         const fnName = value.substr(0, openParenIndex);
-        const fn = this.schema['functions'].filter((fn) => {
-          return fn['name'] === fnName;
-        })[0];
+        const fn = this.schema[model]['functions'][fnName] || this.schema["common_functions"][fnName];
 
         if (fn['role'] === "field") return "lookup";
         // value and expression functions
@@ -136,6 +138,7 @@
       },
 
       checkLookup: function (value) {
+        // check for 'do(es) ...' and 'not in'
         if (value.startsWith('d') || value.startsWith('n')) return 'partial';
 
         const isFull = this.lookupSuggestions.some((lookup) => {
@@ -149,6 +152,7 @@
       getContext: function(expression) {
         var context = {
           scope: null,
+          model: this.baseModel,
           field: null,
           searchTerm: "",
         };
@@ -181,10 +185,14 @@
               }
               break;
             case 'field':
-              context.field = context.searchTerm.startsWith('(')
+              if (context.searchTerm === 'is' || context.searchTerm === 'is not') {
+                extendSearchTerm = true;
+              } else {
+                context.field = context.searchTerm.startsWith('(')
                 ? context.searchTerm.slice(1)
-                : context.searchTerm;
-              context.scope = this.isBooleanShortcut(context.field) ? 'operator' : 'lookup';
+                : context.searchTerm.split(' ').slice(-1)[0];
+                context.scope = this.isBooleanShortcut(context.searchTerm) ? 'operator' : 'lookup';
+              }
               break;
             case 'lookup':
               switch (this.checkLookup(context.searchTerm)) {
@@ -193,7 +201,7 @@
                     extendSearchTerm = true;
                   } else {
                     context.scope = this.isFunction(currentToken)
-                    ? this.scopeAfterFunction(currentToken)
+                    ? this.scopeAfterFunction(currentToken, context.field)
                     : currentToken.startsWith('(')
                       ? 'list-value'
                       : currentToken.startsWith('"')
@@ -208,7 +216,7 @@
               break;
             case 'value':
               context.scope = this.isFunction(currentToken)
-                ? this.scopeAfterFunction(currentToken)
+                ? this.scopeAfterFunction(currentToken, context.field)
                 : 'operator';
               break;
             case 'list-value':
@@ -227,7 +235,7 @@
               break;
             case 'function':
               if (context.searchTerm.endsWith(")")) {
-                context.scope = this.scopeAfterFunction(context.searchTerm);
+                context.scope = this.scopeAfterFunction(context.searchTerm, context.field);
               } else {
                 extendSearchTerm = true;
               }
@@ -235,6 +243,7 @@
             case 'operator':
               context.scope = 'field';
               context.field = null;
+              context.model = this.baseModel;
               break;
           }
           context.searchTerm = extendSearchTerm
@@ -248,7 +257,29 @@
           context.searchTerm = context.searchTerm.split(",").slice(-1)[0].trim();
         }
 
+        if (context.scope === "field") {
+          context.model = this.getModelFromPath(context.searchTerm);
+          context.searchTerm = context.searchTerm.split(this.schema["path_separator"]).slice(-1)[0];
+        }
+
+        if (context.field !== null) {
+          context.model = this.getModelFromPath(context.field);
+          context.field = context.field.split(this.schema["path_separator"]).slice(-1)[0];
+        }
+
         return context;
+      },
+
+      getFieldNamesOf: function (model) {
+        return Object.getOwnPropertyNames(this.schema[model]["fields"]);
+      },
+
+      getModelFromPath: function (path) {
+        path = Array.isArray(path) ? path : path.split(this.schema["path_separator"]).slice(0, -1);
+        return path.reduce(function (model, field) {
+          // TODO: error handling: invalid model or invalid field (wrong name or not a relation)
+          return this.schema[model]["fields"][field]["related"];
+        }.bind(this), this.baseModel);
       },
 
       suggestFor: function (expression) {
@@ -258,22 +289,31 @@
 
           switch (context.scope) {
             case 'field':
-              let depth = context.searchTerm
-                ? (context.searchTerm.match(this.depthRegex) || []).length
-                : 0;
-
-              const exactMatch = this.schema.fields
-              .filter((fieldSchema) => (fieldSchema.path === context.searchTerm));
-              if (exactMatch.length === 1) {
-                depth += 1;
-                suggestions.push(new Suggestion(exactMatch[0].path + ' ', exactMatch[0].path))
+              const exactMatch = this.schema[context.model]["fields"][context.searchTerm];
+              if (exactMatch !== undefined && exactMatch["related"]) {
+                suggestions.push(new Suggestion(
+                  context.searchTerm + ".",
+                  context.searchTerm + ".",
+                  "Filter by " + exactMatch["related"].split(".")[1] + " attributes")
+                );
               }
 
-              this.schema.fields
-                .filter((fieldSchema) => (fieldSchema.path.match(this.depthRegex) || []).length === depth)
-                .forEach((fieldSchema) => {
-                  const suffix = fieldSchema.search_url ? '' : ' ';
-                  suggestions.push(new Suggestion(fieldSchema.path + suffix, fieldSchema.path));
+              Object.keys(this.schema[context.model]["fields"])
+                .forEach((field) => {
+                  const fieldSchema = this.schema[context.model]["fields"][field];
+                  const suffix = fieldSchema.related && exactMatch === undefined ? "" : " ";
+                  const help = fieldSchema.search_url ? "Search for " + context.searchTerm : "";
+                  suggestions.push(new Suggestion(field + suffix, field, help));
+                  if (fieldSchema['type'] === "boolean") {
+                    suggestions.push(
+                      new Suggestion('is ' + field + suffix, 'is ' + field)
+                    );
+                    suggestions.push(
+                      new Suggestion(
+                        'is not ' + field + suffix, 'is not ' + field
+                      )
+                    );
+                  }
                 });
               break;
             case 'lookup':
@@ -283,7 +323,7 @@
             case 'list-value':
             case 'quoted-value':
               const suffix = context.scope === 'list-value' ? ', ' : ' ';
-              const field = this.schema["fields"].find((f) => f["path"] === context.field);
+              const field = this.schema[context.model]["fields"][context.field];
               if (field.choices) {
                 field.choices.forEach((choice) => {
                   suggestions.push(new Suggestion(choice + suffix, choice));
@@ -303,12 +343,13 @@
                   .catch((err) => reject(err));
                 return;
               } else {
-                suggestions = this.schema.functions
-                  .filter((func) => func["role"] === "value")
-                  .map((func) => {
-                    const suffix = func["params"].length ? '(' : '()';
-                    return new Suggestion(func["name"] + suffix, func["name"], func["help"]);
-                  });
+                Object.keys(this.schema["common_functions"]).forEach(function (fnName) {
+                  const fnMeta = this.schema["common_functions"][fnName];
+                  if (fnMeta["role"] === "value") {
+                    const suffix = fnMeta["params"].length ? '(' : '()';
+                    suggestions.push(new Suggestion(fnName + suffix, fnName, fnMeta["help"]))
+                  }
+                }.bind(this));
               }
               if (field.nullable) {
                 suggestions.push(
@@ -388,7 +429,7 @@
               if (this.ongoingRequest.status === 200) {
                 resolve(JSON.parse(this.ongoingRequest.responseText));
               } else {
-                reject('Failed to fetch related ' + field.path + ' from ' + url);
+                reject('Failed to fetch related objects from ' + url);
               }
               this.ongoingRequest = null;
             } else if (this.ongoingRequest.readyState === XMLHttpRequest.UNSENT) {

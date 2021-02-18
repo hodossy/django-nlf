@@ -71,7 +71,6 @@ class FunctionRole(Enum):
 class FunctionMeta:
     """The metadata for custom functions that help verify their usage in the language."""
 
-    name: str = None
     params: typing.Mapping = field(default_factory=dict)
     rtype: str = ""
     role: FunctionRole = FunctionRole.VALUE
@@ -80,10 +79,9 @@ class FunctionMeta:
 
     def to_repr(self):
         return {
-            "name": self.name,
             "params": self.params,
             "rtype": self.rtype,
-            "role": self.role.name,
+            "role": self.role.name.lower(),
             "help": self.help,
         }
 
@@ -92,11 +90,11 @@ class FunctionMeta:
 class FieldFilterSchema:
     """The schema definiton of a model field. Used for autocomplete"""
 
-    path: str
     type: str
     help: str
     nullable: bool
     choices: typing.Iterable[str] = None
+    related: str = None
     search_url: str = None
     search_param: str = None
     target_field: str = None
@@ -108,4 +106,5 @@ class ModelFilterSchema:
 
     fields: typing.Iterable[FieldFilterSchema]
     functions: typing.Iterable[FunctionMeta]
+    shortcuts: typing.Iterable[str]
     empty_val: str

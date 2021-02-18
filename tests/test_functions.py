@@ -1,7 +1,6 @@
 from unittest import TestCase
 
 from django_nlf.functions import FunctionRegistry
-from django_nlf.types import FunctionRole
 
 from .models import Article, Publication
 from .utils import BaseTestCase
@@ -64,20 +63,14 @@ class DjangoNLFilterFunctionsTestCase(BaseTestCase):
 
 
 class FunctionRegistryTestCase(TestCase):
-    DATE_FUNCTIONS = [
-        ("startOfWeek", ""),
-        ("startOfMonth", ""),
-        ("startOfYear", ""),
-    ]
+    def test_get_functions_for_empty(self):
+        functions = list(FunctionRegistry.get_functions_for().keys())
+        self.assertListEqual(functions, ["startOfWeek", "startOfMonth", "startOfYear"])
 
     def test_get_functions_for_article(self):
-        functions = list(map(lambda x: x.name, FunctionRegistry.get_functions_for(Article)))
-        self.assertListEqual(
-            functions, ["startOfWeek", "startOfMonth", "startOfYear", "hasBeenPublished"]
-        )
+        functions = list(FunctionRegistry.get_functions_for(Article).keys())
+        self.assertListEqual(functions, ["hasBeenPublished"])
 
     def test_get_functions_for_publication(self):
-        functions = list(map(lambda x: x.name, FunctionRegistry.get_functions_for(Publication)))
-        self.assertListEqual(
-            functions, ["startOfWeek", "startOfMonth", "startOfYear", "totalViews"]
-        )
+        functions = list(FunctionRegistry.get_functions_for(Publication).keys())
+        self.assertListEqual(functions, ["totalViews"])

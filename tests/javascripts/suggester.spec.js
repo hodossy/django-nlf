@@ -1,85 +1,402 @@
 describe('Suggester', () => {
   const schemaUrl = "/api/schemas/tests/article";
   const testSchema = {
-    fields: [{
-      path: "id",
-      type: "integer",
-      help: "",
-      nullable: false,
-      choices: null,
-      search_url: null,
-      search_param: null,
-      target_field: null
-    }, {
-      path: "archived",
-      type: "boolean",
-      help: "",
-      nullable: false,
-      choices: null,
-      search_url: null,
-      search_param: null,
-      target_field: null
-    }, {
-      path: "headline",
-      type: "string",
-      help: "",
-      nullable: true,
-      choices: null,
-      search_url: null,
-      search_param: null,
-      target_field: null
-    }, {
-      path: "publications",
-      type: "integer",
-      help: "",
-      nullable: false,
-      choices: null,
-      search_url: "/publications/",
-      search_param: "search",
-      target_field: "id"
-    },{
-      path: "publications.subscription_fee",
-      type: "number",
-      help: "",
-      nullable: false,
-      choices: [1, 2, 3],
-      search_url: null,
-      search_param: null,
-      target_field: null
-    }, {
-      path: "publications.articles",
-      type: "integer",
-      help: "",
-      nullable: false,
-      choices: null,
-      search_url: "/articles/",
-      search_param: "search",
-      target_field: "id"
-    }, {
-      path: "publications.articles.id",
-      type: "integer",
-      help: "",
-      nullable: false,
-      choices: null,
-      search_url: null,
-      search_param: null,
-      target_field: null
-    }, {
-      path: "publications.articles.headline",
-      type: "string",
-      help: "",
-      nullable: false,
-      choices: null,
-      search_url: null,
-      search_param: null,
-      target_field: null
-    }],
-    functions: [
-      { name: "fieldFn", role: "field", help: "", params: [] },
-      { name: "valueFn", role: "value", help: "", params: [] },
-      { name: "exprFn", role: "expression", help: "", params: [] },
-    ],
-    empty_val: "EMPTY"
+    "tests.article": {
+      fields: {
+        id: {
+          type: "integer",
+          help: "",
+          nullable: false,
+          choices: null,
+          related: null,
+          search_url: null,
+          search_param: null,
+          target_field: null
+        },
+        headline: {
+          type: "string",
+          help: "",
+          nullable: true,
+          choices: null,
+          related: null,
+          search_url: null,
+          search_param: null,
+          target_field: null
+        },
+        body: {
+          type: "string",
+          help: "",
+          nullable: true,
+          choices: null,
+          related: null,
+          search_url: null,
+          search_param: null,
+          target_field: null
+        },
+        author: {
+          type: "relation",
+          help: "",
+          nullable: false,
+          choices: null,
+          related: "auth.user",
+          search_url: null,
+          search_param: null,
+          target_field: null
+        },
+        created_at: {
+          type: "string",
+          help: "",
+          nullable: false,
+          choices: null,
+          related: null,
+          search_url: null,
+          search_param: null,
+          target_field: null
+        },
+        views: {
+          type: "integer",
+          help: "",
+          nullable: false,
+          choices: null,
+          related: null,
+          search_url: null,
+          search_param: null,
+          target_field: null
+        },
+        archived: {
+          type: "boolean",
+          help: "",
+          nullable: false,
+          choices: null,
+          related: null,
+          search_url: null,
+          search_param: null,
+          target_field: null
+        },
+        publications: {
+          type: "relation",
+          help: "",
+          nullable: false,
+          choices: null,
+          related: "tests.publication",
+          search_url: "/publications/",
+          search_param: "search",
+          target_field: "id"
+        }
+      },
+      functions: {
+        hasBeenPublished: {
+          params: ["args", "exclude", "kwargs"],
+          rtype: null,
+          role: "expression",
+          help: ""
+        }
+      }
+    },
+    "auth.user": {
+      fields: {
+        publication: {
+          type: "relation",
+          help: "",
+          nullable: true,
+          choices: null,
+          related: "tests.publication",
+          search_url: "/publications/",
+          search_param: "search",
+          target_field: "id"
+        },
+        article: {
+          type: "relation",
+          help: "",
+          nullable: true,
+          choices: null,
+          related: "tests.article",
+          search_url: "/articles/",
+          search_param: "search",
+          target_field: "id"
+        },
+        id: {
+          type: "integer",
+          help: "",
+          nullable: false,
+          choices: null,
+          related: null,
+          search_url: null,
+          search_param: null,
+          target_field: null
+        },
+        password: {
+          type: "string",
+          help: "",
+          nullable: false,
+          choices: null,
+          related: null,
+          search_url: null,
+          search_param: null,
+          target_field: null
+        },
+        last_login: {
+          type: "string",
+          help: "",
+          nullable: true,
+          choices: null,
+          related: null,
+          search_url: null,
+          search_param: null,
+          target_field: null
+        },
+        is_superuser: {
+          type: "boolean",
+          help: "Designates that this user has all permissions without explicitly assigning them.",
+          nullable: false,
+          choices: null,
+          related: null,
+          search_url: null,
+          search_param: null,
+          target_field: null
+        },
+        username: {
+          type: "string",
+          help: "Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.",
+          nullable: false,
+          choices: null,
+          related: null,
+          search_url: null,
+          search_param: null,
+          target_field: null
+        },
+        first_name: {
+          type: "string",
+          help: "",
+          nullable: false,
+          choices: null,
+          related: null,
+          search_url: null,
+          search_param: null,
+          target_field: null
+        },
+        last_name: {
+          type: "string",
+          help: "",
+          nullable: false,
+          choices: null,
+          related: null,
+          search_url: null,
+          search_param: null,
+          target_field: null
+        },
+        email: {
+          type: "string",
+          help: "",
+          nullable: false,
+          choices: null,
+          related: null,
+          search_url: null,
+          search_param: null,
+          target_field: null
+        },
+        is_staff: {
+          type: "boolean",
+          help: "Designates whether the user can log into this admin site.",
+          nullable: false,
+          choices: null,
+          related: null,
+          search_url: null,
+          search_param: null,
+          target_field: null
+        },
+        is_active: {
+          type: "boolean",
+          help: "Designates whether this user should be treated as active. Unselect this instead of deleting accounts.",
+          nullable: false,
+          choices: null,
+          related: null,
+          search_url: null,
+          search_param: null,
+          target_field: null
+        },
+        date_joined: {
+          type: "string",
+          help: "",
+          nullable: false,
+          choices: null,
+          related: null,
+          search_url: null,
+          search_param: null,
+          target_field: null
+        },
+        groups: {
+          type: "relation",
+          help: "The groups this user belongs to. A user will get all permissions granted to each of their groups.",
+          nullable: false,
+          choices: null,
+          related: "auth.group",
+          search_url: null,
+          search_param: null,
+          target_field: null
+        },
+        user_permissions: {
+          type: "relation",
+          help: "Specific permissions for this user.",
+          nullable: false,
+          choices: null,
+          related: "auth.permission",
+          search_url: null,
+          search_param: null,
+          target_field: null
+        }
+      },
+      functions: {}
+    },
+    "tests.publication": {
+      fields: {
+        articles: {
+          type: "relation",
+          help: "",
+          nullable: true,
+          choices: null,
+          related: "tests.article",
+          search_url: "/articles/",
+          search_param: "search",
+          target_field: "id"
+        },
+        id: {
+          type: "integer",
+          help: "",
+          nullable: false,
+          choices: null,
+          related: null,
+          search_url: null,
+          search_param: null,
+          target_field: null
+        },
+        title: {
+          type: "string",
+          help: "",
+          nullable: false,
+          choices: null,
+          related: null,
+          search_url: null,
+          search_param: null,
+          target_field: null
+        },
+        category: {
+          type: "integer",
+          help: "",
+          nullable: false,
+          choices: ["Digital", "Printed"],
+          related: null,
+          search_url: null,
+          search_param: null,
+          target_field: null
+        },
+        subscription_fee: {
+          type: "number",
+          help: "",
+          nullable: false,
+          choices: [1, 2, 3],
+          related: null,
+          search_url: null,
+          search_param: null,
+          target_field: null
+        },
+        market_share: {
+          type: "number",
+          help: "",
+          nullable: false,
+          choices: null,
+          related: null,
+          search_url: null,
+          search_param: null,
+          target_field: null
+        },
+        editor: {
+          type: "relation",
+          help: "",
+          nullable: true,
+          choices: null,
+          related: "auth.user",
+          search_url: null,
+          search_param: null,
+          target_field: null
+        }
+      },
+      functions: {
+        totalViews: {
+          params: ["args", "kwargs"],
+          rtype: null,
+          role: "field",
+          help: ""
+        }
+      }
+    },
+    "auth.group": {
+      fields: {
+        user: {
+          type: "relation",
+          help: "",
+          nullable: true,
+          choices: null,
+          related: "auth.user",
+          search_url: null,
+          search_param: null,
+          target_field: null
+        },
+        id: {
+          type: "integer",
+          help: "",
+          nullable: false,
+          choices: null,
+          related: null,
+          search_url: null,
+          search_param: null,
+          target_field: null
+        },
+        name: {
+          type: "string",
+          help: "",
+          nullable: false,
+          choices: null,
+          related: null,
+          search_url: null,
+          search_param: null,
+          target_field: null
+        },
+        permissions: {
+          type: "relation",
+          help: "",
+          nullable: false,
+          choices: null,
+          related: "auth.permission",
+          search_url: null,
+          search_param: null,
+          target_field: null
+        }
+      },
+      functions: {}
+    },
+    common_functions: {
+      valueFn: {
+        params: ["args", "kwargs"],
+        rtype: null,
+        role: "value",
+        help: ""
+      },
+      fieldFn: {
+        params: ["args", "kwargs"],
+        rtype: null,
+        role: "field",
+        help: ""
+      },
+      exprFn: {
+        params: ["args", "kwargs"],
+        rtype: null,
+        role: "expression",
+        help: ""
+      }
+    },
+    empty_val: "EMPTY",
+    path_separator: "."
   };
   var suggester;
 
@@ -105,6 +422,7 @@ describe('Suggester', () => {
   describe('constructor(options)', () => {
     it('should create with default options', () => {
       expect(suggester).toBeDefined();
+      expect(suggester.baseModel).toEqual('tests.article');
     });
   });
 
@@ -114,6 +432,9 @@ describe('Suggester', () => {
       it(`should be returned for '${testCase.expr}'`, () => {
         if (testCase.searchTerm) {
           expected.searchTerm = testCase.searchTerm;
+        }
+        if (testCase.model) {
+          expected.model = testCase.model;
         }
         if (testCase.field) {
           expected.field = testCase.field;
@@ -128,6 +449,7 @@ describe('Suggester', () => {
       beforeEach(() => {
         expected = {
           scope: "field",
+          model: "tests.article",
           field: null,
           searchTerm: "",
         }
@@ -137,11 +459,13 @@ describe('Suggester', () => {
         { expr: "" },
         { expr: "  " },
         { expr: "ar", searchTerm: "ar" },
+        { expr: "is ar", searchTerm: "is ar" },
         { expr: "archived", searchTerm: "archived" },
         { expr: "  ar", searchTerm: "ar" },
         { expr: "(" },
         { expr: "not (" },
-        { expr: "isArchived and " },
+        { expr: "is archived and " },
+        { expr: "is not archived and " },
         { expr: "exprFn() and " },
         { expr: 'exprFn(with, "two params") and ' },
         { expr: 'headline contains "some words" and ' },
@@ -149,6 +473,8 @@ describe('Suggester', () => {
         { expr: '(headline contains "some words" and id is not 12) or ' },
         { expr: 'headline contains "some words" and (id is not 12 or ' },
         { expr: 'headline contains "some words" and (' },
+        { expr: 'publications.', model: "tests.publication" },
+        { expr: 'publications.cat', model: "tests.publication", searchTerm: "cat" },
       ].forEach(generateTestCase);
     });
 
@@ -156,6 +482,7 @@ describe('Suggester', () => {
       beforeEach(() => {
         expected = {
           scope: "lookup",
+          model: "tests.article",
           field: null,
           searchTerm: "",
         }
@@ -164,7 +491,7 @@ describe('Suggester', () => {
       [
         { expr: "(archived ", field: "archived" },
         { expr: "not ( archived ", field: "archived" },
-        { expr: "isArchived and headline co", searchTerm: "co", field: "headline" },
+        { expr: "is archived and headline co", searchTerm: "co", field: "headline" },
         { expr: "fieldFn() " },
         { expr: 'fieldFn(with, "two params") ' },
         { expr: 'headline contains "some words" and id ', field: "id" },
@@ -178,6 +505,7 @@ describe('Suggester', () => {
       beforeEach(() => {
         expected = {
           scope: "value",
+          model: "tests.article",
           field: null,
           searchTerm: "",
         }
@@ -186,7 +514,7 @@ describe('Suggester', () => {
       [
         { expr: "(archived is ", field: "archived" },
         { expr: "not ( archived is not ", field: "archived" },
-        { expr: "isArchived and headline contains foo", searchTerm: "foo", field: "headline" },
+        { expr: "is archived and headline contains foo", searchTerm: "foo", field: "headline" },
         { expr: "fieldFn() is " },
         { expr: 'fieldFn(with, "two params") is ' },
         { expr: 'headline contains "some words" and id is ', field: "id" },
@@ -199,6 +527,7 @@ describe('Suggester', () => {
       beforeEach(() => {
         expected = {
           scope: "list-value",
+          model: "tests.article",
           field: "id",
           searchTerm: "",
         }
@@ -217,6 +546,7 @@ describe('Suggester', () => {
       beforeEach(() => {
         expected = {
           scope: "quoted-value",
+          model: "tests.article",
           field: "headline",
           searchTerm: "",
         }
@@ -233,6 +563,7 @@ describe('Suggester', () => {
       beforeEach(() => {
         expected = {
           scope: "function",
+          model: "tests.article",
           field: null,
           searchTerm: "",
         }
@@ -249,15 +580,17 @@ describe('Suggester', () => {
       beforeEach(() => {
         expected = {
           scope: "operator",
+          model: "tests.article",
           field: null,
           searchTerm: "",
         }
       });
 
       [
+        { expr: "is not archived a", searchTerm: "a", field: "archived" },
         { expr: "(archived is true a", searchTerm: "a", field: "archived" },
         { expr: "not ( archived is not true ", field: "archived" },
-        { expr: "isArchived and headline contains foo ", field: "headline" },
+        { expr: "is archived and headline contains foo ", field: "headline" },
         { expr: "exprFn() " },
         { expr: 'exprFn(with, "two params") ' },
         { expr: 'headline contains "some words" o', searchTerm: "o", field: "headline" },
@@ -281,6 +614,7 @@ describe('Suggester', () => {
     beforeEach(() => {
       testContext = {
         scope: null,
+        model: "tests.article",
         field: null,
         searchTerm: "",
       };
@@ -295,9 +629,10 @@ describe('Suggester', () => {
       it('should return all top level fields by default', () => {
         getContextSpy.and.returnValue(testContext);
         return suggester.suggestFor(expression).then((suggestions) => {
-          expect(suggestions.length).toEqual(4);
+          expect(suggestions.length).toEqual(10);
           suggestions.forEach((sug) => {
-            expect(sug.value.endsWith(" ")).toEqual(!sug.value.startsWith("pub"));
+            const isRelation = sug.value.startsWith("pub") || sug.value.startsWith("auth");
+            expect(sug.value.endsWith(" ")).toEqual(!isRelation);
           });
         });
       });
@@ -310,14 +645,12 @@ describe('Suggester', () => {
         });
       });
 
-      it('should return the next level fields for a complete field', () => {
+      it('should return the field access suggestion for a complete field', () => {
         testContext.searchTerm = "publications";
         getContextSpy.and.returnValue(testContext);
         return suggester.suggestFor(expression).then((suggestions) => {
-          // first suggestion is itself with a space behind
-          // to support searching for related items via API
-          // the rest are the nested fields
-          expect(suggestions.length).toEqual(3);
+          expect(suggestions.length).toEqual(2);
+          expect(suggestions[0].value.endsWith(".")).toBeTrue();
         });
       });
 
@@ -325,8 +658,17 @@ describe('Suggester', () => {
         testContext.searchTerm = "publications";
         getContextSpy.and.returnValue(testContext);
         return suggester.suggestFor(expression).then((suggestions) => {
-          expect(suggestions.length).toEqual(3);
-          expect(suggestions[0].value.endsWith(" ")).toBeTrue();
+          expect(suggestions.length).toEqual(2);
+          expect(suggestions[1].value.endsWith(" ")).toBeTrue();
+        });
+      });
+
+      it('should return the next level fields for a relation field', () => {
+        testContext.model = "tests.publication";
+        testContext.searchTerm = "";
+        getContextSpy.and.returnValue(testContext);
+        return suggester.suggestFor(expression).then((suggestions) => {
+          expect(suggestions.length).toEqual(7);
         });
       });
     });
@@ -358,7 +700,8 @@ describe('Suggester', () => {
       });
 
       it('should return choices of the field', () => {
-        testContext.field = "publications.subscription_fee";
+        testContext.model = "tests.publication";
+        testContext.field = "subscription_fee";
         getContextSpy.and.returnValue(testContext);
         return suggester.suggestFor(expression).then((suggestions) => {
           expect(suggestions.length).toEqual(3);
@@ -537,7 +880,8 @@ describe('Suggester', () => {
         })
       });
 
-      return suggester.fetchRelated(testSchema.fields[3], "foo").then((res) => {
+      const field = testSchema["tests.article"].fields["publications"];
+      return suggester.fetchRelated(field, "foo").then((res) => {
         expect(res.count).toEqual(3);
         expect(res.results).toEqual(testPublications);
       });
@@ -549,16 +893,17 @@ describe('Suggester', () => {
         responseText: null
       });
 
-      return suggester.fetchRelated(testSchema.fields[3], "foo").catch((err) => {
-        expect(err).toContain(testSchema.fields[3].path);
-        expect(err).toContain(testSchema.fields[3].search_url);
-        expect(err).toContain(testSchema.fields[3].search_param);
+      const field = testSchema["tests.article"].fields["publications"];
+      return suggester.fetchRelated(field, "foo").catch((err) => {
+        expect(err).toContain(field.search_url);
+        expect(err).toContain(field.search_param);
         expect(err).toContain("foo");
       });
     });
 
     it('should properly indicate loading state', (done) => {
-      suggester.fetchRelated(testSchema.fields[3], "foo").then(() => {
+      const field = testSchema["tests.article"].fields["publications"];
+      suggester.fetchRelated(field, "foo").then(() => {
         expect(suggester.loading).toBeFalse();
         done();
       });
@@ -577,7 +922,8 @@ describe('Suggester', () => {
       });
       var abortChecked = false;
 
-      suggester.fetchRelated(testSchema.fields[3], "bar").catch((err) => {
+      const field = testSchema["tests.article"].fields["publications"];
+      suggester.fetchRelated(field, "bar").catch((err) => {
         expect(err).toContain("bar");
         expect(err).toContain("aborted");
         abortChecked = true;
@@ -585,7 +931,7 @@ describe('Suggester', () => {
 
       expect(jasmine.Ajax.requests.mostRecent().url).toContain("bar");
 
-      suggester.fetchRelated(testSchema.fields[3], "foo").then(() => {
+      suggester.fetchRelated(field, "foo").then(() => {
         expect(abortChecked).toBeTrue();
         done();
       });

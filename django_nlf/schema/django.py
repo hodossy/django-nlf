@@ -1,3 +1,5 @@
+from typing import Mapping
+
 from django.db import models
 from django.urls import reverse, NoReverseMatch
 
@@ -9,7 +11,6 @@ from django_nlf.types import FieldFilterSchema, ModelFilterSchema
 class NLFModelSchemaBuilder:
     __cache = {}
     field_shortcuts = nlf_settings.FIELD_SHORTCUTS
-    path_sep = nlf_settings.PATH_SEPARATOR
     empty_val = nlf_settings.EMPTY_VALUE
     autocomplete_views = nlf_settings.SEARCH_URL_MAP
     autocomplete_param = nlf_settings.SEARCH_PARAM
@@ -31,44 +32,41 @@ class NLFModelSchemaBuilder:
 
         return self.__cache[label]
 
-    def _build_schema_for(self, model: "django.db.models.Model") -> ModelFilterSchema:
-        fields = self._get_fields(model._meta)  # pylint: disable=protected-access
-        return ModelFilterSchema(
-            fields=[self._build_field_schema_for(field, path) for path, field in fields],
-            functions=[meta.to_repr() for meta in FunctionRegistry.get_functions_for(model)],
-            empty_val=self.empty_val,
-        )
+    def _build_schema_for(self, model: "django.db.models.Model") -> Mapping[str, ModelFilterSchema]:
+        schema = self._get_model_schema(model)
+        schema["common_functions"] = FunctionRegistry.get_functions_for(None)
+        schema["empty_val"] = self.empty_val
 
-    def _get_fields(
-        self, opts: "django.db.models.options.Options", explored_rels=None, path: str = ""
-    ):
-        fields = [
-            (f"{path}{self.path_sep}{field.name}" if path else field.name, field)
-            for field in opts.get_fields()
-        ]
+        return schema
 
-        related_fields = []
-        explored_rels = explored_rels or tuple()
-        for new_path, field in fields:
+    def _get_model_schema(self, model: "django.db.models.Model", explored_models=tuple()):
+        opts = model._meta  # pylint: disable=protected-access
+        app = opts.label.lower()
+        schema = {
+            app: {
+                "fields": {},
+                "functions": FunctionRegistry.get_functions_for(model),
+            },
+        }
+
+        for field in opts.get_fields():
+            schema[app]["fields"][field.name] = self._build_field_schema_for(field)
             if not field.is_relation:
                 continue
 
             related_opts = field.related_model._meta  # pylint: disable=protected-access
             if (
-                field.target_field not in explored_rels
+                related_opts.label not in explored_models
                 and related_opts.label not in self.ignored_model_labels
             ):
-                explored_rels = explored_rels + (field.target_field,)
-                # if we would explore field directions, we would immediately run into an infinite
-                # circle when we encounter a relationship with a reverse reletaionship, which is the
-                # default behaviour. Therefore we skip those paths that we already examined
-                related_fields.extend(self._get_fields(related_opts, explored_rels, new_path))
+                explored_models = explored_models + (related_opts.label,)
+                related_schema = self._get_model_schema(field.related_model, explored_models)
+                schema.update(related_schema)
 
-        return fields + related_fields
+        return schema
 
-    def _build_field_schema_for(self, field, path: str) -> FieldFilterSchema:
+    def _build_field_schema_for(self, field) -> FieldFilterSchema:
         schema = FieldFilterSchema(
-            path=path,
             type=self._get_field_schema_type(field),
             help=str(getattr(field, "help_text", "")),  # convert to str to evaluate lazy text
             nullable=field.null,
@@ -81,6 +79,7 @@ class NLFModelSchemaBuilder:
             url_name = self.autocomplete_views.get(
                 related_model_label, f"{field.related_model.__name__.lower()}-list"
             )
+            schema.related = related_model_label.lower()
             try:
                 schema.search_url = reverse(url_name)
                 schema.search_param = self.autocomplete_param
@@ -95,8 +94,7 @@ class NLFModelSchemaBuilder:
 
     def _get_field_schema_type(self, field) -> str:
         if field.is_relation:
-            return self._get_field_schema_type(field.target_field)
-
+            return "relation"
         if isinstance(field, models.BooleanField):
             return "boolean"
         if isinstance(field, models.IntegerField):
