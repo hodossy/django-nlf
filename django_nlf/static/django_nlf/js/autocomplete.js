@@ -56,10 +56,8 @@
 
         const suggestion = this.suggestions[i];
         this.optionElements[i].children[0].innerText = suggestion['display'];
-        if (suggestion['help']) {
-          this.optionElements[i].children[1].innerText = suggestion['help'];
-          this.optionElements[i].children[1].title = suggestion['help'];
-        }
+        this.optionElements[i].children[1].innerText = suggestion['help'] || "";
+        this.optionElements[i].children[1].title = suggestion['help'] || "";
       }
 
       for (var i = this.optionElements.length - 1; i >= this.suggestions.length; i--) {

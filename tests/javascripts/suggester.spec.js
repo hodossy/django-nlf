@@ -593,6 +593,10 @@ describe('Suggester', () => {
         { expr: "is archived and headline contains foo ", field: "headline" },
         { expr: "exprFn() " },
         { expr: 'exprFn(with, "two params") ' },
+        { expr: 'fieldFn() is 42 ' },
+        { expr: 'headline is valueFn() ', field: "headline" },
+        { expr: 'headline is valueFn(with, params) ', field: "headline" },
+        { expr: 'headline contains valueFn() ', field: "headline" },
         { expr: 'headline contains "some words" o', searchTerm: "o", field: "headline" },
         { expr: '(headline contains "some words" and id is not 12) ', field: "id" },
       ].forEach(generateTestCase);

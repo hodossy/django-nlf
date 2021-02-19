@@ -5,9 +5,6 @@ from django_nlf.functions import FunctionRegistry
 from .models import Article, Publication
 from .utils import BaseTestCase
 
-# register functions by importing them
-from .filter_functions import *
-
 
 class DjangoNLFilterFunctionsTestCase(BaseTestCase):
     def test_unknown_function(self):

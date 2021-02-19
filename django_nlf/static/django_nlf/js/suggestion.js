@@ -94,20 +94,20 @@
         new Suggestion('or not ', 'or not', ''),
       ],
       lookupSuggestions: [
-        new Suggestion('is ', 'is', ''),
-        new Suggestion('is not ', 'is not', ''),
+        new Suggestion('is ', 'is', 'equals or "="'),
+        new Suggestion('is not ', 'is not', 'does not equal or "!="'),
         new Suggestion('contains ', 'contains', ''),
         new Suggestion('does not contain ', 'does not contain', ''),
-        new Suggestion('matches ', 'matches', ''),
-        new Suggestion('does not match ', 'does not match', ''),
+        new Suggestion('matches ', 'matches', '~'),
+        new Suggestion('does not match ', 'does not match', '!~'),
         new Suggestion('in (', 'in', ''),
         new Suggestion('not in (', 'not in', ''),
-        new Suggestion('> ', 'greater than', ''),
-        new Suggestion('>= ', 'greater than or equal', ''),
-        new Suggestion('< ', 'lower than', ''),
-        new Suggestion('<= ', 'lower than or equal', ''),
+        new Suggestion('> ', 'greater than', '>'),
+        new Suggestion('>= ', 'greater than or equal', '>='),
+        new Suggestion('< ', 'lower than', '<'),
+        new Suggestion('<= ', 'lower than or equal', '<='),
       ],
-      depthRegex: /\./g,
+      alternativeLookups: [">", ">=", "<", "<=", "equals", "does not equal"],
       fnRegex: /\w+\(/,
 
       isBooleanShortcut: function(field) {
@@ -201,7 +201,7 @@
                     extendSearchTerm = true;
                   } else {
                     context.scope = this.isFunction(currentToken)
-                    ? this.scopeAfterFunction(currentToken, context.field)
+                    ? "function"
                     : currentToken.startsWith('(')
                       ? 'list-value'
                       : currentToken.startsWith('"')
@@ -282,6 +282,11 @@
         }.bind(this), this.baseModel);
       },
 
+      getFnSuggestion: function (fnName, fnMeta) {
+        const suffix = fnMeta["params"].length ? '(' : '()';
+        return new Suggestion(fnName + suffix, fnName, fnMeta["help"])
+      },
+
       suggestFor: function (expression) {
         var execFn = function (resolve, reject) {
           var context = this.getContext(expression);
@@ -302,7 +307,7 @@
                 .forEach((field) => {
                   const fieldSchema = this.schema[context.model]["fields"][field];
                   const suffix = fieldSchema.related && exactMatch === undefined ? "" : " ";
-                  const help = fieldSchema.search_url ? "Search for " + context.searchTerm : "";
+                  const help = fieldSchema.search_url ? "Search for " + field : "";
                   suggestions.push(new Suggestion(field + suffix, field, help));
                   if (fieldSchema['type'] === "boolean") {
                     suggestions.push(
@@ -315,6 +320,17 @@
                     );
                   }
                 });
+
+                const functions = {
+                  ...this.schema[context.model]["functions"],
+                  ...this.schema["common_functions"]
+                };
+                Object.keys(functions).forEach(function (fnName) {
+                  const fnMeta = functions[fnName];
+                  if (fnMeta["role"] !== "value") {
+                    suggestions.push(this.getFnSuggestion(fnName, fnMeta));
+                  }
+                }.bind(this));
               break;
             case 'lookup':
               suggestions = this.lookupSuggestions;
@@ -343,11 +359,14 @@
                   .catch((err) => reject(err));
                 return;
               } else {
-                Object.keys(this.schema["common_functions"]).forEach(function (fnName) {
-                  const fnMeta = this.schema["common_functions"][fnName];
+                const functions = {
+                  ...this.schema[context.model]["functions"],
+                  ...this.schema["common_functions"]
+                };
+                Object.keys(functions).forEach(function (fnName) {
+                  const fnMeta = functions[fnName];
                   if (fnMeta["role"] === "value") {
-                    const suffix = fnMeta["params"].length ? '(' : '()';
-                    suggestions.push(new Suggestion(fnName + suffix, fnName, fnMeta["help"]))
+                    suggestions.push(this.getFnSuggestion(fnName, fnMeta));
                   }
                 }.bind(this));
               }

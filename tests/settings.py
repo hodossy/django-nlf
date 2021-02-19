@@ -11,7 +11,7 @@ INSTALLED_APPS = (
     "django.contrib.auth",
     "django_nlf",
     "rest_framework",
-    "tests",
+    "tests.apps.DjangoNLFDemoAppConfig",
 )
 
 MIDDLEWARE = []
