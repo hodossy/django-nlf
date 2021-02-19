@@ -2,6 +2,7 @@ module.exports = function(config) {
   config.set({
     basePath: "",
     files: [
+      {pattern: "node_modules/jasmine-ajax/lib/mock-ajax.js", watched: false},
       "django_nlf/static/django_nlf/js/suggestion.js",
       "django_nlf/static/django_nlf/js/autocomplete.js",
       "tests/javascripts/**/*.spec.js",
