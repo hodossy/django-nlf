@@ -1,6 +1,7 @@
 [![PyPi Version](https://img.shields.io/pypi/v/django-nlf)](https://pypi.org/project/django-nlf/)
 [![PyPi Downloads](https://img.shields.io/pypi/dw/django-nlf)](https://pypi.org/project/django-nlf/)
-![Tests](https://github.com/hodossy/django-nlf/workflows/Unit%20tests/badge.svg?branch=main)
+![PyTests](https://github.com/hodossy/django-nlf/workflows/Python%20unit%20tests/badge.svg?branch=main)
+![JsTests](https://github.com/hodossy/django-nlf/workflows/Javascript%20unit%20tests/badge.svg?branch=main)
 ![Weekly](https://github.com/hodossy/django-nlf/workflows/Weekly/badge.svg?branch=main)
 [![Documentation](https://img.shields.io/readthedocs/django-nlf)](https://django-nlf.readthedocs.io/en/latest/)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)

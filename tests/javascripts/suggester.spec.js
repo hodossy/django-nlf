@@ -630,13 +630,18 @@ describe('Suggester', () => {
         testContext.scope = 'field';
       });
 
-      it('should return all top level fields by default', () => {
+      it('should return all top level fields and functions by default', () => {
         getContextSpy.and.returnValue(testContext);
         return suggester.suggestFor(expression).then((suggestions) => {
-          expect(suggestions.length).toEqual(10);
-          suggestions.forEach((sug) => {
+          expect(suggestions.length).toEqual(13);
+          // fields
+          suggestions.slice(0,10).forEach((sug) => {
             const isRelation = sug.value.startsWith("pub") || sug.value.startsWith("auth");
             expect(sug.value.endsWith(" ")).toEqual(!isRelation);
+          });
+          // functions
+          suggestions.slice(10).forEach((sug) => {
+            expect(sug.value.endsWith("(")).toBeTrue();
           });
         });
       });

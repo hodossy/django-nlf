@@ -321,16 +321,19 @@
                   }
                 });
 
-                const functions = {
-                  ...this.schema[context.model]["functions"],
-                  ...this.schema["common_functions"]
-                };
-                Object.keys(functions).forEach(function (fnName) {
-                  const fnMeta = functions[fnName];
-                  if (fnMeta["role"] !== "value") {
-                    suggestions.push(this.getFnSuggestion(fnName, fnMeta));
-                  }
-                }.bind(this));
+                // functions are not supported as nested fields
+                if (context["model"] === this.baseModel) {
+                  const functions = {
+                    ...this.schema[context.model]["functions"],
+                    ...this.schema["common_functions"]
+                  };
+                  Object.keys(functions).forEach(function (fnName) {
+                    const fnMeta = functions[fnName];
+                    if (fnMeta["role"] !== "value") {
+                      suggestions.push(this.getFnSuggestion(fnName, fnMeta));
+                    }
+                  }.bind(this));
+                }
               break;
             case 'lookup':
               suggestions = this.lookupSuggestions;
