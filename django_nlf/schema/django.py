@@ -97,7 +97,9 @@ class NLFModelSchemaBuilder:
             return "relation"
         if isinstance(field, models.BooleanField):
             return "boolean"
-        if isinstance(field, models.IntegerField):
+        # AutoField on Django 2.2 is not an IntegerField
+        # TODO: remove AutoField check when dropping support for Django 2
+        if isinstance(field, (models.IntegerField, models.AutoField)):
             return "integer"
         if isinstance(field, (models.DecimalField, models.FloatField)):
             return "number"

@@ -15,33 +15,62 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Publication',
+            name="Publication",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('title', models.CharField(max_length=30)),
-                ('category', models.SmallIntegerField(choices=[(0, 'Digital'), (1, 'Printed')], default=0)),
-                ('subscription_fee', models.DecimalField(decimal_places=2, max_digits=5)),
-                ('market_share', models.FloatField()),
-                ('editor', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to=settings.AUTH_USER_MODEL, to_field='username')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
+                    ),
+                ),
+                ("title", models.CharField(max_length=30)),
+                (
+                    "category",
+                    models.SmallIntegerField(choices=[(0, "Digital"), (1, "Printed")], default=0),
+                ),
+                ("subscription_fee", models.DecimalField(decimal_places=2, max_digits=5)),
+                ("market_share", models.FloatField()),
+                (
+                    "editor",
+                    models.ForeignKey(
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        to=settings.AUTH_USER_MODEL,
+                        to_field="username",
+                    ),
+                ),
             ],
             options={
-                'ordering': ['title'],
+                "ordering": ["title"],
             },
         ),
         migrations.CreateModel(
-            name='Article',
+            name="Article",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('headline', models.CharField(max_length=100)),
-                ('body', models.TextField(blank=True, null=True)),
-                ('created_at', models.DateTimeField()),
-                ('views', models.IntegerField(default=0)),
-                ('archived', models.BooleanField(default=False)),
-                ('author', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
-                ('publications', models.ManyToManyField(related_name='articles', to='tests.Publication')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
+                    ),
+                ),
+                ("headline", models.CharField(max_length=100)),
+                ("body", models.TextField(blank=True, null=True)),
+                ("created_at", models.DateTimeField()),
+                ("views", models.IntegerField(default=0)),
+                ("archived", models.BooleanField(default=False)),
+                (
+                    "author",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL
+                    ),
+                ),
+                (
+                    "publications",
+                    models.ManyToManyField(related_name="articles", to="tests.Publication"),
+                ),
             ],
             options={
-                'ordering': ['headline'],
+                "ordering": ["headline"],
             },
         ),
     ]

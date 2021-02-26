@@ -1,4 +1,4 @@
-{% load nlf_autocomplete %}
+{% load nlf_autocomplete nlf_autocomplete_js %}
 
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
@@ -6,9 +6,6 @@
     <meta charset="utf-8">
     <title>Django NLF demo</title>
     <style media="screen">
-      body {
-      }
-
       section {
         height: 50vh;
         width: 100%;
@@ -19,12 +16,6 @@
 
       section:nth-child(even) {
         background-color: rgba(0, 0, 0, 0.05);
-      }
-
-      input[type="search"]:before {
-        content: "\002315";
-        font-size: inherit;
-        margin-left: 14px;
       }
 
       h1 {
@@ -88,7 +79,6 @@
     <section>
       <h1>Search input example</h1>
       <input class="nlf-autocomplete__input" type="search" name="" value="" placeholder="Start typing...">
-
     </section>
 
     <section>
@@ -98,20 +88,27 @@
 
     <section>
       <h1>Textarea example</h1>
-      <textarea class="nlf-autocomplete__input" name="" value="" placeholder="Start typing..."></textarea>
+      {% nlf_autocomplete "tests" "article" include_js=False input_type="textarea" placeholder="Start typing..." %}
     </section>
 
     {% nlf_autocomplete_js %}
 
     <script type="text/javascript">
-    co = {
+    c1 = new DjangoNLF.Completion({
       selector: 'input[type="search"]',
       rendererOptions: {},
       suggestionOptions: {
         schemaUrl: "/schemas/tests/article"
       }
-    };
-    c = new DjangoNLF.Completion(co);
+    });
+    const textInput = document.querySelector('input:not([type])');
+    c2 = new DjangoNLF.Completion({
+      input: textInput,
+      rendererOptions: {},
+      suggestionOptions: {
+        schemaUrl: "/schemas/tests/publication"
+      }
+    });
     </script>
   </body>
 </html>

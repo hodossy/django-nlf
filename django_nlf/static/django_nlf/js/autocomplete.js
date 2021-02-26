@@ -3,8 +3,11 @@
     return;
   }
 
-  function checkInput(input) {
+  function checkInput(input, selector) {
     if (input === null) {
+      if (selector) {
+        throw new Error(`Invalid selector ${selector}: No elements matched!`);
+      }
       throw new Error("Either 'input' or 'selector' must be defined!");
     }
   }
@@ -12,7 +15,7 @@
   var OptionRenderer = function(options) {
     this.autoselectFirst = options['autoselectFirst'] || true;
     this.input = options['input'] || document.querySelector(options['selector']);
-    checkInput(this.input);
+    checkInput(this.input, options['selector']);
 
     this.optionElements = [];
     this.onOptionClicked = null;
@@ -98,8 +101,8 @@
     showPanel: function () {
       const rect = this.input.getBoundingClientRect();
       this.optionContainer.style.position = 'absolute';
-      this.optionContainer.style.left = `${rect.left}px`;
-      this.optionContainer.style.top = `${rect.top + rect.height}px`;
+      this.optionContainer.style.left = `${rect.left + window.scrollX}px`;
+      this.optionContainer.style.top = `${rect.top + rect.height + window.scrollY}px`;
       this.optionContainer.style.width = `${rect.width}px`;
 
       this.optionContainer.classList.remove(this.blockHiddenClass);
