@@ -11,30 +11,30 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: '3.x'
-    - id: get-version
-      name: Get version for tag
-      uses: actions/github-script@v3
-      with:
-        script: |
-          const lastSlashIndex = context.ref.lastIndexOf('/') + 1;
-          const version = context.ref.substr(lastSlashIndex);
-          console.log(`Parsed version: ${version}`);
-          core.setOutput('version', `${version}`);
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install setuptools wheel twine
-        pip install -r requirements.txt
-    - name: Build and publish
-      env:
-        TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
-        TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
-      run: |
-        sed -i -E s/"(__version__ = ).*"/"\1\"${{ steps.get-version.outputs.version }}\""/g django_nlf/__init__.py
-        python setup.py sdist bdist_wheel
-        twine upload dist/*
+      - uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+      - id: get-version
+        name: Get version for tag
+        uses: actions/github-script@v3
+        with:
+          script: |
+            const lastSlashIndex = context.ref.lastIndexOf('/') + 1;
+            const version = context.ref.substr(lastSlashIndex);
+            console.log(`Parsed version: ${version}`);
+            core.setOutput('version', `${version}`);
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install setuptools wheel twine
+          pip install -r requirements.txt
+      - name: Build and publish
+        env:
+          TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
+          TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
+        run: |
+          sed -i -E s/"(__version__ = ).*"/"\1\"${{ steps.get-version.outputs.version }}\""/g django_nlf/__init__.py
+          python setup.py sdist bdist_wheel
+          twine upload dist/*

@@ -12,7 +12,7 @@
     }
   }
 
-  var OptionRenderer = function(options) {
+  var OptionRenderer = function (options) {
     this.autoselectFirst = options['autoselectFirst'] || true;
     this.input = options['input'] || document.querySelector(options['selector']);
     checkInput(this.input, options['selector']);
@@ -59,8 +59,8 @@
 
         const suggestion = this.suggestions[i];
         this.optionElements[i].children[0].innerText = suggestion['display'];
-        this.optionElements[i].children[1].innerText = suggestion['help'] || "";
-        this.optionElements[i].children[1].title = suggestion['help'] || "";
+        this.optionElements[i].children[1].innerText = suggestion['help'] || '';
+        this.optionElements[i].children[1].title = suggestion['help'] || '';
       }
 
       for (var i = this.optionElements.length - 1; i >= this.suggestions.length; i--) {
@@ -92,7 +92,7 @@
       return li;
     },
 
-    createOptionContent: function(isHint) {
+    createOptionContent: function (isHint) {
       const span = document.createElement('span');
       span.classList.add(isHint ? this.optionHintClass : this.optionValueClass);
       return span;
@@ -158,14 +158,14 @@
 
     getSelectedValue: function () {
       return this.selected === null ? null : this.suggestions[this.selected].value;
-    }
+    },
   };
   OptionRenderer.prototype.constructor = OptionRenderer;
 
   var Completion = function (options) {
     if (options === undefined) {
       // TODO: documentation link to available options
-      throw Error("Mandatory options must be defined! See the documentation!");
+      throw Error('Mandatory options must be defined! See the documentation!');
     }
 
     this.suggester = options['suggester'] || this.getDefaultSuggester(options);
@@ -181,7 +181,7 @@
     this.input = options['input'] || document.querySelector(options['selector']);
     checkInput(this.input);
     this.setUpListeners();
-  }
+  };
 
   Completion.prototype = {
     getDefaultSuggester: function (options) {
@@ -197,21 +197,33 @@
     },
 
     setUpListeners: function () {
-      this.input.addEventListener('keydown', function (e) {
-        this.onKeyDown(e);
-      }.bind(this));
-      this.input.addEventListener('input', function (e) {
-        this.onInput(e);
-      }.bind(this));
-      this.input.addEventListener('focus', function (e) {
-        this.onFocus(e);
-      }.bind(this));
-      this.input.addEventListener('blur', function () {
-        this.renderer.hidePanel();
-      }.bind(this));
+      this.input.addEventListener(
+        'keydown',
+        function (e) {
+          this.onKeyDown(e);
+        }.bind(this)
+      );
+      this.input.addEventListener(
+        'input',
+        function (e) {
+          this.onInput(e);
+        }.bind(this)
+      );
+      this.input.addEventListener(
+        'focus',
+        function (e) {
+          this.onFocus(e);
+        }.bind(this)
+      );
+      this.input.addEventListener(
+        'blur',
+        function () {
+          this.renderer.hidePanel();
+        }.bind(this)
+      );
     },
 
-    onFocus: function(e) {
+    onFocus: function (e) {
       // prevent the re-render of the same options,
       // it could be expensive for relations
       if (this.lastValue === e.target.value) {
@@ -228,48 +240,49 @@
       }
 
       this.lastValue = e.target.value;
-      this.inputDebounceTimer = setTimeout(function () {
-        this.suggester.suggestFor(this.lastValue).then(function (suggestions) {
-          this.renderer.render(suggestions);
-        }.bind(this));
-      }.bind(this), this.debounce);
+      this.inputDebounceTimer = setTimeout(
+        function () {
+          this.suggester.suggestFor(this.lastValue).then(
+            function (suggestions) {
+              this.renderer.render(suggestions);
+            }.bind(this)
+          );
+        }.bind(this),
+        this.debounce
+      );
     },
 
-    onKeyDown: function(e) {
+    onKeyDown: function (e) {
       switch (e.keyCode) {
-        case 38:  // up arrow
+        case 38: // up arrow
           if (this.renderer.selected !== null) {
-            const newSelection = this.renderer.selected === 0
-              ? null
-              : this.renderer.selected - 1;
+            const newSelection = this.renderer.selected === 0 ? null : this.renderer.selected - 1;
             this.renderer.select(newSelection);
             e.preventDefault();
           }
           break;
 
-        case 40:  // down arrow
-          const newSelection = this.renderer.selected === null
-            ? 0
-            : this.renderer.selected + 1;
+        case 40: // down arrow
+          const newSelection = this.renderer.selected === null ? 0 : this.renderer.selected + 1;
           this.renderer.select(newSelection);
           e.preventDefault();
           break;
 
-        case 39:  // right arrow
-        case 13:  // Enter
-        case 9:   // Tab, may not be a good idea for accessibility
+        case 39: // right arrow
+        case 13: // Enter
+        case 9: // Tab, may not be a good idea for accessibility
           if (this.renderer.selected !== null) {
             this.completeInput();
             e.preventDefault();
           }
           break;
 
-        case 27:  // Esc
+        case 27: // Esc
           // Esc clears the selection for input[type='search']
           // we intend to keep that functionality
           if (this.renderer.hidePanel()) {
             e.preventDefault();
-          };
+          }
           break;
       }
     },
@@ -278,11 +291,11 @@
       const current = this.input.value;
       const selectedValue = this.renderer.getSelectedValue();
       this.input.value = this.suggester.mergeSelection(current, selectedValue);
-      this.onInput({target: {value: this.input.value}});
-    }
+      this.onInput({ target: { value: this.input.value } });
+    },
   };
   Completion.prototype.constructor = Completion;
 
   root['DjangoNLF']['OptionRenderer'] = OptionRenderer;
   root['DjangoNLF']['Completion'] = Completion;
-}(this))
+})(this);
