@@ -1,12 +1,29 @@
-.PHONY: lint
-lint:
-	@python -m black --check django_nlf tests
+.PHONY: lint-py
+lint-py:
 	@python -m pylint django_nlf
 
 
-.PHONY: format
-format:
+.PHONY: lint-js
+lint-js:
+	@npx eslint django/static
+
+
+.PHONY: lint
+lint: lint-py lint -js
+
+
+.PHONY: format-py
+format-py:
 	@python -m black django_nlf tests manage.py setup.py
+
+
+.PHONY: format-js
+format-js:
+	@npx prettier --write "django_nlf/static" "django_nlf/templates"
+
+
+.PHONY: format
+format: format-py format-js
 
 
 .PHONY: test-py
@@ -39,6 +56,7 @@ docs:
 publish:
 	@python setup.py sdist bdist_wheel
 	@twine upload dist/*
+
 
 .PHONY: lang
 lang:

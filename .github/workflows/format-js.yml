@@ -1,4 +1,4 @@
-name: Javascript unit tests
+name: Check Js and CSS Format
 
 on:
   push:

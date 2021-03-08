@@ -1,4 +1,4 @@
-name: Javascript unit tests
+name: Lint Javascript
 
 on:
   push:

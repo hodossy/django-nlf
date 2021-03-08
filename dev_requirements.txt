@@ -2,6 +2,7 @@
 -r test_requirements.txt
 coverage[toml]
 pylint
+pylint-django
 sphinx
 sphinx_rtd_theme
 setuptools
