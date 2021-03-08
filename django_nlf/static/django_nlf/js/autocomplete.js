@@ -51,7 +51,7 @@
     render: function (suggestions) {
       this.suggestions = suggestions;
 
-      for (var i = 0; i < this.suggestions.length; i++) {
+      for (let i = 0; i < this.suggestions.length; i++) {
         // make sure we have enough li elements
         if (this.optionElements[i] == undefined) {
           this.optionElements[i] = this.createOption();
@@ -63,7 +63,7 @@
         this.optionElements[i].children[1].title = suggestion['help'] || '';
       }
 
-      for (var i = this.optionElements.length - 1; i >= this.suggestions.length; i--) {
+      for (let i = this.optionElements.length - 1; i >= this.suggestions.length; i--) {
         // remove not used li, if any
         this.optionList.removeChild(this.optionElements.pop());
       }
@@ -254,20 +254,22 @@
 
     onKeyDown: function (e) {
       switch (e.keyCode) {
-        case 38: // up arrow
+        case 38: {
+          // up arrow
           if (this.renderer.selected !== null) {
             const newSelection = this.renderer.selected === 0 ? null : this.renderer.selected - 1;
             this.renderer.select(newSelection);
             e.preventDefault();
           }
           break;
-
-        case 40: // down arrow
+        }
+        case 40: {
+          // down arrow
           const newSelection = this.renderer.selected === null ? 0 : this.renderer.selected + 1;
           this.renderer.select(newSelection);
           e.preventDefault();
           break;
-
+        }
         case 39: // right arrow
         case 13: // Enter
         case 9: // Tab, may not be a good idea for accessibility

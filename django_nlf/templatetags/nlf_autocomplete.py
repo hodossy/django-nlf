@@ -2,7 +2,7 @@ from random import choice
 from string import ascii_letters
 
 from django import template
-from django.urls import reverse, NoReverseMatch
+from django.urls import reverse
 
 from django_nlf.schema.urls import SCHEMA_URL_NAME
 

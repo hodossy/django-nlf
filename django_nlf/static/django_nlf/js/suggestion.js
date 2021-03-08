@@ -1,10 +1,7 @@
 (function (root, factory) {
   'use strict';
 
-  if (typeof define === 'function' && define.amd) {
-    // AMD. Register as an anonymous module.
-    define('DjangoNLF', [], factory);
-  } else if (typeof exports === 'object') {
+  if (typeof exports === 'object') {
     // Node. Does not work with strict CommonJS, but
     // only CommonJS-like environments that support module.exports,
     // like Node.
@@ -50,10 +47,6 @@
       // otherwise the response itself is the list
       return response[objectsPropName] || response;
     };
-  }
-
-  function defaultOptionDisplay(obj, field) {
-    return obj;
   }
 
   var Suggester = function (options) {
@@ -147,18 +140,17 @@
     },
 
     getContext: function (expression) {
-      var context = {
+      let context = {
         scope: null,
         model: this.baseModel,
         field: null,
         searchTerm: '',
       };
-      var lookBehindTokens = [];
 
-      var rest = expression.replace(/\s+/, ' ');
-      var currentToken = null;
-      var endsWithSpace = rest.endsWith(' ');
-      var extendSearchTerm = false;
+      let rest = expression.replace(/\s+/, ' ');
+      let currentToken = null;
+      let endsWithSpace = rest.endsWith(' ');
+      let extendSearchTerm = false;
       do {
         [currentToken, rest] = breakBy(rest);
         if (!rest && endsWithSpace) {
@@ -247,7 +239,7 @@
           ? context.searchTerm + ' ' + currentToken
           : currentToken;
         extendSearchTerm = false;
-      } while (!!rest);
+      } while (rest);
 
       context.searchTerm = trimStart(context.searchTerm, '"(');
       if (context.scope === 'list-value') {
@@ -293,7 +285,7 @@
         var suggestions = [];
 
         switch (context.scope) {
-          case 'field':
+          case 'field': {
             const exactMatch = this.schema[context.model]['fields'][context.searchTerm];
             if (exactMatch !== undefined && exactMatch['related']) {
               suggestions.push(
@@ -332,12 +324,13 @@
               );
             }
             break;
+          }
           case 'lookup':
             suggestions = this.lookupSuggestions;
             break;
           case 'value':
           case 'list-value':
-          case 'quoted-value':
+          case 'quoted-value': {
             const suffix = context.scope === 'list-value' ? ', ' : ' ';
             const field = this.schema[context.model]['fields'][context.field];
             if (field.choices) {
@@ -380,6 +373,7 @@
               );
             }
             break;
+          }
           case 'operator':
             suggestions = this.operatorSuggestions;
             break;

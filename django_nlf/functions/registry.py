@@ -105,7 +105,7 @@ def nlf_function(fn_name: str = None, **kwargs) -> Callable:
         signature = inspect.signature(func)
         meta = FunctionMeta(
             **kwargs,
-            params=[p for p in signature.parameters],
+            params=list(signature.parameters),
             rtype=get_rtype(signature.return_annotation),
         )
 

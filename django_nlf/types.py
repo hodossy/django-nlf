@@ -90,6 +90,8 @@ class FunctionMeta:
 class FieldFilterSchema:
     """The schema definiton of a model field. Used for autocomplete"""
 
+    # pylint: disable=too-many-instance-attributes
+
     type: str
     help: str
     nullable: bool
