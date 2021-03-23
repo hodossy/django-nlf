@@ -1,0 +1,3 @@
+SCHEMA_APP_NAME = "django_nlf"
+SCHEMA_VIEW_NAME = "schema"
+SCHEMA_URL_NAME = "%s:%s" % (SCHEMA_APP_NAME, SCHEMA_VIEW_NAME)

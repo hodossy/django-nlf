@@ -74,6 +74,7 @@
           this.select(0);
         }
       } else {
+        this.selected = null;
         this.hidePanel();
       }
     },
@@ -82,6 +83,8 @@
       const li = document.createElement('li');
       li.classList.add(this.optionClass);
       li.onclick = function (e) {
+        e.preventDefault();
+        e.stopPropagation();
         this.onClick(e);
       }.bind(this);
 
@@ -217,7 +220,10 @@
       );
       this.input.addEventListener(
         'blur',
-        function () {
+        function (e) {
+          // TODO: this blocks selecting options via mouse clicks or touch clicks,
+          // effectively breaking mobile UX, however leaving open panels everywhere is not
+          // desired as well. Could check material autocomplete implementation for ideas.
           this.renderer.hidePanel();
         }.bind(this)
       );

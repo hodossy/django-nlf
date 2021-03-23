@@ -4,7 +4,7 @@ from string import ascii_letters
 from django import template
 from django.urls import reverse
 
-from django_nlf.schema.urls import SCHEMA_URL_NAME
+from django_nlf.schema import SCHEMA_URL_NAME
 
 
 register = template.Library()

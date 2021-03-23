@@ -12,6 +12,7 @@ class NLFModelSchemaBuilder:
     __cache = {}
     field_shortcuts = nlf_settings.FIELD_SHORTCUTS
     empty_val = nlf_settings.EMPTY_VALUE
+    path_separator = nlf_settings.PATH_SEPARATOR
     autocomplete_views = nlf_settings.SEARCH_URL_MAP
     autocomplete_param = nlf_settings.SEARCH_PARAM
     ignored_model_labels = (
@@ -36,6 +37,7 @@ class NLFModelSchemaBuilder:
         schema = self._get_model_schema(model)
         schema["common_functions"] = FunctionRegistry.get_functions_for(None)
         schema["empty_val"] = self.empty_val
+        schema["path_separator"] = self.path_separator
 
         return schema
 
