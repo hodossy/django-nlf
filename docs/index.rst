@@ -54,10 +54,23 @@ Then you can use the ``DjangoNLFilter`` with a queryset and a string, containing
   # )
   articles = nl_filter.filter(qs, q)
 
+You can also use the autocomplete template tag to create an input with autocomplete functionality. Please see the :ref:`autocomplete-guide` for more details.
+
+.. code-block:: html
+  :linenos:
+
+  {% load nlf_autocomplete %}
+
+  <!-- your page content  -->
+
+  {% nlf_autocomplete app_label model_name %}
+
+  <!-- rest of the content  -->
+
 Rest framework integration
 **************************
 
-You just need to simply add the natural language filter backend to your filter backends list.
+You just need to simply add the natural language filter backend to your filter backends list. Check the :ref:`spa-integration` for the autocomplete integration.
 
 .. code-block:: python
 
@@ -76,6 +89,7 @@ You just need to simply add the natural language filter backend to your filter b
    :titlesonly:
 
    language/index.rst
+   autocomplete/index.rst
    customizations/index.rst
    configuration.rst
 

@@ -1,3 +1,4 @@
+import inspect
 from functools import wraps
 from typing import Callable, Dict, Tuple
 
@@ -59,23 +60,33 @@ class FunctionRegistry:
         return func
 
     @classmethod
-    def get_functions_for(cls, model: "django.db.models.Model") -> Dict[FunctionRole, str]:
+    def get_functions_for(
+        cls, model: "django.db.models.Model" = tuple()
+    ) -> Dict[FunctionRole, str]:
         """Returns available functions for a given model.
 
         :param "django.db.models.Model" model: The current model that is operated on..
         :return: A dictionary of function names where the key is the function role.
         :rtype: list
         """
-        function_map = {
-            FunctionRole.FIELD: [],
-            FunctionRole.VALUE: [],
-            FunctionRole.EXPRESSION: [],
+        return {
+            name: entry[1].to_repr()
+            for name, entry in cls.registry.items()
+            if not model and not entry[1].models or model and model in entry[1].models
         }
-        for fn_name, (_, meta) in cls.registry.items():
-            if not meta.models or model in meta.models:
-                function_map[meta.role].append((fn_name, meta.help))
 
-        return function_map
+
+def get_rtype(return_annotation):
+    """Determines the return type based on return annotation.
+
+    :param type return_annotation: The return annotation.
+    :return: The string representation of the type.
+    :rtype: str
+    """
+    if return_annotation is inspect.Signature.empty:
+        return None
+
+    return str(return_annotation)
 
 
 def nlf_function(fn_name: str = None, **kwargs) -> Callable:
@@ -88,10 +99,16 @@ def nlf_function(fn_name: str = None, **kwargs) -> Callable:
     :return: A decorator function that registers the decorated function.
     :rtype: Callable
     """
-    meta = FunctionMeta(**kwargs)
 
     def decorator(func: Callable) -> Callable:
         name = fn_name or func.__name__
+        signature = inspect.signature(func)
+        meta = FunctionMeta(
+            **kwargs,
+            params=list(signature.parameters),
+            rtype=get_rtype(signature.return_annotation),
+        )
+
         FunctionRegistry.register(name, func, meta)
 
         @wraps(func)

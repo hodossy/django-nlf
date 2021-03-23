@@ -31,14 +31,14 @@ def import_from_string(val, setting_name):
     """
     try:
         return import_string(val)
-    except ImportError as e:
+    except ImportError as err:
         msg = "Could not import '%s' for NLF setting '%s'. %s: %s." % (
             val,
             setting_name,
-            e.__class__.__name__,
-            e,
+            err.__class__.__name__,
+            err,
         )
-        raise ImportError(msg) from e
+        raise ImportError(msg) from err
 
 
 def deprecate(msg, level_modifier=0):
@@ -86,7 +86,7 @@ class NLFSettings:
 
         return val
 
-    def change_setting(self, setting, value, enter, **kwargs):
+    def change_setting(self, setting, value, enter, **kwargs):  # pylint: disable=unused-argument
         if not setting.startswith("NLF_"):
             return
         setting = setting[4:]  # strip 'NLF_'

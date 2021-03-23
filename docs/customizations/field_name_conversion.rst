@@ -1,7 +1,7 @@
 Converting field names
 ======================
 
-You may not like the snake case convention widely used in Python to be used in the filtering expressions your user write. Therefore you can use one of the built in case coverters or write your own.
+You may not like the snake case convention widely used in Python to be used in the filtering expressions your users write. Therefore you can use one of the built-in case converters or write your own.
 
 Built in converters
 *******************

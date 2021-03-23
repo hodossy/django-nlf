@@ -1,0 +1,20 @@
+{% load static %} {% if is_textarea %}
+<textarea id="nlfInput{{ input_id }}" class="nlf-autocomplete__input">{{ placeholder }}</textarea>
+{% else %}
+<input
+  id="nlfInput{{ input_id }}"
+  class="nlf-autocomplete__input"
+  type="{{ input_type }}"
+  placeholder="{{ placeholder }}"
+/>
+{% endif %} {% if include_js %}
+<script src="{% static 'django_nlf/js/suggestion.js' %}" charset="utf-8"></script>
+<script src="{% static 'django_nlf/js/autocomplete.js' %}" charset="utf-8"></script>
+{% endif %} {{ js_options | json_script:input_id }}
+<script type="text/javascript">
+  window.addEventListener("load", function () {
+    var {{ input_id }}Options = JSON.parse(document.getElementById("{{ input_id }}").textContent);
+    {{ input_id }}Options.input = document.querySelector("#nlfInput{{ input_id }}");
+    new DjangoNLF.Completion({{ input_id }}Options);
+  }, {once: true});
+</script>

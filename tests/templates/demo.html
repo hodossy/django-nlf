@@ -1,0 +1,114 @@
+{% load nlf_autocomplete nlf_autocomplete_js %}
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Django NLF demo</title>
+    <style media="screen">
+      section {
+        height: 50vh;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      section:nth-child(even) {
+        background-color: rgba(0, 0, 0, 0.05);
+      }
+
+      h1 {
+        color: green;
+      }
+
+      .nlf-autocomplete {
+        box-sizing: border-box;
+        width: 377px;
+        border: 1px solid black;
+        border-radius: 4px;
+        max-height: 200px;
+        overflow-y: auto;
+        position: absolute;
+      }
+
+      .nlf-autocomplete--hidden {
+        display: none;
+      }
+
+      .nlf-autocomplete__input {
+        padding: 0.5em;
+        width: 350px;
+      }
+
+      .nlf-autocomplete__list {
+        list-style: none;
+        padding: 0;
+        margin-block-start: 0;
+      }
+
+      .nlf-autocomplete__option {
+        position: relative;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.5em;
+        border-radius: 0.2em;
+      }
+
+      .nlf-autocomplete__option--active {
+        background-color: rgba(0, 0, 0, 0.1);
+      }
+
+      .nlf-autocomplete__option--active .nlf-autocomplete__value {
+        font-weight: bold;
+      }
+
+      .nlf-autocomplete__hint {
+        font-size: 0.8em;
+        color: rgba(0, 0, 0, 0.6);
+        right: 0;
+        width: 33%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    </style>
+  </head>
+  <body>
+    <section>
+      <h1>Search input example</h1>
+      <input class="nlf-autocomplete__input" type="search" name="" value="" placeholder="Start typing...">
+    </section>
+
+    <section>
+      <h1>Text input example</h1>
+      <input class="nlf-autocomplete__input" name="" value="" placeholder="Start typing...">
+    </section>
+
+    <section>
+      <h1>Textarea example</h1>
+      {% nlf_autocomplete "tests" "article" include_js=False input_type="textarea" placeholder="Start typing..." %}
+    </section>
+
+    {% nlf_autocomplete_js %}
+
+    <script type="text/javascript">
+    c1 = new DjangoNLF.Completion({
+      selector: 'input[type="search"]',
+      rendererOptions: {},
+      suggestionOptions: {
+        schemaUrl: "/schemas/tests/article"
+      }
+    });
+    const textInput = document.querySelector('input:not([type])');
+    c2 = new DjangoNLF.Completion({
+      input: textInput,
+      rendererOptions: {},
+      suggestionOptions: {
+        schemaUrl: "/schemas/tests/publication"
+      }
+    });
+    </script>
+  </body>
+</html>

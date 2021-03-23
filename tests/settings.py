@@ -1,7 +1,11 @@
+import sys
+
+IS_DEMO = "runserver" in sys.argv
+
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
-        "NAME": ":memory:",
+        "NAME": "db.sqlite3" if IS_DEMO else ":memory:",
     },
 }
 
@@ -11,7 +15,7 @@ INSTALLED_APPS = (
     "django.contrib.auth",
     "django_nlf",
     "rest_framework",
-    "tests",
+    "tests.apps.DjangoNLFDemoAppConfig",
 )
 
 MIDDLEWARE = []
@@ -28,6 +32,8 @@ TEMPLATES = [
 STATIC_URL = "/static/"
 
 ROOT_URLCONF = "tests.urls"
+ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
+DEBUG = True
 
 REST_FRAMEWORK = {
     "DEFAULT_FILTER_BACKENDS": (

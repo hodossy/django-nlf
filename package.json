@@ -1,0 +1,26 @@
+{
+  "name": "jasmine_testing_server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "npx karma start",
+    "testci": "npx karma start karma-ci.conf.js"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "jasmine": "^3.6.4",
+    "jasmine-ajax": "^4.0.0",
+    "karma": "^6.1.0",
+    "karma-chrome-launcher": "^3.1.0",
+    "karma-coverage": "^2.0.3",
+    "karma-jasmine": "^4.0.1",
+    "karma-jasmine-ajax": "^0.1.13",
+    "karma-jasmine-html-reporter": "^1.5.4"
+  },
+  "devDependencies": {
+    "eslint": "^7.21.0",
+    "prettier": "^2.2.1"
+  }
+}
